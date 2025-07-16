@@ -1,24 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
-const Input = ({ id, type, onInputChange, label, keys }) => {
-  const [data, setData] = useState('');
+const Input = ({
+  id,
+  type = 'text',
+  onInputChange,
+  label,
+  placeholder = 'Placeholder',
+  initialValue = '',
+  ...props
+}) => {
+  const [data, setData] = useState(initialValue);
 
-  function handleChange(event) {
-    const eventData = event.target.value;
-    setData(eventData);
-    onInputChange({ id, eventData });
-  }
+  useEffect(() => {
+    setData(initialValue);
+  }, [initialValue]);
+
+  const handleChange = useCallback(
+    (event) => {
+      const value = event.target.value;
+      setData(value);
+      onInputChange({ id, value });
+    },
+    [id, onInputChange]
+  );
 
   return (
     <div>
       <label htmlFor={id}>{label}</label>
       <input
-        key={keys}
         id={id}
-        className="beautiful-input"
-        onInput={handleChange}
+        onChange={handleChange}
         value={data}
         type={type}
+        {...props}
       />
     </div>
   );

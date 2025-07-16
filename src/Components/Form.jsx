@@ -62,8 +62,8 @@ const Form = () => {
     }, {})
   );
 
-  function handleChange({ id, eventData }) {
-    setForm({ ...form, [id]: eventData });
+  function handleChange({ id, value }) {
+    setForm({ ...form, [id]: value });
   }
 
   async function handleSubmit(event) {
@@ -92,7 +92,7 @@ const Form = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {objetos.map(({id, type, label}) => {
+      {objetos.map(({ id, type, label }) => {
         return (
           <Input
             key={id}
