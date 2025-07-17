@@ -1,31 +1,59 @@
-import React, { useState } from 'react';
-import Input from './Components/Input';
-import Select from './Components/Select';
+import React from 'react';
+import Form from './Components/Form';
+
+const objetos = [
+  {
+    id: 'nome',
+    label: 'Nome',
+    type: 'text',
+  },
+  {
+    id: 'email',
+    label: 'Email',
+    type: 'email',
+  },
+  {
+    id: 'senha',
+    label: 'Senha',
+    type: 'password',
+  },
+  {
+    id: 'cep',
+    label: 'Cep',
+    type: 'text',
+  },
+  {
+    id: 'rua',
+    label: 'Rua',
+    type: 'text',
+  },
+  {
+    id: 'numero',
+    label: 'Numero',
+    type: 'text',
+  },
+  {
+    id: 'bairro',
+    label: 'Bairro',
+    type: 'text',
+  },
+  {
+    id: 'cidade',
+    label: 'Cidade',
+    type: 'text',
+  },
+  {
+    id: 'estado',
+    label: 'Estado',
+    type: 'text',
+  },
+];
 
 const App = () => {
-  const [form, setForm] = useState({
-    name: '',
-    gender: '',
-  });
-
-  function handleSelect({ id, value }) {
-    setForm({ ...form, [id]: value });
-  }
-
-  function handleInput({ id, value }) {
-    setForm({ ...form, [id]: value });
-  }
-
   return (
-    <div>
-      <Input id="name" onInputChange={handleInput} />
-      <Select
-        id="gender"
-        data={['Vini', 'Joao']}
-        initialValue={'MAISDNJASIDJASIO'}
-        selectInput={handleSelect}
-      />
-    </div>
+    <>
+      <Form formData={objetos} />
+    </>
   );
 };
 

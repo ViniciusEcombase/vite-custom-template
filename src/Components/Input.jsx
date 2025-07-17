@@ -7,6 +7,7 @@ const Input = ({
   label,
   placeholder = 'Placeholder',
   initialValue = '',
+  className = 'form-input',
   ...props
 }) => {
   const [data, setData] = useState(initialValue);
@@ -31,7 +32,7 @@ const Input = ({
       </label>
       <input
         placeholder={placeholder}
-        className="form-input"
+        className={className}
         id={id}
         onChange={handleChange}
         value={data}
