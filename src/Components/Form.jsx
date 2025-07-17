@@ -3,6 +3,7 @@ import Button from './Button';
 import Input from './Input';
 import useFetch from './useFetch';
 import Modal from './Modal';
+import Select from './Select';
 
 const objetos = [
   {
@@ -94,13 +95,16 @@ const Form = () => {
     <form onSubmit={handleSubmit}>
       {objetos.map(({ id, type, label }) => {
         return (
-          <Input
-            key={id}
-            id={id}
-            type={type}
-            label={label}
-            onInputChange={handleChange}
-          />
+          <>
+            <Input
+              key={id}
+              id={id}
+              type={type}
+              label={label}
+              onInputChange={handleChange}
+            />
+            <Select />
+          </>
         );
       })}
       {loader && (

@@ -26,8 +26,12 @@ const Input = ({
 
   return (
     <div>
-      <label htmlFor={id}>{label}</label>
+      <label className="form-label" htmlFor={id}>
+        {label}
+      </label>
       <input
+        placeholder={placeholder}
+        className="form-input"
         id={id}
         onChange={handleChange}
         value={data}
