@@ -1,58 +1,47 @@
 import React from 'react';
 import Form from './Components/Form';
+import InputPassword from './Components/InputPassword';
 
+const objetos2 = [];
 const objetos = [
   {
-    id: 'nome',
+    id: 'name',
     label: 'Nome',
     type: 'text',
+    required: true,
+    validations: [
+      { type: 'required', message: 'Email is required' },
+      { type: 'minLength', value: 2, message: 'Minimum 2 characters' },
+      { type: 'maxLength', value: 16, message: 'Maximum 16 characters' },
+      {
+        type: 'regex',
+        pattern: 'username',
+        message: 'Only letters, numbers, and underscores',
+      },
+    ],
   },
   {
-    id: 'email',
-    label: 'Email',
-    type: 'email',
-  },
-  {
-    id: 'senha',
-    label: 'Senha',
+    id: 'password',
+    label: 'Password',
     type: 'password',
-  },
-  {
-    id: 'cep',
-    label: 'Cep',
-    type: 'text',
-  },
-  {
-    id: 'rua',
-    label: 'Rua',
-    type: 'text',
-  },
-  {
-    id: 'numero',
-    label: 'Numero',
-    type: 'text',
-  },
-  {
-    id: 'bairro',
-    label: 'Bairro',
-    type: 'text',
-  },
-  {
-    id: 'cidade',
-    label: 'Cidade',
-    type: 'text',
-  },
-  {
-    id: 'estado',
-    label: 'Estado',
-    type: 'text',
+    required: true,
+    validations: [
+      { type: 'required', message: 'Password is required' },
+      { type: 'minLength', value: 3, message: 'Minimum 3 characters' },
+      { type: 'maxLength', value: 16, message: 'Maximum 16 characters' },
+      {
+        type: 'regex',
+        pattern: 'strongPassword',
+        message: 'Needs: Special symbol, Uppercase, LowerCase',
+      },
+    ],
   },
 ];
 
 const App = () => {
   return (
     <>
-      <Form formData={objetos} />
+      <Form validation={objetos} formData={objetos} />
     </>
   );
 };
