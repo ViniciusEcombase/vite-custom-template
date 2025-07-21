@@ -7,7 +7,7 @@ import InputPassword from './InputPassword';
 const Form = ({ formData }) => {
   const [form, setForm] = useState(() =>
     formData.reduce((acc, item) => {
-      acc[item.id] = {ASDASDASDAS
+      acc[item.id] = {
         value: '',
         isValid: !item.required, // Start invalid if required
       };
