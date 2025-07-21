@@ -4,122 +4,44 @@ import PasswordRequirements from './PasswordRequirements';
 const InputPassword = ({
   id,
   label,
-  required,
   onInputChange,
   placeholder = 'Enter your password',
-  initialValue = '',
-  className = 'form-input',
-  validation,
-  ...props
 }) => {
-  const [data, setData] = useState(initialValue);
-  const [error, setError] = useState('');
-  const [touched, setTouched] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+  const [password, setPassword] = useState('');
   const [showRequirements, setShowRequirements] = useState(false);
+  const [isValid, setIsValid] = useState(false);
 
-  useEffect(() => {
-    setData(initialValue);
-  }, [initialValue]);
-
-  // Validation function (same as Input component)
-  const validateField = useCallback(
-    (value, fieldId) => {
-      console.log(value, fieldId);
-
-      // Find validation rules for this field
-      const fieldValidation = validation.find((item) => {
-        return item.id === fieldId;
-      });
-
-      if (!fieldValidation || !fieldValidation.validations) {
-        return { isValid: true, error: '' };
-      }
-
-      // Check each validation rule
-      for (const rule of fieldValidation.validations) {
-        switch (rule.type) {
-          case 'required':
-            if (!value.trim()) {
-              return { isValid: false, error: rule.message };
-            }
-            break;
-
-          case 'minLength':
-            if (value.length < rule.value) {
-              return { isValid: false, error: rule.message };
-            }
-            break;
-
-          case 'maxLength':
-            if (value.length > rule.value) {
-              return { isValid: false, error: rule.message };
-            }
-            break;
-
-          case 'regex':
-            const pattern =
-              regexPatterns[rule.pattern] || new RegExp(rule.pattern);
-            if (!pattern.test(value)) {
-              return { isValid: false, error: rule.message };
-            }
-            break;
-
-          default:
-            break;
-        }
-      }
-
-      return { isValid: true, error: '' };
-    },
-    [validation]
-  );
-
-  const handleChange = useCallback(
-    (event) => {
-      const value = event.target.value;
-      setData(value);
-
-      // Only validate if field has been touched
-      if (touched) {
-        const validationResult = validateField(value, id);
-        setIsValid(validationResult.isValid);
-        setError(validationResult.error);
-
-        // Call parent's onChange with validation result
-        onInputChange({ id, value, isValid: validationResult.isValid });
-      } else {
-        // Call parent's onChange without validation on first change
-        onInputChange({ id, value, isValid: true });
-      }
-    },
-    [id, onInputChange, touched, validateField]
-  );
-
-  const handleFocus = useCallback(() => {
-    setShowRequirements(true);
+  // 🔧 FIXED: Corrected the regex pattern - removed the incorrect escaping
+  const validatePassword = useCallback((item) => {
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
+    return strongPasswordRegex.test(item);
   }, []);
 
-  const handleBlur = useCallback(() => {
-    setTouched(true);
+  useEffect(() => {
+    const valid = validatePassword(password);
+    setIsValid(valid);
+    onInputChange({ id, value: password, isValid: valid });
+  }, [password, validatePassword, onInputChange, id]);
 
-    // Validate on blur
-    const validationResult = validateField(data, id);
-    setIsValid(validationResult.isValid);
-    setError(validationResult.error);
+  const handleChange = (event) => {
+    setPassword(event.target.value);
+  };
 
-    // Update parent with validation result
-    onInputChange({ id, value: data, isValid: validationResult.isValid });
+  const handleFocus = () => {
+    setShowRequirements(true);
+  };
 
+  const handleBlur = () => {
     // Keep requirements visible if password is not valid
-    if (validationResult.isValid) {
+    if (isValid) {
       setShowRequirements(false);
     }
-  }, [id, data, onInputChange, validateField]);
+  };
 
   const getInputClass = () => {
     let classes = 'form-input';
-    if (touched) {
+    if (password.length > 0) {
       classes += isValid ? ' valid-password' : ' invalid-password';
     }
     return classes;
@@ -133,17 +55,14 @@ const InputPassword = ({
       <input
         id={id}
         type="password"
-        value={data}
+        value={password}
         onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
         placeholder={placeholder}
         className={getInputClass()}
-        {...(required ? { required } : {})}
-        {...props}
       />
-      {touched && error && <span className="vini-error">{error}</span>}
-      <PasswordRequirements password={data} isVisible={showRequirements} />
+      <PasswordRequirements password={password} isVisible={showRequirements} />
     </div>
   );
 };

@@ -4,24 +4,25 @@ import Select from './Select';
 import Button from './Button';
 import InputPassword from './InputPassword';
 
-const Form = ({ formData, validation }) => {
-  const [form, setForm] = useState(
+const Form = ({ formData }) => {
+  const [form, setForm] = useState(() =>
     formData.reduce((acc, item) => {
-      acc[item.id] = { value: '', isValid: !item.required }; // Start invalid if required
+      acc[item.id] = {
+        value: '',
+        isValid: !item.required, // Start invalid if required
+      };
       return acc;
     }, {})
   );
 
   const handleInput = useCallback(({ id, value, isValid }) => {
-    console.log(id, value, isValid);
-
     setForm((prev) => ({
       ...prev,
       [id]: { value, isValid },
     }));
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
     const allValid = Object.values(form).every((field) => field.isValid);
 
     if (allValid) {
@@ -42,21 +43,20 @@ const Form = ({ formData, validation }) => {
   return (
     <form>
       <div className="form-group">
-        {formData.map(({ label, type, id }) => {
-          let Component = type === 'password' ? InputPassword : Input;
-          return (
-            <Component
-              key={id}
-              id={id}
-              label={label}
-              validation={form}
-              onInputChange={handleInput}
-              placeholder={`Enter your ${label.toLowerCase()}`}
-            />
-          );
-        })}
+        {formData.map((fieldConfig) => (
+          <Input
+            key={fieldConfig.id}
+            id={fieldConfig.id}
+            label={fieldConfig.label}
+            type={fieldConfig.type}
+            validations={fieldConfig.validations}
+            onInputChange={handleInput}
+            placeholder={`Enter your ${fieldConfig.label.toLowerCase()}`}
+            showPasswordRequirements={fieldConfig.type === 'password'}
+          />
+        ))}
       </div>
-      <Button onClick={handleSubmit} text="vini" />
+      <Button disabled={!isFormValid} onClick={handleSubmit} text="Enviar" />
     </form>
   );
 };

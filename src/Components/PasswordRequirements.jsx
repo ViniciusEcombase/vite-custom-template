@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import usePasswordRequirements from '../CustomHooks/usePasswordRequirements';
 
 // Custom Icons
 const CheckIcon = () => (
@@ -22,37 +23,7 @@ const XIcon = () => (
 );
 
 const PasswordRequirements = ({ password, isVisible }) => {
-  const requirements = [
-    {
-      id: 'length',
-      text: 'At least 8 characters',
-      test: (pwd) => pwd.length >= 8,
-    },
-    {
-      id: 'lowercase',
-      text: 'One lowercase letter',
-      test: (pwd) => /[a-z]/.test(pwd),
-    },
-    {
-      id: 'uppercase',
-      text: 'One uppercase letter',
-      test: (pwd) => /[A-Z]/.test(pwd),
-    },
-    {
-      id: 'number',
-      text: 'One number',
-      test: (pwd) => /\d/.test(pwd),
-    },
-    {
-      id: 'special',
-      text: 'One special character (@$!%*?&)',
-      test: (pwd) => /[@$!%*?&]/.test(pwd),
-    },
-  ];
-
-  const validCount = requirements.filter((req) => req.test(password)).length;
-  const strengthClasses = ['weak', 'fair', 'good', 'strong', 'very-strong'];
-  const strengthClass = strengthClasses[Math.min(validCount, 4)];
+  const { requirements, strengthClass } = usePasswordRequirements(password);
 
   return (
     <>
@@ -84,5 +55,4 @@ const PasswordRequirements = ({ password, isVisible }) => {
     </>
   );
 };
-
 export default PasswordRequirements;

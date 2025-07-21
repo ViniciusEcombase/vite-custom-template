@@ -1,8 +1,7 @@
 import React from 'react';
 import Form from './Components/Form';
-import InputPassword from './Components/InputPassword';
+import Select from './Origamid/Select';
 
-const objetos2 = [];
 const objetos = [
   {
     id: 'name',
@@ -10,7 +9,7 @@ const objetos = [
     type: 'text',
     required: true,
     validations: [
-      { type: 'required', message: 'Email is required' },
+      { type: 'required', message: 'Name is required' },
       { type: 'minLength', value: 2, message: 'Minimum 2 characters' },
       { type: 'maxLength', value: 16, message: 'Maximum 16 characters' },
       {
@@ -41,7 +40,10 @@ const objetos = [
 const App = () => {
   return (
     <>
-      <Form validation={objetos} formData={objetos} />
+      <div style={{ marginTop: '100px' }} className="container">
+        <Form validation={objetos} formData={objetos} />
+      </div>
+      {/* <Select /> */}
     </>
   );
 };
