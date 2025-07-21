@@ -1,0 +1,110 @@
+.checkout-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+  padding: var(--space-6);
+  background: var(--color-gray-800);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-gray-700);
+}
+
+.checkout-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+  position: relative;
+}
+
+.checkout-step::after {
+  content: '';
+  position: absolute;
+  right: -50%;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--color-gray-600);
+  transform: translateY(-50%);
+}
+
+.checkout-step:last-child::after {
+  display: none;
+}
+
+.checkout-step.active::after {
+  background: var(--color-primary);
+}
+
+.checkout-step-number {
+  width: 32px;
+  height: 32px;
+  background: var(--color-gray-700);
+  color: var(--color-text-muted);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  border: 2px solid var(--color-gray-600);
+  transition: var(--transition-base);
+}
+
+.checkout-step.active .checkout-step-number {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+.checkout-step.completed .checkout-step-number {
+  background: var(--color-success);
+  color: var(--color-white);
+  border-color: var(--color-success);
+}
+
+.checkout-step-text {
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: var(--transition-base);
+}
+
+.checkout-step.active .checkout-step-text {
+  color: var(--color-primary);
+}
+
+.checkout-step.completed .checkout-step-text {
+  color: var(--color-success);
+}
+
+.order-summary {
+  background: var(--color-gray-800);
+  border: 1px solid var(--color-gray-700);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  position: sticky;
+  top: var(--space-6);
+}
+
+.order-summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-gray-700);
+}
+
+.order-summary-item:last-child {
+  border-bottom: none;
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: var(--text-lg);
+}
+
+.order-summary-label {
+  color: var(--color-text-secondary);
+}
+
+.order-summary-value {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}

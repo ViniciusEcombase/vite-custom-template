@@ -42,13 +42,9 @@ const objetos = [
 const App = () => {
   return (
     <>
-      <DogSvg />
-
       <div style={{ marginTop: '100px' }} className="container">
         <Form validation={objetos} formData={objetos} />
-        <img src={img} alt="" />
       </div>
-      {/* <Select /> */}
     </>
   );
 };

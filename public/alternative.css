@@ -1172,7 +1172,6 @@ a:focus {
   color: var(--color-primary);
   margin-bottom: var(--space-4);
 }
-
 /* ===== ALERTS ===== */
 .alert {
   padding: var(--space-4);
