@@ -23,6 +23,10 @@
   box-shadow: var(--shadow-sm);
 }
 
+.form-input::placeholder {
+  color: var(--color-text-muted);
+}
+
 .form-input:focus {
   outline: none;
   border-color: var(--color-primary);
@@ -30,9 +34,16 @@
   background: var(--color-gray-900);
 }
 
+.form-input:disabled {
+  background: var(--color-gray-700);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
 .form-input.error {
   border-color: var(--color-error);
 }
+
 .form-input.success {
   border-color: var(--color-success);
 }
