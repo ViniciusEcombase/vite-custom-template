@@ -71,7 +71,7 @@ const Input = ({
         className={getInputClass()}
       />
       {field.touched && field.error && (
-        <span className="vini-error">{field.error}</span>
+        <span className="form-error">{field.error}</span>
       )}
       {showPasswordRequirements && (
         <PasswordRequirements
