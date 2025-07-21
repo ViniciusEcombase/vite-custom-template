@@ -1,0 +1,32 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black */
+  z-index: 9999; /* stays above all normal content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(1px); /* optional: background blur */
+  transition: opacity 0.3s ease;
+  opacity: 1;
+  cursor: pointer;
+}
+
+/* Hidden state for animation purposes */
+.overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Optional: inner content wrapper (like modal box or spinner container) */
+.overlay-content {
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+  cursor: default;
+}

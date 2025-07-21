@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import usePasswordRequirements from '../CustomHooks/usePasswordRequirements';
+import usePasswordRequirements from '../../customHooks/usePasswordRequirements';
 
 // Custom Icons
 const CheckIcon = () => (

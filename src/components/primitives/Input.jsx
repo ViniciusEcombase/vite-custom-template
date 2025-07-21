@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import useFieldValidation from '../CustomHooks/useFieldValidation';
+import useFieldValidation from '../../customHooks/useFieldValidation';
 import PasswordRequirements from './PasswordRequirements';
 
 const Input = ({
