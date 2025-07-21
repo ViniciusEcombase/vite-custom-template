@@ -1,8 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import Input from './Input';
-import Select from './Select';
-import Button from './Button';
-import InputPassword from './InputPassword';
+import Input from '../primitives/Input';
+import Select from '../primitives/Select';
+import Button from '../primitives/Button';
 
 const Form = ({ formData }) => {
   const [form, setForm] = useState(() =>
