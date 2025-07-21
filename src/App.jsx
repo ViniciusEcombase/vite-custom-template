@@ -1,6 +1,8 @@
 import React from 'react';
 import Form from './Components/Form';
-import Select from './Origamid/Select';
+import img from './assets/images/img.jpg';
+import DogSvg from './assets/svg/DogSvg';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const objetos = [
   {
@@ -40,8 +42,11 @@ const objetos = [
 const App = () => {
   return (
     <>
+      <DogSvg />
+
       <div style={{ marginTop: '100px' }} className="container">
         <Form validation={objetos} formData={objetos} />
+        <img src={img} alt="" />
       </div>
       {/* <Select /> */}
     </>
