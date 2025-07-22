@@ -1,86 +1,94 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import useFieldValidation from '../../customHooks/useFieldValidation';
 import PasswordRequirements from './PasswordRequirements';
 
-const Input = ({
-  id,
-  label,
-  type = 'text',
-  placeholder = 'Enter value',
-  initialValue = '',
-  validations = [],
-  onInputChange,
-  showPasswordRequirements = false,
-}) => {
-  const [showRequirements, setShowRequirements] = useState(false);
-
-  const handleValidationChange = useCallback(
-    (isValid) => {
-      onInputChange({ id, value: field.value, isValid });
+const Input = forwardRef(
+  (
+    {
+      id,
+      label,
+      type = 'text',
+      placeholder = 'Enter value',
+      initialValue = '',
+      validations = [],
+      showPasswordRequirements = false,
     },
-    [id, onInputChange]
-  );
+    ref
+  ) => {
+    const [showRequirements, setShowRequirements] = useState(false);
 
-  const field = useFieldValidation(
-    initialValue,
-    validations,
-    handleValidationChange
-  );
+    const field = useFieldValidation(initialValue, validations);
 
-  const handleChange = (event) => {
-    field.handleChange(event.target.value);
-  };
+    // Expose validation method to parent
+    useImperativeHandle(
+      ref,
+      () => ({
+        validate: field.validate,
+        getValue: () => field.value,
+        getIsValid: () => field.isValid,
+        setValue: field.setValue,
+      }),
+      [field.validate, field.value, field.isValid, field.setValue]
+    );
 
-  const handleFocus = () => {
-    if (showPasswordRequirements) {
-      setShowRequirements(true);
-    }
-  };
+    const handleChange = (event) => {
+      field.handleChange(event.target.value);
+    };
 
-  const handleBlur = () => {
-    field.handleBlur();
-    if (showPasswordRequirements && field.isValid) {
-      setShowRequirements(false);
-    }
-  };
+    const handleFocus = () => {
+      if (showPasswordRequirements) {
+        setShowRequirements(true);
+      }
+    };
 
-  const getInputClass = () => {
-    let classes = 'form-input';
-    if (field.touched) {
-      classes += field.isValid ? ' success' : ' error';
-    }
-    if (showPasswordRequirements && field.value.length > 0) {
-      classes += field.isValid ? ' valid-password' : ' invalid-password';
-    }
-    return classes;
-  };
+    const handleBlur = () => {
+      field.handleBlur();
+      // Keep requirements visible if password is invalid or empty
+      if (showPasswordRequirements) {
+        setShowRequirements(!field.isValid || field.value.length === 0);
+      }
+    };
 
-  return (
-    <div className={showPasswordRequirements ? 'form-input-password' : ''}>
-      <label className="form-label" htmlFor={id}>
-        {label}
-      </label>
-      <input
-        id={id}
-        type={type}
-        value={field.value}
-        onChange={handleChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        placeholder={placeholder}
-        className={getInputClass()}
-      />
-      {field.touched && field.error && (
-        <span className="form-error">{field.error}</span>
-      )}
-      {showPasswordRequirements && (
-        <PasswordRequirements
-          password={field.value}
-          isVisible={showRequirements}
+    const getInputClass = () => {
+      let classes = 'form-input';
+      if (field.touched) {
+        classes += field.isValid ? ' success' : ' error';
+      }
+      if (showPasswordRequirements && field.value.length > 0) {
+        classes += field.isValid ? ' valid-password' : ' invalid-password';
+      }
+      return classes;
+    };
+
+    return (
+      <div className={showPasswordRequirements ? 'form-input-password' : ''}>
+        <label className="form-label" htmlFor={id}>
+          {label}
+        </label>
+        <input
+          id={id}
+          type={type}
+          value={field.value}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          placeholder={placeholder}
+          className={getInputClass()}
         />
-      )}
-    </div>
-  );
-};
+        {field.touched && field.error && (
+          <span className="form-error">{field.error}</span>
+        )}
+        {showPasswordRequirements && (
+          <PasswordRequirements
+            password={field.value}
+            isVisible={showRequirements}
+          />
+        )}
+      </div>
+    );
+  }
+);
+
+Input.displayName = 'Input';
 
 export default Input;

@@ -1,0 +1,14 @@
+const options = {
+  method: 'GET', // or 'POST', 'PUT', 'DELETE', etc.
+  headers: {
+    'Content-Type': 'application/json', // Specifies the type of content being sent
+    Authorization: 'Bearer YOUR_AUTH_TOKEN', // For authenticated requests
+    Accept: 'application/json', // Specifies the type of content the client can accept
+    // Add other custom headers as needed
+  },
+  body: JSON.stringify({
+    // For POST, PUT requests, the data to be sent
+    key1: 'value1',
+    key2: 'value2',
+  }),
+};

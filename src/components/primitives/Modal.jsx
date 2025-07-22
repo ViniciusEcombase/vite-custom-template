@@ -1,29 +1,35 @@
 import React from 'react';
-import Overlay from './Overlay';
+import Button from './Button';
 
-const Modal = () => {
-  function handleClick(item) {
-    console.log(item);
-  }
-
+const Modal = ({
+    title = 'Modal Title',
+    message = 'Modal message',
+    confirmText = 'Confirm',
+    cancelText = 'Cancel',
+    onConfirm,
+    onCancel,
+    showCancel = true,
+}) => {
   return (
-    <>
-      <Overlay onButtonClick={handleClick}>
-        <div className="modal">
-          <div className="modal-header">
-            <h1 className="modal-title">Vini</h1>
-          </div>
+    <div className="modal">
+      <div className="modal-header">
+        <h1 id="modal-title" className="modal-title">
+          {title}
+        </h1>
+      </div>
 
-          <div className="modal-body">
-            <p>Deu erro hein!</p>
-          </div>
+      <div className="modal-body">
+        <p>{message}</p>
+      </div>
 
-          <div className="modal-footer">
-            <button className="btn">Tabom né</button>
-          </div>
-        </div>
-      </Overlay>
-    </>
+      <div className="modal-footer">
+        {showCancel && (
+          <Button onClick={onCancel} text={cancelText} variant="secondary" />
+        )}
+
+        <Button onClick={onConfirm} text={confirmText} variant="primary" />
+      </div>
+    </div>
   );
 };
 
