@@ -24,7 +24,11 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
   color: var(--color-white);
   box-shadow: var(--shadow-orange);
 }
@@ -38,6 +42,11 @@
   background: var(--color-gray-800);
   color: var(--color-text-primary);
   border-color: var(--color-gray-600);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-orange);
 }
 
 .btn-outline {
@@ -61,4 +70,6 @@
   font-size: var(--text-lg);
 }
 
-.btn-full { width: 100%; }
+.btn-full {
+  width: 100%;
+}

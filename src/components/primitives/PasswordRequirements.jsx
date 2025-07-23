@@ -1,58 +1,59 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import usePasswordRequirements from '../../customHooks/usePasswordRequirements';
-
-// Custom Icons
-const CheckIcon = () => (
-  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-    <path
-      fillRule="evenodd"
-      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const XIcon = () => (
-  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-    <path
-      fillRule="evenodd"
-      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
+import React, { useState, useEffect } from 'react';
 
 const PasswordRequirements = ({ password, isVisible }) => {
-  const { requirements, strengthClass } = usePasswordRequirements(password);
+  const [shouldRender, setShouldRender] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const requirements = [
+    { text: 'At least 8 characters', test: (pwd) => pwd.length >= 8 },
+    { text: 'One lowercase letter', test: (pwd) => /[a-z]/.test(pwd) },
+    { text: 'One uppercase letter', test: (pwd) => /[A-Z]/.test(pwd) },
+    { text: 'One number', test: (pwd) => /\d/.test(pwd) },
+    { text: 'One special character', test: (pwd) => /[@$!%?&]/.test(pwd) },
+  ];
+
+  useEffect(() => {
+    if (isVisible) {
+      // Show: render first, then animate in
+      setShouldRender(true);
+      // Use requestAnimationFrame for smoother animation
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsAnimating(true);
+        });
+      });
+    } else if (shouldRender) {
+      // Hide: animate out first, then stop rendering
+      setIsAnimating(false);
+      setTimeout(() => setShouldRender(false), 350); // Slightly longer to ensure animation completes
+    }
+  }, [isVisible, shouldRender]);
+
+  if (!shouldRender) {
+    return null;
+  }
 
   return (
-    <>
-      {/* Password Strength Indicator */}
-      <div className={`password-strength ${isVisible ? 'show' : 'hide'}`}>
-        <div className={`strength-bar ${strengthClass}`}></div>
+    <div className={`password-requirements ${isAnimating ? 'show' : ''}`}>
+      <div className="requirements-header">
+        <span>Password requirements:</span>
       </div>
-
-      {/* Password Requirements */}
-      <div className={`password-requirements ${isVisible ? 'show' : ''}`}>
-        <div className="requirements-header">
-          <span>Password must contain:</span>
-        </div>
-        <div className="requirements-list">
-          {requirements.map((req) => {
-            const isValid = req.test(password);
-            return (
-              <div
-                key={req.id}
-                className={`requirement-item ${isValid ? 'valid' : 'invalid'}`}
-              >
-                <div className="requirement-icon">{isValid ? '✓' : '○'}</div>
-                <span className="requirement-text">{req.text}</span>
-              </div>
-            );
-          })}
-        </div>
+      <div className="requirements-list">
+        {requirements.map((req, index) => {
+          const isValid = req.test(password || '');
+          return (
+            <div
+              key={index}
+              className={`requirement-item ${isValid ? 'valid' : 'invalid'}`}
+            >
+              <div className="requirement-icon">{isValid ? '✓' : '○'}</div>
+              <span className="requirement-text">{req.text}</span>
+            </div>
+          );
+        })}
       </div>
-    </>
+    </div>
   );
 };
+
 export default PasswordRequirements;
