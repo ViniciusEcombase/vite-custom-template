@@ -12,14 +12,15 @@ const Input = forwardRef(
       initialValue = '',
       validations = [],
       showPasswordRequirements = false,
+      getFormValues = () => ({}), // ✅ default empty
+      onChangeNotify, // ✅ added if you're using it
     },
     ref
   ) => {
     const [showRequirements, setShowRequirements] = useState(false);
-
     const field = useFieldValidation(initialValue, validations);
 
-    // Expose validation method to parent
+    // Expose methods to parent
     useImperativeHandle(
       ref,
       () => ({
@@ -32,7 +33,9 @@ const Input = forwardRef(
     );
 
     const handleChange = (event) => {
-      field.handleChange(event.target.value);
+      const newValue = event.target.value;
+      field.handleChange(newValue, getFormValues()); // ✅ correct usage
+      if (onChangeNotify) onChangeNotify();
     };
 
     const handleFocus = () => {
@@ -42,8 +45,7 @@ const Input = forwardRef(
     };
 
     const handleBlur = () => {
-      field.handleBlur();
-      // Keep requirements visible if password is invalid or empty
+      field.handleBlur(getFormValues()); // ✅ pass full form context
       if (showPasswordRequirements) {
         setShowRequirements(!field.isValid || field.value.length === 0);
       }
@@ -90,5 +92,4 @@ const Input = forwardRef(
 );
 
 Input.displayName = 'Input';
-
 export default Input;

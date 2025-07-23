@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const PasswordRequirements = ({ password, isVisible }) => {
+  const [shouldRender, setShouldRender] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
   const requirements = [
     { text: 'At least 8 characters', test: (pwd) => pwd.length >= 8 },
     { text: 'One lowercase letter', test: (pwd) => /[a-z]/.test(pwd) },
@@ -9,8 +12,29 @@ const PasswordRequirements = ({ password, isVisible }) => {
     { text: 'One special character', test: (pwd) => /[@$!%?&]/.test(pwd) },
   ];
 
+  useEffect(() => {
+    if (isVisible) {
+      // Show: render first, then animate in
+      setShouldRender(true);
+      // Use requestAnimationFrame for smoother animation
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsAnimating(true);
+        });
+      });
+    } else if (shouldRender) {
+      // Hide: animate out first, then stop rendering
+      setIsAnimating(false);
+      setTimeout(() => setShouldRender(false), 350); // Slightly longer to ensure animation completes
+    }
+  }, [isVisible, shouldRender]);
+
+  if (!shouldRender) {
+    return null;
+  }
+
   return (
-    <div className={`password-requirements ${isVisible ? 'show' : ''}`}>
+    <div className={`password-requirements ${isAnimating ? 'show' : ''}`}>
       <div className="requirements-header">
         <span>Password requirements:</span>
       </div>

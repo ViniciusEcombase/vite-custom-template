@@ -12,7 +12,6 @@ const useFieldValidation = (initialValue = '', validations = []) => {
   const [error, setError] = useState('');
   const [touched, setTouched] = useState(false);
   const [isValid, setIsValid] = useState(() => {
-    // Initial validation state - only invalid if required and empty
     const hasRequired = validations.some((rule) => rule.type === 'required');
     return !(hasRequired && !initialValue?.toString().trim());
   });
@@ -77,6 +76,7 @@ const useFieldValidation = (initialValue = '', validations = []) => {
             break;
 
           case 'matches':
+            console.log(formValues)
             if (value !== formValues[rule.fieldToMatch]) {
               return { isValid: false, error: rule.message };
             }
@@ -122,28 +122,30 @@ const useFieldValidation = (initialValue = '', validations = []) => {
     [validateField, validations]
   );
 
+  // ✅ Accept formValues here
   const handleChange = useCallback(
-    (newValue) => {
+    (newValue, formValues = {}) => {
       setValue(newValue);
 
-      // Clear previous timeout
       if (validationTimeoutRef.current) {
         clearTimeout(validationTimeoutRef.current);
       }
 
-      // Debounce validation for better performance
       validationTimeoutRef.current = setTimeout(() => {
-        runValidation(newValue);
+        runValidation(newValue, formValues);
       }, 300);
     },
     [runValidation]
   );
 
-  const handleBlur = useCallback(() => {
-    setTouched(true);
-    // Immediate validation on blur
-    runValidation(value);
-  }, [runValidation, value]);
+  // ✅ Accept formValues here
+  const handleBlur = useCallback(
+    (formValues = {}) => {
+      setTouched(true);
+      runValidation(value, formValues);
+    },
+    [runValidation, value]
+  );
 
   const validate = useCallback(
     (formValues = {}) => {
@@ -152,7 +154,6 @@ const useFieldValidation = (initialValue = '', validations = []) => {
     [runValidation, value]
   );
 
-  // Cleanup
   useEffect(() => {
     return () => {
       mountedRef.current = false;

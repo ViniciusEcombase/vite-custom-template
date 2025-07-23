@@ -17,6 +17,45 @@ const Form = ({ formData, onSubmit, label }) => {
     return inputRefs.current[fieldId];
   }, []);
 
+  // ✅ ADD THIS FUNCTION - This lets each input know about other field values
+  const getFormValues = useCallback(() => {
+    const formValues = {};
+    Object.keys(inputRefs.current).forEach((fieldId) => {
+      const inputRef = inputRefs.current[fieldId]?.current;
+      if (inputRef) {
+        formValues[fieldId] = inputRef.getValue();
+      }
+    });
+    return formValues;
+  }, []);
+
+  // ✅ ADD THIS FUNCTION - Re-validate related fields when one changes
+  const handleFieldChange = useCallback(
+    (changedFieldId) => {
+      // If password changed, re-validate confirm password
+      if (changedFieldId === 'password') {
+        const confirmRef = inputRefs.current['confirmPassword']?.current;
+        if (confirmRef && confirmRef.getValue()) {
+          // Small delay to ensure the password field has updated
+          setTimeout(() => {
+            confirmRef.validate(getFormValues());
+          }, 50);
+        }
+      }
+
+      // If confirm password changed, re-validate password (if it has matching rules)
+      if (changedFieldId === 'confirmPassword') {
+        const passwordRef = inputRefs.current['password']?.current;
+        if (passwordRef && passwordRef.getValue()) {
+          setTimeout(() => {
+            passwordRef.validate(getFormValues());
+          }, 50);
+        }
+      }
+    },
+    [getFormValues]
+  );
+
   const validateAllFields = async () => {
     const formValues = {};
     const validationResults = {};
@@ -58,7 +97,7 @@ const Form = ({ formData, onSubmit, label }) => {
       const { isValid, values, validationResults } = await validateAllFields();
 
       if (isValid) {
-        showDialog({
+        showConfirmDialog({
           title: 'Success',
           message: 'Form submitted successfully!',
         });
@@ -113,6 +152,8 @@ const Form = ({ formData, onSubmit, label }) => {
               fieldConfig.showPasswordRequirements || false
             }
             initialValue={fieldConfig.initialValue || ''}
+            getFormValues={getFormValues} // ✅ ADD THIS LINE - Pass the function to each input
+            onChangeNotify={() => handleFieldChange(fieldConfig.id)} // ✅ ADD THIS LINE - Notify when field changes
           />
         ))}
       </div>
