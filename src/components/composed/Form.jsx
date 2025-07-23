@@ -97,18 +97,13 @@ const Form = ({ formData, onSubmit, label }) => {
       const { isValid, values, validationResults } = await validateAllFields();
 
       if (isValid) {
-        showConfirmDialog({
-          title: 'Success',
-          message: 'Form submitted successfully!',
-        });
-
         if (onSubmit) {
           await onSubmit(values);
         } else {
           alert('Form submitted successfully!');
         }
       } else {
-        console.log('Validation errors:', validationResults);
+        console.log('Validation errors:', validationResults, values);
         showConfirmDialog({
           title: 'Validation Error',
           message: 'Fix validations errors first',

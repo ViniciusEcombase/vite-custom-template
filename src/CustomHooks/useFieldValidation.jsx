@@ -5,6 +5,9 @@ const regexPatterns = {
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/,
   email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   username: /^[a-zA-Z0-9_]{2,16}$/,
+  postal_code: /^\d{5}-\d{3}$/,
+  cpf: /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/,
+  cnpj: /^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/,
 };
 
 const useFieldValidation = (initialValue = '', validations = []) => {
@@ -76,7 +79,7 @@ const useFieldValidation = (initialValue = '', validations = []) => {
             break;
 
           case 'matches':
-            console.log(formValues)
+            console.log(formValues);
             if (value !== formValues[rule.fieldToMatch]) {
               return { isValid: false, error: rule.message };
             }

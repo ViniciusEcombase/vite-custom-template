@@ -5,9 +5,15 @@ const Button = ({
   onClick,
   disabled,
   variant = 'primary',
+  size = 'full', // sm | md | lg
   fullWidth = false,
 }) => {
-  const classNames = ['btn', `btn-${variant}`, fullWidth && 'btn-full']
+  const classNames = [
+    'btn',
+    `btn-${variant}`,
+    `btn-${size}`,
+    fullWidth && 'btn-full',
+  ]
     .filter(Boolean)
     .join(' ');
 

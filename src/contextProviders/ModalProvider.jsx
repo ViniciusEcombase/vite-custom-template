@@ -42,10 +42,70 @@ class ModalErrorBoundary extends React.Component {
   }
 }
 
+// Countdown Bar Component
+const CountdownBar = ({ duration, onComplete, isActive }) => {
+  const [timeLeft, setTimeLeft] = useState(duration);
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    if (!isActive) return;
+
+    setTimeLeft(duration);
+
+    intervalRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(intervalRef.current);
+          onComplete?.();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [duration, onComplete, isActive]);
+
+  // Calculate percentage for progress bar
+  const progress = ((duration - timeLeft) / duration) * 100;
+
+  return (
+    <div className="countdown-container">
+      <div className="countdown-bar">
+        <div className="countdown-progress" style={{ width: `${progress}%` }} />
+      </div>
+      <div className="countdown-text">
+        Redirecting in {timeLeft} second{timeLeft !== 1 ? 's' : ''}...
+      </div>
+    </div>
+  );
+};
+
 // Modal Container Component
 const ModalContainer = ({ children, onClose, isVisible }) => {
   const modalRef = useRef(null);
   const previouslyFocusedElement = useRef(null);
+
+  // Handle animation completion to enable scrolling
+  useEffect(() => {
+    if (isVisible && modalRef.current) {
+      // Remove the class first (in case of re-opening)
+      modalRef.current.classList.remove('animation-complete');
+
+      // Add the class after animation completes (300ms)
+      const timer = setTimeout(() => {
+        if (modalRef.current) {
+          modalRef.current.classList.add('animation-complete');
+        }
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible]);
 
   // Focus management
   useEffect(() => {
@@ -111,13 +171,46 @@ const ModalContainer = ({ children, onClose, isVisible }) => {
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isVisible) {
+      // Get the current scroll bar width
+      const scrollBarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+
+      // Apply styles to prevent layout shift
       document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollBarWidth}px`;
+
+      // Also apply to fixed elements if needed
+      const fixedElements = document.querySelectorAll(
+        '[data-fixed-compensate]'
+      );
+      fixedElements.forEach((el) => {
+        el.style.paddingRight = `${scrollBarWidth}px`;
+      });
     } else {
+      // Reset styles
       document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+
+      // Reset fixed elements
+      const fixedElements = document.querySelectorAll(
+        '[data-fixed-compensate]'
+      );
+      fixedElements.forEach((el) => {
+        el.style.paddingRight = '';
+      });
     }
 
     return () => {
+      // Cleanup
       document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+
+      const fixedElements = document.querySelectorAll(
+        '[data-fixed-compensate]'
+      );
+      fixedElements.forEach((el) => {
+        el.style.paddingRight = '';
+      });
     };
   }, [isVisible]);
 
@@ -232,20 +325,38 @@ export const useModalActions = () => {
       message = 'This is an alert dialog with important information.',
       confirmText = 'OK',
       onClose,
+      // New countdown options
+      showCountdown = false,
+      countdownDuration = 5,
+      onCountdownComplete,
     }) => {
       const handleClose = () => {
         onClose?.();
         closeModal();
       };
 
+      const handleCountdownComplete = () => {
+        onCountdownComplete?.();
+        closeModal();
+      };
+
       openModal(
-        <Modal
-          title={title}
-          message={message}
-          confirmText={confirmText}
-          onConfirm={handleClose}
-          showCancel={false}
-        />
+        <div>
+          <Modal
+            title={title}
+            message={message}
+            confirmText={confirmText}
+            onConfirm={handleClose}
+            showCancel={false}
+          />
+          {showCountdown && (
+            <CountdownBar
+              duration={countdownDuration}
+              onComplete={handleCountdownComplete}
+              isActive={true}
+            />
+          )}
+        </div>
       );
     },
     [openModal, closeModal]

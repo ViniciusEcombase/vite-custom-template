@@ -1,12 +1,20 @@
 import React from 'react';
 import { ModalProvider } from './contextProviders/ModalProvider';
-import Home from './Home';
+import SignUp from './components/pages/SignUp';
+import Home from './components/pages/Home';
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const App = () => {
   return (
-    <ModalProvider>
-      <Home />
-    </ModalProvider>
+    <BrowserRouter>
+      <ModalProvider>
+        <Routes>
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </ModalProvider>
+    </BrowserRouter>
   );
 };
 

@@ -1,4 +1,9 @@
-import React, { useState, useImperativeHandle, forwardRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
 import useFieldValidation from '../../customHooks/useFieldValidation';
 import PasswordRequirements from './PasswordRequirements';
 
@@ -14,6 +19,7 @@ const Input = forwardRef(
       showPasswordRequirements = false,
       getFormValues = () => ({}), // ✅ default empty
       onChangeNotify, // ✅ added if you're using it
+      onValidChange,
     },
     ref
   ) => {
@@ -61,6 +67,13 @@ const Input = forwardRef(
       }
       return classes;
     };
+
+    useEffect(() => {
+      if (field.isValid) {
+        onValidChange?.(field.value);
+        console.log(field.value);
+      }
+    }, [field.value, field.isValid, onValidChange]);
 
     return (
       <div className={showPasswordRequirements ? 'form-input-password' : ''}>
