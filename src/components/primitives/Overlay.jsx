@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import '../../Styles/components/_overlay.css';
 
-const Overlay = ({ children, onButtonClick }) => {
+const Overlay = ({ children, onClose, onClickOut = () => null }) => {
   const [overlay, setOverlay] = useState(true);
 
   function handleClick(e) {
-    onButtonClick({ currentTaget: e.currentTarget, target: e.target });
-
     if (e.target === e.currentTarget) {
       setOverlay(!overlay);
+      document.body.classList.remove('overlay-body');
+      onClickOut();
     }
   }
 
+  if (overlay) {
+    console.log(document.body);
+    document.body.classList.add('overlay-body');
+  } else {
+  }
   return (
     <>
       {overlay && (

@@ -1,11 +1,9 @@
-import React from 'react';
 import Logo from '../primitives/Logo';
 import SearchBar from '../primitives/SearchBar';
 import UserAuth from '../primitives/UserAuth';
 import Cart from '../primitives/Cart';
 import { useAuth } from '../../customHooks/useAuth';
 import { useCart } from '../../customHooks/useCart';
-import Input from '../primitives/Input';
 
 const Header = () => {
   const { isLoggedIn, user, login, logout } = useAuth();
@@ -20,6 +18,11 @@ const Header = () => {
     { id: 1, name: 'Premium Wireless Headphones', price: 299.99, quantity: 2 },
     { id: 2, name: 'Smart Watch Series 8', price: 399.99, quantity: 1 },
     { id: 3, name: 'Wireless Charging Pad', price: 49.99, quantity: 1 },
+    { id: 4, name: 'Wireless Charging Pad', price: 49.99, quantity: 1 },
+    { id: 5, name: 'Wireless Charging Pad', price: 49.99, quantity: 1 },
+    { id: 6, name: 'Wireless Charging Pad', price: 49.99, quantity: 1 },
+    { id: 6, name: 'Wireless Charging Pad', price: 49.99, quantity: 1 },
+    { id: 6, name: 'Wireless Charging Pad', price: 49.99, quantity: 1 },
   ]);
 
   const handleSearch = (searchTerm) => {

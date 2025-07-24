@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useModalActions } from '../../contextProviders/ModalProvider';
 import Form from '../composed/Form';
 import useFetch from '../../customHooks/useFetch';

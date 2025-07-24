@@ -1,5 +1,6 @@
 import React from 'react';
 import CartItem from '../primitives/CartItem';
+import Overlay from './Overlay';
 
 const CartDropdown = ({
   cartItems,
@@ -22,7 +23,7 @@ const CartDropdown = ({
   }
 
   return (
-    <div className="cart-dropdown">
+    <div className="cart-dropdown animate-slide-in-right overlay-content">
       <div className="cart-header">Shopping Cart ({cartItemCount} items)</div>
 
       <div className="cart-items">
