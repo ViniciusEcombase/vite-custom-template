@@ -141,8 +141,10 @@ const UserAuth = ({ isLoggedIn, user, onLogin, onLogout, onUserAction }) => {
         <span>{user?.name || 'User'}</span>
         <ChevronDownIcon />
       </button>
+
       {showUserMenu && (
-        <div>
+        <div className="user-menu-wrapper">
+          {/* 👇 This is your dropdown */}
           <UserMenu
             user={user}
             onUserAction={handleUserAction}

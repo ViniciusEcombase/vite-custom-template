@@ -5,6 +5,7 @@ import UserAuth from '../primitives/UserAuth';
 import Cart from '../primitives/Cart';
 import { useAuth } from '../../customHooks/useAuth';
 import { useCart } from '../../customHooks/useCart';
+import Input from '../primitives/Input';
 
 const Header = () => {
   const { isLoggedIn, user, login, logout } = useAuth();
@@ -41,39 +42,35 @@ const Header = () => {
   };
 
   return (
-    <div>
-      <header className="header">
-        <div className="container header-container">
-          <Logo />
+    <header className="header">
+      <div className="container header-container">
+        <Logo />
 
-          <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} />
 
-          <div className="header-actions">
-            <div className="login-section">
-              <UserAuth
-                isLoggedIn={isLoggedIn}
-                user={user}
-                onLogin={login}
-                onLogout={logout}
-                onUserAction={handleUserAction}
-              />
-            </div>
-
-            <Cart
-              cartItems={cartItems}
-              cartTotal={cartTotal}
-              cartItemCount={cartItemCount}
-              onUpdateQuantity={updateQuantity}
-              onRemoveItem={removeFromCart}
-              onViewCart={handleViewCart}
-              onCheckout={handleCheckout}
+        <div className="header-actions">
+          <div className="login-section">
+            <UserAuth
+              isLoggedIn={isLoggedIn}
+              user={user}
+              onLogin={login}
+              onLogout={logout}
+              onUserAction={handleUserAction}
             />
           </div>
-        </div>
-      </header>
 
-      {/* DEMO/TESTING SECTION - Remove in production */}
-    </div>
+          <Cart
+            cartItems={cartItems}
+            cartTotal={cartTotal}
+            cartItemCount={cartItemCount}
+            onUpdateQuantity={updateQuantity}
+            onRemoveItem={removeFromCart}
+            onViewCart={handleViewCart}
+            onCheckout={handleCheckout}
+          />
+        </div>
+      </div>
+    </header>
   );
 };
 

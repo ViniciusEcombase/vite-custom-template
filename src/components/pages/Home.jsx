@@ -3,9 +3,9 @@ import Header from '../composed/Header';
 
 const Home = () => {
   return (
-    <div>
+    <>
       <Header />
-    </div>
+    </>
   );
 };
 

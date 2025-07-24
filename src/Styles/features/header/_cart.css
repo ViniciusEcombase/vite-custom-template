@@ -64,10 +64,6 @@
   overflow: hidden;
 }
 
-.cart-dropdown.active {
-  display: block;
-}
-
 .cart-header {
   padding: var(--space-4);
   border-bottom: 1px solid var(--color-gray-700);
