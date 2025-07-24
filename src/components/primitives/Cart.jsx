@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CartDropdown from '../primitives/CartDropdown';
 import { useClickOutside } from '../../customHooks/useClickOutside';
+import Overlay from './Overlay';
 
 const CartIcon = () => (
   <svg
@@ -40,21 +41,27 @@ const Cart = ({
       </button>
 
       {showCartDropdown && (
-        <CartDropdown
-          cartItems={cartItems}
-          cartTotal={cartTotal}
-          cartItemCount={cartItemCount}
-          onUpdateQuantity={onUpdateQuantity}
-          onRemoveItem={onRemoveItem}
-          onViewCart={() => {
-            onViewCart();
+        <Overlay
+          onClickOut={() => {
             setShowCartDropdown(false);
           }}
-          onCheckout={() => {
-            onCheckout();
-            setShowCartDropdown(false);
-          }}
-        />
+        >
+          <CartDropdown
+            cartItems={cartItems}
+            cartTotal={cartTotal}
+            cartItemCount={cartItemCount}
+            onUpdateQuantity={onUpdateQuantity}
+            onRemoveItem={onRemoveItem}
+            onViewCart={() => {
+              onViewCart();
+              setShowCartDropdown(false);
+            }}
+            onCheckout={() => {
+              onCheckout();
+              setShowCartDropdown(false);
+            }}
+          />
+        </Overlay>
       )}
     </div>
   );

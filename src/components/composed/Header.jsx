@@ -1,4 +1,3 @@
-import React from 'react';
 import Logo from '../primitives/Logo';
 import SearchBar from '../primitives/SearchBar';
 import UserAuth from '../primitives/UserAuth';
@@ -19,6 +18,11 @@ const Header = () => {
     { id: 1, name: 'Premium Wireless Headphones', price: 299.99, quantity: 2 },
     { id: 2, name: 'Smart Watch Series 8', price: 399.99, quantity: 1 },
     { id: 3, name: 'Wireless Charging Pad', price: 49.99, quantity: 1 },
+    { id: 4, name: 'Wireless Charging Pad', price: 49.99, quantity: 1 },
+    { id: 5, name: 'Wireless Charging Pad', price: 49.99, quantity: 1 },
+    { id: 6, name: 'Wireless Charging Pad', price: 49.99, quantity: 1 },
+    { id: 6, name: 'Wireless Charging Pad', price: 49.99, quantity: 1 },
+    { id: 6, name: 'Wireless Charging Pad', price: 49.99, quantity: 1 },
   ]);
 
   const handleSearch = (searchTerm) => {
@@ -41,39 +45,35 @@ const Header = () => {
   };
 
   return (
-    <div>
-      <header className="header">
-        <div className="container header-container">
-          <Logo />
+    <header className="header">
+      <div className="container header-container">
+        <Logo />
 
-          <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} />
 
-          <div className="header-actions">
-            <div className="login-section">
-              <UserAuth
-                isLoggedIn={isLoggedIn}
-                user={user}
-                onLogin={login}
-                onLogout={logout}
-                onUserAction={handleUserAction}
-              />
-            </div>
-
-            <Cart
-              cartItems={cartItems}
-              cartTotal={cartTotal}
-              cartItemCount={cartItemCount}
-              onUpdateQuantity={updateQuantity}
-              onRemoveItem={removeFromCart}
-              onViewCart={handleViewCart}
-              onCheckout={handleCheckout}
+        <div className="header-actions">
+          <div className="login-section">
+            <UserAuth
+              isLoggedIn={isLoggedIn}
+              user={user}
+              onLogin={login}
+              onLogout={logout}
+              onUserAction={handleUserAction}
             />
           </div>
-        </div>
-      </header>
 
-      {/* DEMO/TESTING SECTION - Remove in production */}
-    </div>
+          <Cart
+            cartItems={cartItems}
+            cartTotal={cartTotal}
+            cartItemCount={cartItemCount}
+            onUpdateQuantity={updateQuantity}
+            onRemoveItem={removeFromCart}
+            onViewCart={handleViewCart}
+            onCheckout={handleCheckout}
+          />
+        </div>
+      </div>
+    </header>
   );
 };
 

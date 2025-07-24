@@ -1,0 +1,433 @@
+
+\color{#ff9900}\Large\text{Hook type:} \color{#88bbff}\Large\text{'Custom React Hook'}
+
+
+---
+
+---
+
+
+\color{#ff9900}\Huge\text {Parameters}
+
+
+\color{#ff9900}\Large\text { initialValue: }\color{#fff}\large\text { Default value for the field when initialized. }
+
+\color{#ff9900}\Large\text { validations: }\color{#fff}\large\text { Array of validation rules to apply to the field. }
+
+\color{#ff9900}\Large\text { options: }\color{#fff}\large\text { Configuration object for validation behavior. }
+
+---
+
+---
+
+
+\color{#ff9900}\Huge\text { initialValue }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { string | number | boolean }
+
+\color{#ff9900}\Large\text { Required: }\color{#88bbff}\Large\text { No }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { The initial value for the field when the hook is initialized.}
+
+\color{#ff9900}\Large\text { Default: }\color{#88bbff}\Large\text { '' }
+
+---
+
+
+\color{#ff9900}\Huge\text { validations }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { ValidationRule[] }
+
+\color{#ff9900}\Large\text { Required: }\color{#88bbff}\Large\text { No }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Array of validation rules to apply. Each rule defines validation logic and error messages. }
+
+\color{#ff9900}\Large\text { Default: }\color{#88bbff}\Large\text { [] }
+
+---
+
+
+\color{#ff9900}\Huge\text { options }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { ValidationOptions }
+
+\color{#ff9900}\Large\text { Required: }\color{#88bbff}\Large\text { No }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Configuration object to customize validation behavior. }
+
+\color{#ff9900}\Large\text { Default: }\color{#88bbff}\Large\text { {} }
+
+---
+
+
+\color{#ff9900}\Huge\text { Options Properties }
+
+
+\color{#ff9900}\Large\text { validateOn: }\color{#fff}\large\text { When to trigger validation (change, blur, or both). }
+
+\color{#ff9900}\Large\text { debounceMs: }\color{#fff}\large\text { Debounce delay for validation in milliseconds. }
+
+\color{#ff9900}\Large\text { validateOnMount: }\color{#fff}\large\text { Whether to validate the field when component mounts. }
+
+\color{#ff9900}\Large\text { transformValue: }\color{#fff}\large\text { Function to transform the value before setting it. }
+
+---
+
+
+\color{#ff9900}\Huge\text { validateOn }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { String }
+
+\color{#ff9900}\Large\text { Required: }\color{#88bbff}\Large\text { No }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Defines when validation should be triggered. }
+
+\color{#ff9900}\Large\text { Options: } \color{#88bbff}\Large\text { 'change' }, \color{#88bbff}\Large\text { 'blur' }, \color{#88bbff}\Large\text { 'both' }
+
+\color{#ff9900}\Large\text { Default: }\color{#88bbff}\Large\text { 'both' }
+
+---
+
+
+\color{#ff9900}\Huge\text { debounceMs }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Number }
+
+\color{#ff9900}\Large\text { Required: }\color{#88bbff}\Large\text { No }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Delay in milliseconds before validation is triggered after value changes. }
+
+\color{#ff9900}\Large\text { Default: }\color{#88bbff}\Large\text { 300 }
+
+---
+
+
+\color{#ff9900}\Huge\text { validateOnMount }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Boolean }
+
+\color{#ff9900}\Large\text { Required: }\color{#88bbff}\Large\text { No }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Whether to run validation immediately when the component mounts. }
+
+\color{#ff9900}\Large\text { Default: }\color{#88bbff}\Large\text { false }
+
+---
+
+
+\color{#ff9900}\Huge\text { transformValue }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Function }
+
+\color{#ff9900}\Large\text { Required: }\color{#88bbff}\Large\text { No }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Function to transform the value before setting it (e.g., formatting). }
+
+\color{#ff9900}\Large\text { Default: }\color{#88bbff}\Large\text { null }
+
+---
+
+
+\color{#ff9900}\Huge\text { Return Values }
+
+
+\color{#ff9900}\Large\text { value: }\color{#fff}\large\text { Current field value. }
+
+\color{#ff9900}\Large\text { error: }\color{#fff}\large\text { Current validation error message. }
+
+\color{#ff9900}\Large\text { touched: }\color{#fff}\large\text { Whether the field has been interacted with. }
+
+\color{#ff9900}\Large\text { isValid: }\color{#fff}\large\text { Whether the field passes all validations. }
+
+\color{#ff9900}\Large\text { isValidating: }\color{#fff}\large\text { Whether async validation is in progress. }
+
+\color{#ff9900}\Large\text { showError: }\color{#fff}\large\text { Computed property for displaying errors (touched && error). }
+
+\color{#ff9900}\Large\text { hasValue: }\color{#fff}\large\text { Computed property indicating if field has non-empty value. }
+
+\color{#ff9900}\Large\text { handleChange: }\color{#fff}\large\text { Function to update field value. }
+
+\color{#ff9900}\Large\text { handleBlur: }\color{#fff}\large\text { Function to handle field blur event. }
+
+\color{#ff9900}\Large\text { validate: }\color{#fff}\large\text { Function to manually trigger validation. }
+
+\color{#ff9900}\Large\text { setValue: }\color{#fff}\large\text { Function to set value without validation. }
+
+\color{#ff9900}\Large\text { reset: }\color{#fff}\large\text { Function to reset field to initial state. }
+
+---
+
+
+\color{#ff9900}\Huge\text { value }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { string | number | boolean }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { The current value of the field. }
+
+---
+
+
+\color{#ff9900}\Huge\text { error }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { String }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { The current validation error message, empty string if valid. }
+
+---
+
+
+\color{#ff9900}\Huge\text { touched }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Boolean }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Indicates whether the user has interacted with the field (blur event). }
+
+---
+
+
+\color{#ff9900}\Huge\text { isValid }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Boolean }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Indicates whether the field passes all validation rules. }
+
+---
+
+
+\color{#ff9900}\Huge\text { isValidating }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Boolean }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Indicates whether asynchronous validation is currently in progress. }
+
+---
+
+
+\color{#ff9900}\Huge\text { showError }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Boolean }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Computed property that returns true when error should be displayed (touched && error). }
+
+---
+
+
+\color{#ff9900}\Huge\text { hasValue }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Boolean }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Computed property indicating whether the field has a non-empty value. }
+
+---
+
+
+\color{#ff9900}\Huge\text { handleChange }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Function }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Function to update the field value and trigger validation if configured. }
+
+\color{#ff9900}\Large\text { Signature: }\color{#88bbff}\Large\text { (newValue, formValues?) => void }
+
+---
+
+
+\color{#ff9900}\Huge\text { handleBlur }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Function }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Function to handle blur event and trigger validation if configured. }
+
+\color{#ff9900}\Large\text { Signature: }\color{#88bbff}\Large\text { (formValues?) => void }
+
+---
+
+
+\color{#ff9900}\Huge\text { validate }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Function }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Function to manually trigger validation and return the result. }
+
+\color{#ff9900}\Large\text { Signature: }\color{#88bbff}\Large\text { (formValues?) => Promise<{isValid: boolean, error: string}> }
+
+---
+
+
+\color{#ff9900}\Huge\text { setValue }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Function }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Function to set the field value directly without triggering validation. }
+
+\color{#ff9900}\Large\text { Signature: }\color{#88bbff}\Large\text { (newValue) => void }
+
+---
+
+
+\color{#ff9900}\Huge\text { reset }
+
+
+\color{#ff9900}\Large\text { Type: }\color{#88bbff}\Large\text { Function }
+
+\color{#ff9900}\Large\text { Definition: }\color{#fff}\Large\text { Function to reset the field to its initial state or a new value. }
+
+\color{#ff9900}\Large\text { Signature: }\color{#88bbff}\Large\text { (newValue?) => void }
+
+---
+
+
+\color{#ff9900}\Huge\text { Validation Rules }
+
+
+\color{#ff9900}\Large\text { required: }\color{#fff}\large\text { Validates that the field has a non-empty value. }
+
+\color{#ff9900}\Large\text { minLength: }\color{#fff}\large\text { Validates minimum string length. }
+
+\color{#ff9900}\Large\text { maxLength: }\color{#fff}\large\text { Validates maximum string length. }
+
+\color{#ff9900}\Large\text { min: }\color{#fff}\large\text { Validates minimum numeric value. }
+
+\color{#ff9900}\Large\text { max: }\color{#fff}\large\text { Validates maximum numeric value. }
+
+\color{#ff9900}\Large\text { regex: }\color{#fff}\large\text { Validates against predefined or custom regex patterns. }
+
+\color{#ff9900}\Large\text { url: }\color{#fff}\large\text { Validates URL format using native URL constructor. }
+
+\color{#ff9900}\Large\text { number: }\color{#fff}\large\text { Validates that the value is a valid number. }
+
+\color{#ff9900}\Large\text { matches: }\color{#fff}\large\text { Validates that the field matches another field in the form. }
+
+\color{#ff9900}\Large\text { custom: }\color{#fff}\large\text { Custom synchronous validation function. }
+
+\color{#ff9900}\Large\text { async: }\color{#fff}\large\text { Custom asynchronous validation function with abort signal support. }
+
+---
+
+
+\color{#ff9900}\Huge\text { Predefined Regex Patterns }
+
+
+\color{#ff9900}\Large\text { strongPassword: }\color{#fff}\large\text { Strong password with uppercase, lowercase, number, and special character. }
+
+\color{#ff9900}\Large\text { email: }\color{#fff}\large\text { Standard email format validation. }
+
+\color{#ff9900}\Large\text { username: }\color{#fff}\large\text { Alphanumeric username (2-16 characters). }
+
+\color{#ff9900}\Large\text { postal_code: }\color{#fff}\large\text { Brazilian postal code format (12345-678). }
+
+\color{#ff9900}\Large\text { cpf: }\color{#fff}\large\text { Brazilian CPF format (123.456.789-01). }
+
+\color{#ff9900}\Large\text { cnpj: }\color{#fff}\large\text { Brazilian CNPJ format (12.345.678/0001-90). }
+
+\color{#ff9900}\Large\text { phone: }\color{#fff}\large\text { Brazilian phone format ((11) 99999-9999). }
+
+\color{#ff9900}\Large\text { date: }\color{#fff}\large\text { Date format DD/MM/YYYY. }
+
+\color{#ff9900}\Large\text { time: }\color{#fff}\large\text { Time format HH:MM (24-hour). }
+
+\color{#ff9900}\Large\text { creditCard: }\color{#fff}\large\text { Credit card format with spaces (1234 5678 9012 3456). }
+
+---
+
+
+\color{#ff9900}\Huge\text { Usage Examples }
+
+
+```jsx
+// Basic usage
+const nameField = useFieldValidation('', [
+  { type: 'required', message: 'Name is required' },
+  { type: 'minLength', value: 2, message: 'Name must be at least 2 characters' }
+]);
+
+// Email validation with predefined pattern
+const emailField = useFieldValidation('', [
+  { type: 'required', message: 'Email is required' },
+  { type: 'regex', pattern: 'email', message: 'Please enter a valid email' }
+]);
+
+// Password with confirmation matching
+const passwordField = useFieldValidation('', [
+  { type: 'required', message: 'Password is required' },
+  { type: 'regex', pattern: 'strongPassword', message: 'Password must be strong' }
+]);
+
+const confirmPasswordField = useFieldValidation('', [
+  { type: 'required', message: 'Please confirm password' },
+  { type: 'matches', fieldToMatch: 'password', message: 'Passwords must match' }
+]);
+
+// Custom validation options
+const phoneField = useFieldValidation('', [
+  { type: 'regex', pattern: 'phone', message: 'Invalid phone format' }
+], {
+  validateOn: 'blur',
+  debounceMs: 500,
+  transformValue: (value) => value.replace(/\D/g, ''),
+  validateOnMount: true
+});
+
+// Async validation
+const usernameField = useFieldValidation('', [
+  { type: 'required', message: 'Username is required' },
+  { 
+    type: 'async',
+    validate: async (value, formValues, signal) => {
+      const response = await fetch(`/api/users/check/{value}`, { signal });
+      const data = await response.json();
+      return data.available;
+    },
+    message: 'Username is already taken'
+  }
+]);
+
+// Using in JSX
+<input
+  value={emailField.value}
+  onChange={(e) => emailField.handleChange(e.target.value)}
+  onBlur={emailField.handleBlur}
+  className={emailField.showError ? 'error' : ''}
+/>
+{emailField.showError && <span>{emailField.error}</span>}
+{emailField.isValidating && <span>Validating...</span>}
+
+// Form submission validation
+const handleSubmit = async () => {
+  const formValues = {
+    email: emailField.value,
+    password: passwordField.value
+  };
+
+  const emailValid = await emailField.validate(formValues);
+  const passwordValid = await passwordField.validate(formValues);
+
+  if (emailValid.isValid && passwordValid.isValid) {
+    // Submit form
+  }
+};
+
+// Reset field
+emailField.reset(); // Reset to initial value
+emailField.reset('new@email.com'); // Reset to new value
+```
+
+---

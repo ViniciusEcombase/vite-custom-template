@@ -4,15 +4,44 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black */
-  z-index: 9999; /* stays above all normal content */
+  background: rgba(0, 0, 0, 0.7);
+  z-index: var(--z-modal, 1000);
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(1px); /* optional: background blur */
+  backdrop-filter: blur(4px);
   transition: opacity 0.3s ease;
   opacity: 1;
   cursor: pointer;
+  inset: 0;
+  animation: fadeIn 0.3s ease;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow: hidden;
+}
+
+.overlay-body {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  overflow-y: hidden;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal, 1000);
+  padding: var(--space-4, 1rem);
+  animation: fadeIn 0.3s ease;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 /* Hidden state for animation purposes */
@@ -23,10 +52,11 @@
 
 /* Optional: inner content wrapper (like modal box or spinner container) */
 .overlay-content {
-  border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  max-width: 90%;
-  max-height: 90%;
   overflow: auto;
   cursor: default;
+}
+
+.overlay::-webkit-scrollbar {
+  display: none;
 }
