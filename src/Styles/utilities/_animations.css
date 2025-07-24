@@ -54,18 +54,18 @@
   }
   40%,
   43% {
-    transform: translateY(-10px);
+    transform: translateY(-3px);
   }
   70% {
-    transform: translateY(-5px);
+    transform: translateY(-2px);
   }
   90% {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
   }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s ease;
+  animation: fadeIn 0.3s ease;
 }
 
 .animate-fade-out {
@@ -76,7 +76,7 @@
   animation: slideIn 0.5s ease;
 }
 .animate-slide-in-right {
-  animation: slideInRight 0.5s ease;
+  animation: slideInRight 0.3s ease;
 }
 .animate-bounce {
   animation: bounce 2s infinite;

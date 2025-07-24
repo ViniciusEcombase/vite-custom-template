@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useModalActions } from '../../contextProviders/ModalProvider';
 import Form from '../composed/Form';
 import useFetch from '../../customHooks/useFetch';
+import Header from '../composed/Header';
 
 const SignUp = () => {
   const { fetchRequest } = useFetch(); // Comes from CustomHook: useFetch
@@ -301,6 +302,7 @@ const SignUp = () => {
 
   return (
     <>
+      <Header />
       {currentStep === 1 && (
         <div
           className="container"

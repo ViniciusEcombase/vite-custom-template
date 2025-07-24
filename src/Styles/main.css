@@ -35,7 +35,12 @@
 /* Features */
 @import './features/_navbar.css';
 @import './features/_product-card.css';
-@import './features/_cart.css';
+@import './features/ALTERNATIVE_cart.css';
+@import './features/header/_cart.css';
+@import './features/header/_header.css';
+@import './features/header/_login.css';
+@import './features/header/_logo.css';
+@import './features/header/_search-bar';
 
 /* Utilities */
 @import './utilities/_animations.css';
