@@ -89,9 +89,9 @@
   --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
 
   /* Brand-specific shadows */
-  --shadow-orange: 0 4px 10px rgba(255, 122, 0, 0.2);
-  --shadow-orange-lg: 0 6px 14px rgba(255, 122, 0, 0.3);
-  --shadow-orange-xl: 0 10px 20px rgba(255, 122, 0, 0.25);
+  --shadow-primary: 0 4px 10px rgba(255, 122, 0, 0.2);
+  --shadow-primary-lg: 0 6px 14px rgba(255, 122, 0, 0.3);
+  --shadow-primary-xl: 0 10px 20px rgba(255, 122, 0, 0.25);
 
   /* Z-Index Scale */
   --z-hide: -1;

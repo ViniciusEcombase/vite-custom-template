@@ -30,7 +30,6 @@
 @import './components/_review.css';
 @import './components/_checkout.css';
 @import './utilities/_animations.css';
-@import './utilities/_theme-toggle.css';
 
 /* Features */
 @import './features/_navbar.css';
@@ -41,6 +40,7 @@
 @import './features/header/_login.css';
 @import './features/header/_logo.css';
 @import './features/header/_search-bar';
+@import './features/header/_theme-picker.css';
 
 /* Utilities */
 @import './utilities/_animations.css';

@@ -30,7 +30,7 @@
 .form-input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.2);
+  box-shadow: var(--shadow-primary);
   background: var(--color-gray-900);
 }
 

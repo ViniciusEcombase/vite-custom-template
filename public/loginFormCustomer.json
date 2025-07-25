@@ -1,0 +1,30 @@
+[
+  {
+    "id": "email",
+    "label": "Email",
+    "type": "email",
+    "validations": [
+      { "type": "required", "message": "Email is required" },
+      {
+        "type": "regex",
+        "pattern": "email",
+        "message": "Please enter a valid email"
+      }
+    ]
+  },
+
+  {
+    "id": "password",
+    "label": "Password",
+    "type": "password",
+    "showPasswordRequirements": false,
+    "validations": [
+      { "type": "required", "message": "Password is required" },
+      {
+        "type": "regex",
+        "pattern": "strongPassword",
+        "message": "Password must meet requirements"
+      }
+    ]
+  }
+]

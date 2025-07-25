@@ -1,0 +1,56 @@
+[
+  {
+    "id": "postal_code",
+    "label": "Postal Code",
+    "type": "text",
+    "validations": [
+      { "type": "required", "message": "Postal Code is required" },
+      {
+        "type": "regex",
+        "pattern": "postal_code",
+        "message": "Invalid Postal Code"
+      }
+    ]
+  },
+  {
+    "id": "number",
+    "label": "Number",
+    "type": "text",
+    "validations": [{ "type": "required", "message": "Number is required" }]
+  },
+  {
+    "id": "complement",
+    "label": "Complement",
+    "type": "text"
+  },
+  {
+    "id": "street",
+    "label": "Street",
+    "type": "text",
+    "validations": [{ "type": "required", "message": "Street is required" }]
+  },
+  {
+    "id": "district",
+    "label": "District",
+    "type": "text",
+    "validations": [{ "type": "required", "message": "District is required" }]
+  },
+  {
+    "id": "city",
+    "label": "City",
+    "type": "text",
+    "validations": [{ "type": "required", "message": "City is required" }]
+  },
+  {
+    "id": "state",
+    "label": "State",
+    "type": "text",
+    "validations": [{ "type": "required", "message": "State is required" }]
+  },
+  {
+    "id": "country",
+    "label": "Country",
+    "type": "text",
+    "validations": [{ "type": "required", "message": "Country is required" }]
+  }
+]
