@@ -37,8 +37,8 @@ const UserMenu = ({ user, onUserAction, onLogout, isLoggedIn }) => {
   ];
 
   const MenuItemsRegister = [
-    { id: 'Login', label: 'Login', icon: 'user' },
-    { id: 'SignUp', label: 'Register', icon: 'clipboard' },
+    { id: 'Login', label: 'Login', icon: 'login' },
+    { id: 'SignUp', label: 'Register', icon: 'register' },
   ];
 
   const getIcon = (iconType) => {
