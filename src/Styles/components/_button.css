@@ -60,8 +60,8 @@
 .btn-primary:hover:not(:disabled):not(.btn-loading) {
   background: linear-gradient(
     135deg,
-    var(--color-primary-light),
-    var(--color-primary)
+    var(--color-primary),
+    var(--color-primary-darker)
   );
   transform: translateY(-1px);
   box-shadow: var(--shadow-orange-lg);

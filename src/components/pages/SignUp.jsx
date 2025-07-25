@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useModalActions } from '../../contextProviders/ModalProvider';
 import Form from '../composed/Form';
 import useFetch from '../../customHooks/useFetch';
@@ -11,146 +11,28 @@ const SignUp = () => {
   const [responseUser, setResponseUser] = useState(); // Saves the response of the User form
   const [responseCustomer, setResponseCustomer] = useState(); // Saves the response of the Customer form
   const [responseAddress, setResponseAddress] = useState(); // Saves the response of the Address form
+  const [signUpFormCustomer, setSignUpFormCustomer] = useState(); //Customer form Input config
+  const [signUpFormAddress, setSignUpFormAddress] = useState(); //Address form Input config
 
-  // Array of inputs for the Customer/User form
-  const formConfig = [
-    {
-      id: 'first_name',
-      label: 'First Name',
-      type: 'text',
-      validations: [
-        { type: 'required', message: 'First name is required' },
-        {
-          type: 'regex',
-          pattern: 'username',
-          message: 'Please enter a valid name',
-        },
-      ],
-    },
-    {
-      id: 'last_name',
-      label: 'Last Name',
-      type: 'text',
-      validations: [
-        { type: 'required', message: 'Last name is required' },
-        {
-          type: 'regex',
-          pattern: 'username',
-          message: 'Please enter a valid name',
-        },
-      ],
-    },
-    {
-      id: 'email',
-      label: 'Email',
-      type: 'email',
-      validations: [
-        { type: 'required', message: 'Email is required' },
-        {
-          type: 'regex',
-          pattern: 'email',
-          message: 'Please enter a valid email',
-        },
-      ],
-    },
-    {
-      id: 'phone',
-      label: 'Phone',
-      type: 'text',
-    },
-    {
-      id: 'cpf',
-      label: 'Cpf',
-      type: 'text',
-      validations: [{ type: 'required', message: 'Cpf is required' }],
-    },
-    {
-      id: 'password',
-      label: 'Password',
-      type: 'password',
-      showPasswordRequirements: true,
-      validations: [
-        { type: 'required', message: 'Password is required' },
-        {
-          type: 'regex',
-          pattern: 'strongPassword',
-          message: 'Password must meet requirements',
-        },
-      ],
-    },
-    {
-      id: 'confirmPassword',
-      label: 'Confirm Password',
-      type: 'password',
-      showPasswordRequirements: false,
-      validations: [
-        { type: 'required', message: 'Please confirm your password' },
-        {
-          type: 'matches',
-          fieldToMatch: 'password',
-          message: 'Passwords do not match',
-        },
-      ],
-    },
-  ];
+  //Fetches the signUpFormCustomer configuration
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchRequest('signUpFormCustomer.json');
+      setSignUpFormCustomer(data.json);
+    };
 
-  // Array of inputs for the Address form
-  const formAddressConfig = [
-    {
-      id: 'postal_code',
-      label: 'Postal Code',
-      type: 'text',
-      validations: [
-        { type: 'required', message: 'Postal Code is required' },
-        {
-          type: 'regex',
-          pattern: 'postal_code',
-          message: 'Invalid Postal Code',
-        },
-      ],
-    },
-    {
-      id: 'number',
-      label: 'Number',
-      type: 'text',
-      validations: [{ type: 'required', message: 'Number is required' }],
-    },
-    {
-      id: 'complement',
-      label: 'Complement',
-      type: 'text',
-    },
-    {
-      id: 'street',
-      label: 'Street',
-      type: 'text',
-      validations: [{ type: 'required', message: 'Street is required' }],
-    },
-    {
-      id: 'district',
-      label: 'District',
-      type: 'text',
-      validations: [{ type: 'required', message: 'District is required' }],
-    },
-    {
-      id: 'city',
-      label: 'City',
-      type: 'text',
-      validations: [{ type: 'required', message: 'City is required' }],
-    },
-    {
-      id: 'state',
-      label: 'State',
-      type: 'text',
-      validations: [{ type: 'required', message: 'State is required' }],
-    },
-    {
-      id: 'country',
-      label: 'Country',
-      type: 'text',
-      validations: [{ type: 'required', message: 'Country is required' }],
-    },
-  ];
+    fetchData();
+  }, []);
+
+  //Fetches the signUpFormAddress configuration
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchRequest('signUpFormAddress.json');
+      setSignUpFormAddress(data.json);
+    };
+
+    fetchData();
+  }, []);
 
   // Helper function to handle redirects
   const redirectToHome = () => {
@@ -239,8 +121,6 @@ const SignUp = () => {
 
   // Handles the Address Form submit
   const handleAddressFormSubmit = async (values) => {
-    console.log(values);
-
     try {
       const supabaseCustomerAddress = {
         customer_id: responseCustomer.json[0].id,
@@ -254,7 +134,6 @@ const SignUp = () => {
         number: values.number,
         complement: values.complement ? values.complement : '',
       };
-
       const resAddress = await fetchRequest(
         'https://niihlyofonxtmzgzanpv.supabase.co/rest/v1/customer_addresses',
         {
@@ -303,7 +182,7 @@ const SignUp = () => {
   return (
     <>
       <Header />
-      {currentStep === 1 && (
+      {currentStep === 1 && signUpFormCustomer && (
         <div
           className="container"
           style={{
@@ -316,13 +195,13 @@ const SignUp = () => {
           <div className="container container-sm">
             <Form
               label="Create Your Account"
-              formData={formConfig}
+              formData={signUpFormCustomer}
               onSubmit={handleCustomerFormSubmit}
             />
           </div>
         </div>
       )}
-      {currentStep === 2 && (
+      {currentStep === 2 && signUpFormAddress && (
         <div
           className="container"
           style={{
@@ -335,7 +214,7 @@ const SignUp = () => {
           <div className="container container-sm">
             <Form
               label="Add Your Address"
-              formData={formAddressConfig}
+              formData={signUpFormAddress}
               onSubmit={handleAddressFormSubmit}
             />
           </div>
