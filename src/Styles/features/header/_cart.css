@@ -223,7 +223,7 @@
 
 .cart-checkout-btn:hover {
   background: var(--color-primary-dark);
-  box-shadow: var(--shadow-orange);
+  box-shadow: var(--shadow-primary);
 }
 
 .cart-empty {

@@ -4,33 +4,37 @@ import Form from '../composed/Form';
 import useFetch from '../../customHooks/useFetch';
 import Header from '../composed/Header';
 
-const SignUp = () => {
+const Login = () => {
+  const { data, loading, error, get, post, fetchRequest } = useFetch();
   const { showAlert } = useModalActions(); // Comes from Context: ModalProvider
   const [currentStep, setCurrentStep] = useState(1); // Changes what is on display
   const [responseUser, setResponseUser] = useState(); // Saves the response of the User form
   const [responseCustomer, setResponseCustomer] = useState(); // Saves the response of the Customer form
   const [responseAddress, setResponseAddress] = useState(); // Saves the response of the Address form
   const [signUpFormCustomer, setSignUpFormCustomer] = useState(); //Customer form Input config
-  const [signUpFormAddress, setSignUpFormAddress] = useState(); //Address form Input config
-  const customerFormFetch = useFetch();
-  const addressFormFetch = useFetch();
+  const api = useFetch({
+    // Comes from CustomHook: useFetch
+    baseURL: 'https://niihlyofonxtmzgzanpv.supabase.co/auth/v1/',
+    timeout: 10000,
+    retries: 0,
+    cache: true,
+    defaultHeaders: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer token123',
+      Accept: 'application/json',
+      apikey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5paWhseW9mb254dG16Z3phbnB2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjcyMzg2MCwiZXhwIjoyMDYyMjk5ODYwfQ.4Cy3yD5bJcDoI5xf1hYCdswiNHpRy1C9zETJH6czBpk',
+    },
+  });
 
+  //Fetches the signUpFormCustomer configuration
   useEffect(() => {
-    const fetchLocalForm = async () => {
-      const res = await customerFormFetch.get('signUpFormCustomer.json');
-      setSignUpFormCustomer(res.data);
+    const fetchData = async () => {
+      const data = await fetchRequest('loginFormCustomer.json');
+      setSignUpFormCustomer(data.json);
     };
 
-    fetchLocalForm();
-  }, []);
-
-  useEffect(() => {
-    const fetchLocalFormAddress = async () => {
-      const res = await addressFormFetch.get('signUpFormAddress.json');
-      setSignUpFormAddress(res.data);
-    };
-
-    fetchLocalFormAddress();
+    fetchData();
   }, []);
 
   // Helper function to handle redirects
@@ -39,16 +43,16 @@ const SignUp = () => {
   };
 
   // Handles the Customer Form submit
-  const handleCustomerFormSubmit = async (values) => {
+  const handleCustomerFormSubmitss = async (values) => {
     const supabaseUser = {
       email: values.email,
       password: values.password,
     };
 
     try {
-      const resUser = await get(
+      const resUser = await fetchRequest(
         // Signup user in supabase
-        'https://niihlyofonxtmzgzanpv.supabase.co/auth/v1/signup',
+        'https://niihlyofonxtmzgzanpv.supabase.co/auth/v1/token?grant_type=password',
         {
           method: 'POST',
           headers: {
@@ -105,6 +109,7 @@ const SignUp = () => {
         onCountdownComplete: () => setCurrentStep(2),
       });
     } catch (error) {
+      // Error handling with alert modal
       showAlert({
         title: '❌ Registration Failed',
         message:
@@ -116,6 +121,32 @@ const SignUp = () => {
       });
     }
   };
+
+  // POST request with data
+  const handleCustomerFormSubmit = async () => {
+    const result = await api.post('/users', {
+      email: values.email,
+      password: values.password,
+    });
+
+    if (result.ok) {
+      console.log('User created:', result.data);
+    }
+  };
+
+  // Error handling
+  if (error) {
+    switch (error.type) {
+      case 'NETWORK_ERROR':
+        return <div>Network error - check connection</div>;
+      case 'HTTP_ERROR':
+        return <div>Server error: {error.message}</div>;
+      case 'TIMEOUT':
+        return <div>Request timed out</div>;
+      default:
+        return <div>Something went wrong</div>;
+    }
+  }
 
   // Handles the Address Form submit
   const handleAddressFormSubmit = async (values) => {
@@ -199,27 +230,8 @@ const SignUp = () => {
           </div>
         </div>
       )}
-      {currentStep === 2 && signUpFormAddress && (
-        <div
-          className="container"
-          style={{
-            padding: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <div className="container container-sm">
-            <Form
-              label="Add Your Address"
-              formData={signUpFormAddress}
-              onSubmit={handleAddressFormSubmit}
-            />
-          </div>
-        </div>
-      )}
     </>
   );
 };
 
-export default SignUp;
+export default Login;
