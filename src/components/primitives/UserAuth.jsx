@@ -169,7 +169,15 @@ const UserAuth = ({ onUserAction }) => {
   const menuRef = useClickOutside(() => setShowUserMenu(false));
 
   const handleUserAction = (action) => {
-    window.location.href = `/${action}`;
+    const path =
+      action === 'profile' ||
+      action === 'orders' ||
+      action === 'wishlist' ||
+      action === 'settings'
+        ? `/UserAccount?section=${action}`
+        : `/${action}`;
+    window.location.href = path;
+
     onUserAction?.(action);
     setShowUserMenu(false);
   };
@@ -225,7 +233,7 @@ const UserAuth = ({ onUserAction }) => {
         onClick={() => setShowUserMenu(!showUserMenu)}
       >
         <UserIcon />
-        <span>{user?.name || 'User'}</span>
+        <span>{user?.first_name || 'User'}</span>
         <ChevronDownIcon />
       </button>
 

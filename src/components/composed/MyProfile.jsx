@@ -4,19 +4,29 @@ import useFetch from '../../customHooks/useFetch';
 import Button from '../primitives/Button';
 import { useModalActions } from '../../contextProviders/ModalProvider';
 import Form from './Form';
+import { useAuth } from '../../contextProviders/AuthProvider';
 
 const MyProfile = () => {
-  const { showAlert, openModal } = useModalActions();
+  const { user } = useAuth();
+  const { openModal, closeModal } = useModalActions();
   const [editForm, setEditForm] = useState();
-  const [profile, setProfile] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    whatsapp: '51 997674724',
-    phone: '+1 (555) 123-4567',
-    cpf: '05027350074',
-  });
   const customerFormFetch = useFetch();
+
+  // With configuration
+  const api = useFetch({
+    baseURL: 'https://niihlyofonxtmzgzanpv.supabase.co/rest/v1',
+    timeout: 10000,
+    retries: 0,
+    cache: true,
+    defaultHeaders: {
+      'Content-Type': 'application/json',
+      Authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5paWhseW9mb254dG16Z3phbnB2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjcyMzg2MCwiZXhwIjoyMDYyMjk5ODYwfQ.4Cy3yD5bJcDoI5xf1hYCdswiNHpRy1C9zETJH6czBpk',
+      apikey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5paWhseW9mb254dG16Z3phbnB2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjcyMzg2MCwiZXhwIjoyMDYyMjk5ODYwfQ.4Cy3yD5bJcDoI5xf1hYCdswiNHpRy1C9zETJH6czBpk',
+      Prefer: 'return=minimal',
+    },
+  });
 
   useEffect(() => {
     const fetchLocalForm = async () => {
@@ -27,22 +37,39 @@ const MyProfile = () => {
     fetchLocalForm();
   }, []);
 
-  const handleInputChange = (field, value) => {
-    setProfile((prev) => ({ ...prev, [field]: value }));
-  };
-
   function handleEditClick() {
-    function handleAddressFormSubmit() {
-      console.log('deu cert!');
+    console.log(user);
+    function handleAddressFormSubmit(values) {
+      console.log(values);
+      api.patch(
+        `/customers?user_id=eq.984d07c3-2c20-4b2d-aa45-f8e276a0134d`,
+        values
+      );
     }
+
+    const formWithInitialValues = editForm.map((item) => ({
+      ...item,
+      initialValue: user?.[item.id] || '',
+      disabled: item.id === 'email' || item.id === 'cpf_cnpj',
+    }));
+
     openModal(
       <div className="container">
         <div className="container container-sm">
           <Form
             label="Change info"
-            formData={editForm}
+            formData={formWithInitialValues}
             onSubmit={handleAddressFormSubmit}
           />
+
+          <div style={{ paddingTop: '10px' }}>
+            <Button
+              size="md"
+              variant="secondary"
+              text="Cancel"
+              onClick={closeModal}
+            />
+          </div>
         </div>
       </div>
     );
@@ -60,9 +87,11 @@ const MyProfile = () => {
           <h3>Personal Information</h3>
           <div className="form-grid">
             {editForm &&
+              user &&
               editForm.map((item) => {
                 return (
                   <Input
+                    initialValue={user[item.id]}
                     key={item.id}
                     type={item.type}
                     disabled={true}

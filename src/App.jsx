@@ -19,7 +19,7 @@ const App = () => {
               path="/signup"
               element={
                 <PublicRoute>
-                  <Login />
+                  <SignUp />
                 </PublicRoute>
               }
             />
@@ -27,7 +27,7 @@ const App = () => {
               path="/login"
               element={
                 <PublicRoute>
-                  <SignUp />
+                  <Login />
                 </PublicRoute>
               }
             />

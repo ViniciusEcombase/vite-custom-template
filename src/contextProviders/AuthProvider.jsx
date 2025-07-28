@@ -44,10 +44,16 @@ export const AuthProvider = ({ children }) => {
           setUser({
             id: session.user.id,
             email: session.user.email,
-            name:
+            first_name:
               customer.data[0].first_name ||
               session.user.email?.split('@')[0] ||
               'User',
+            last_name:
+              customer.data[0].last_name ||
+              session.user.email?.split('@')[0] ||
+              'User',
+            cpf_cnpj: customer.data[0].cpf_cnpj,
+            phone: customer.data[0].phone,
             avatar: session.user.user_metadata?.avatar_url || null,
           });
           setIsLoggedIn(true);
@@ -76,12 +82,19 @@ export const AuthProvider = ({ children }) => {
         setUser({
           id: session.user.id,
           email: session.user.email,
-          name:
+          first_name:
             customer.data[0].first_name ||
             session.user.email?.split('@')[0] ||
             'User',
+          last_name:
+            customer.data[0].last_name ||
+            session.user.email?.split('@')[0] ||
+            'User',
+          cpf_cnpj: customer.data[0].cpf_cnpj,
+          phone: customer.data[0].phone,
           avatar: session.user.user_metadata?.avatar_url || null,
         });
+
         setIsLoggedIn(true);
         setError(null);
       } else if (event === 'SIGNED_OUT') {

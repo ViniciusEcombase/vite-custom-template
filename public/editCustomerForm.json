@@ -44,7 +44,7 @@
     "type": "text"
   },
   {
-    "id": "cpf",
+    "id": "cpf_cnpj",
     "label": "Cpf",
     "type": "text",
     "validations": [{ "type": "required", "message": "Cpf is required" }]
