@@ -4,7 +4,7 @@ import SearchBar from '../primitives/SearchBar';
 import UserAuth from '../primitives/UserAuth';
 import Cart from '../primitives/Cart';
 import ChangeTheme from '../primitives/ChangeTheme';
-import { useAuth } from '../../customHooks/useAuth';
+import { useAuth } from '../../contextProviders/AuthProvider';
 import { useCart } from '../../customHooks/useCart';
 
 const Header = () => {
@@ -42,13 +42,7 @@ const Header = () => {
 
           <div className="header-actions">
             <div className="login-section">
-              <UserAuth
-                isLoggedIn={isLoggedIn}
-                user={user}
-                onLogin={login}
-                onLogout={logout}
-                onUserAction={handleUserAction}
-              />
+              <UserAuth />
             </div>
 
             <Cart

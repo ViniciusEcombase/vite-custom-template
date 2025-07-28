@@ -1,0 +1,29 @@
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background-color: var(--color-gray-600);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+
+.toggle-switch.active {
+  background-color: var(--color-primary);
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: var(--color-white);
+  border-radius: var(--radius-full);
+  transition: var(--transition-transform);
+}
+
+.toggle-switch.active::after {
+  transform: translateX(20px);
+}

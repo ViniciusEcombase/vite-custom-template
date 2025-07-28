@@ -21,6 +21,7 @@ const Input = forwardRef(
       getFormValues = () => ({}),
       onChangeNotify,
       onValidChange,
+      disabled = false,
       onPasswordStrengthChange, // New callback for password strength updates
     },
     ref
@@ -118,6 +119,7 @@ const Input = forwardRef(
           {label}
         </label>
         <input
+          disabled={disabled}
           id={id}
           type={type}
           value={field.value}

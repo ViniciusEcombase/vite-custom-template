@@ -5,7 +5,7 @@ const useFetch = (config = {}) => {
     // Default configuration
     baseURL = '',
     defaultHeaders = {},
-    timeout = 30000,
+    timeout = 10000,
     retries = 0,
     retryDelay = 1000,
     cache = false,
@@ -50,6 +50,7 @@ const useFetch = (config = {}) => {
 
       // Build full URL
       const fullURL = baseURL ? `${baseURL}${url}` : url;
+      
 
       // Create cache key
       const cacheKey = createCacheKey(fullURL, options);

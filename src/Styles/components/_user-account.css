@@ -1,0 +1,99 @@
+.user-account-container {
+  background-color: var(--color-gray-800);
+  min-height: 100vh;
+  color: var(--color-text-primary);
+  font-family: var(--font-primary);
+}
+
+.user-account-header {
+  background-color: var(--color-gray-900);
+  padding: var(--space-6) 0;
+  border-bottom: var(--border-1) solid var(--color-gray-700);
+}
+
+.user-account-header h1 {
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+.user-account-content {
+  padding: var(--space-8) 0;
+}
+
+.user-account-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--space-8);
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+@media (max-width: 768px) {
+  .user-account-layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+}
+
+.content-area {
+  background-color: var(--color-gray-900);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-md);
+  animation: fadeIn var(--duration-slow) ease;
+}
+
+.content-header {
+  margin-bottom: var(--space-6);
+}
+
+.content-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.content-subtitle {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* MyProfile Component Styles */
+.profile-form {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.profile-section {
+  background-color: var(--color-gray-800);
+  padding: var(--space-6);
+  border-radius: var(--radius-base);
+  border: var(--border-1) solid var(--color-gray-700);
+}
+
+.profile-section h3 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-4) 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-4);
+}
+
+
+
+
