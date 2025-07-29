@@ -6,7 +6,7 @@ import Header from '../composed/Header';
 
 const SignUp = () => {
   const { showAlert } = useModalActions(); // Comes from Context: ModalProvider
-  const [currentStep, setCurrentStep] = useState(1); // Changes what is on display
+  const [currentStep, setCurrentStep] = useState(2); // Changes what is on display
   const [responseUser, setResponseUser] = useState(); // Saves the response of the User form
   const [responseCustomer, setResponseCustomer] = useState(); // Saves the response of the Customer form
   const [responseAddress, setResponseAddress] = useState(); // Saves the response of the Address form

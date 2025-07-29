@@ -113,6 +113,11 @@ const Input = forwardRef(
       }
     }, [field.value, field.isValid, onValidChange]);
 
+    // 🔁 Sync internal state if initialValue prop changes
+    useEffect(() => {
+      field.setValue(initialValue);
+    }, [initialValue]);
+
     return (
       <div className={showPasswordRequirements ? 'form-input-password' : ''}>
         <label className="form-label" htmlFor={id}>

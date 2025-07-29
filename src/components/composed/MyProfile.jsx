@@ -7,8 +7,8 @@ import Form from './Form';
 import { useAuth } from '../../contextProviders/AuthProvider';
 
 const MyProfile = () => {
-  const { user } = useAuth();
-  const { openModal, closeModal } = useModalActions();
+  const { user, refreshUser, setUser } = useAuth();
+  const { openModal, closeModal, showAlert } = useModalActions();
   const [editForm, setEditForm] = useState();
   const customerFormFetch = useFetch();
 
@@ -24,7 +24,7 @@ const MyProfile = () => {
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5paWhseW9mb254dG16Z3phbnB2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjcyMzg2MCwiZXhwIjoyMDYyMjk5ODYwfQ.4Cy3yD5bJcDoI5xf1hYCdswiNHpRy1C9zETJH6czBpk',
       apikey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5paWhseW9mb254dG16Z3phbnB2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjcyMzg2MCwiZXhwIjoyMDYyMjk5ODYwfQ.4Cy3yD5bJcDoI5xf1hYCdswiNHpRy1C9zETJH6czBpk',
-      Prefer: 'return=minimal',
+      Prefer: 'return=representation',
     },
   });
 
@@ -38,13 +38,20 @@ const MyProfile = () => {
   }, []);
 
   function handleEditClick() {
-    console.log(user);
-    function handleAddressFormSubmit(values) {
-      console.log(values);
-      api.patch(
-        `/customers?user_id=eq.984d07c3-2c20-4b2d-aa45-f8e276a0134d`,
-        values
-      );
+    async function handleAddressFormSubmit(values) {
+      const res = await api.patch(`/customers?user_id=eq.${user.id}`, values);
+      if (res.ok === true) {
+        const updatedCustomer = res.data?.[0];
+        setUser((prev) => ({
+          ...prev,
+          ...updatedCustomer,
+        }));
+        showAlert({
+          title: 'Success!',
+          message: 'Your information was successfully updated!',
+        });
+      }
+      return res;
     }
 
     const formWithInitialValues = editForm.map((item) => ({
@@ -55,7 +62,7 @@ const MyProfile = () => {
 
     openModal(
       <div className="container">
-        <div className="container container-sm">
+        <div className="container container-sm" style={{ padding: '1rem' }}>
           <Form
             label="Change info"
             formData={formWithInitialValues}

@@ -30,6 +30,24 @@ const ChangeTheme = ({ showThemePicker, toggleThemePicker }) => {
       '--shadow-primary-lg': '0 6px 14px rgba(40, 167, 69, 0.3)',
       '--shadow-primary-xl': '0 10px 20px rgba(40, 167, 69, 0.25)',
     },
+    purple: {
+      '--color-primary': '#6f42c1',
+      '--color-primary-light': '#b095e0',
+      '--color-primary-dark': '#5936a0',
+      '--color-primary-darker': '#432a7a',
+      '--shadow-primary': '0 4px 10px rgba(111, 66, 193, 0.2)',
+      '--shadow-primary-lg': '0 6px 14px rgba(111, 66, 193, 0.3)',
+      '--shadow-primary-xl': '0 10px 20px rgba(111, 66, 193, 0.25)',
+    },
+    red: {
+      '--color-primary': '#dc3545',
+      '--color-primary-light': '#f28b94',
+      '--color-primary-dark': '#b02a37',
+      '--color-primary-darker': '#801f29',
+      '--shadow-primary': '0 4px 10px rgba(220, 53, 69, 0.2)',
+      '--shadow-primary-lg': '0 6px 14px rgba(220, 53, 69, 0.3)',
+      '--shadow-primary-xl': '0 10px 20px rgba(220, 53, 69, 0.25)',
+    },
   };
 
   // Load saved theme on component mount
@@ -112,6 +130,22 @@ const ChangeTheme = ({ showThemePicker, toggleThemePicker }) => {
               onClick={() => applyTheme('blue')}
             >
               🔵 Blue Theme {currentTheme === 'blue' && '✓'}
+            </button>
+            <button
+              className={`theme-option-btn ${
+                currentTheme === 'red' ? 'active' : ''
+              }`}
+              onClick={() => applyTheme('red')}
+            >
+              🔴 Red Theme {currentTheme === 'red' && '✓'}
+            </button>
+            <button
+              className={`theme-option-btn ${
+                currentTheme === 'purple' ? 'active' : ''
+              }`}
+              onClick={() => applyTheme('purple')}
+            >
+              🟣 Purple Theme {currentTheme === 'purple' && '✓'}
             </button>
           </div>
         </div>

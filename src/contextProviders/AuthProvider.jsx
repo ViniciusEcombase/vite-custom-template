@@ -110,6 +110,32 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
+  const refreshUser = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const customer = await api.get(
+      `/customers?select=*&user_id=eq.${session.user.id}`
+    );
+    console.log(customer);
+
+    if (customer.data?.length) {
+      const newUserData = {
+        id: session.user.id,
+        email: session.user.email,
+        first_name: customer.data[0].first_name,
+        last_name: customer.data[0].last_name,
+        cpf_cnpj: customer.data[0].cpf_cnpj,
+        phone: customer.data[0].phone,
+        avatar: session.user.user_metadata?.avatar_url || null,
+      };
+
+      console.log('Setting new user:', newUserData); // ✅ confirm this matches expectations
+      setUser(newUserData);
+    }
+  };
+
   // Login with email and password
   const login = async (email, password) => {
     setLoading(true);
@@ -293,6 +319,8 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
+    setUser,
+    refreshUser,
     isLoggedIn,
     loading,
     error,
