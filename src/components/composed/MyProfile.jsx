@@ -39,18 +39,29 @@ const MyProfile = () => {
 
   function handleEditClick() {
     async function handleAddressFormSubmit(values) {
-      const res = await api.patch(`/customers?user_id=eq.${user.id}`, values);
-      if (res.ok === true) {
+      const res = await api.patch(
+        `/customers?user_id=eq.${user.user_id}`,
+        values
+      );
+      if (res.ok) {
         const updatedCustomer = res.data?.[0];
+
+        // Optimistic UI update
         setUser((prev) => ({
           ...prev,
           ...updatedCustomer,
+          updated_at: updatedCustomer.updated_at,
         }));
+
+        // Inform refreshUser so it doesn't overwrite with stale data
+        await refreshUser(updatedCustomer);
+
         showAlert({
           title: 'Success!',
           message: 'Your information was successfully updated!',
         });
       }
+
       return res;
     }
 

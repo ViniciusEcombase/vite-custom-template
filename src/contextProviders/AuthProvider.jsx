@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Configure useFetch for Supabase REST API calls (if needed)
   const api = useFetch({
     baseURL: 'https://niihlyofonxtmzgzanpv.supabase.co/rest/v1',
     timeout: 10000,
@@ -23,7 +22,6 @@ export const AuthProvider = ({ children }) => {
     },
   });
 
-  // Check if user is already logged in on app start
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -31,30 +29,38 @@ export const AuthProvider = ({ children }) => {
           data: { session },
           error,
         } = await supabase.auth.getSession();
-        let customer;
+
+        let customer = null;
+
         if (session) {
-          customer = await api.get(
-            `/customers?select=*&user_id=eq.${session.user.id}`
-          );
+          try {
+            const res = await api.get(
+              `/customers?select=*&user_id=eq.${session.user.id}`
+            );
+            customer = res.data?.[0];
+          } catch (error) {
+            console.log('Erro no customer:', error);
+          }
         }
+
         if (error) {
           console.error('Error getting session:', error);
           setError(error.message);
-        } else if (session?.user) {
+        } else if (session?.user && customer) {
           setUser({
-            id: session.user.id,
+            user_id: session.user.id,
+            customer_id: customer.id,
             email: session.user.email,
             first_name:
-              customer.data[0].first_name ||
+              customer.first_name ||
               session.user.email?.split('@')[0] ||
               'User',
             last_name:
-              customer.data[0].last_name ||
-              session.user.email?.split('@')[0] ||
-              'User',
-            cpf_cnpj: customer.data[0].cpf_cnpj,
-            phone: customer.data[0].phone,
+              customer.last_name || session.user.email?.split('@')[0] || 'User',
+            cpf_cnpj: customer.cpf_cnpj,
+            phone: customer.phone,
             avatar: session.user.user_metadata?.avatar_url || null,
+            updated_at: customer.updated_at,
           });
           setIsLoggedIn(true);
         }
@@ -68,40 +74,52 @@ export const AuthProvider = ({ children }) => {
 
     checkUser();
 
-    // Listen for auth state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
-        let customer;
-        if (session) {
-          customer = await api.get(
+        let customer = null;
+
+        try {
+          const res = await api.get(
             `/customers?select=*&user_id=eq.${session.user.id}`
           );
+          customer = res.data?.[0];
+        } catch (err) {
+          console.log('Erro no customer (auth change):', err);
         }
-        setUser({
-          id: session.user.id,
-          email: session.user.email,
-          first_name:
-            customer.data[0].first_name ||
-            session.user.email?.split('@')[0] ||
-            'User',
-          last_name:
-            customer.data[0].last_name ||
-            session.user.email?.split('@')[0] ||
-            'User',
-          cpf_cnpj: customer.data[0].cpf_cnpj,
-          phone: customer.data[0].phone,
-          avatar: session.user.user_metadata?.avatar_url || null,
-        });
 
-        setIsLoggedIn(true);
-        setError(null);
+        if (customer) {
+          const incoming = new Date(customer.updated_at);
+          const current = user?.updated_at ? new Date(user.updated_at) : null;
+
+          const isNewer = !current || incoming > current;
+
+          if (isNewer) {
+            setUser({
+              ...user,
+              user_id: session.user.id,
+              customer_id: customer.id,
+              email: session.user.email,
+              first_name: customer.first_name,
+              last_name: customer.last_name,
+              cpf_cnpj: customer.cpf_cnpj,
+              phone: customer.phone,
+              avatar: session.user.user_metadata?.avatar_url || null,
+              updated_at: customer.updated_at,
+            });
+
+            setIsLoggedIn(true);
+          } else {
+            console.log('Ignored stale customer overwrite');
+          }
+        }
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
         setIsLoggedIn(false);
         setError(null);
       }
+
       setLoading(false);
     });
 
@@ -110,33 +128,31 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  const refreshUser = async () => {
+  const refreshUser = async (forceData = null) => {
     const {
       data: { session },
     } = await supabase.auth.getSession();
 
-    const customer = await api.get(
-      `/customers?select=*&user_id=eq.${session.user.id}`
-    );
-    console.log(customer);
+    let customer;
+    if (forceData) {
+      customer = { ...forceData };
+    } else {
+      const res = await api.get(
+        `/customers?select=*&user_id=eq.${session.user.id}`
+      );
+      customer = res.data?.[0];
+    }
 
-    if (customer.data?.length) {
-      const newUserData = {
-        id: session.user.id,
+    if (customer) {
+      setUser((prev) => ({
+        ...prev,
+        ...customer,
         email: session.user.email,
-        first_name: customer.data[0].first_name,
-        last_name: customer.data[0].last_name,
-        cpf_cnpj: customer.data[0].cpf_cnpj,
-        phone: customer.data[0].phone,
         avatar: session.user.user_metadata?.avatar_url || null,
-      };
-
-      console.log('Setting new user:', newUserData); // ✅ confirm this matches expectations
-      setUser(newUserData);
+      }));
     }
   };
 
-  // Login with email and password
   const login = async (email, password) => {
     setLoading(true);
     setError(null);
@@ -162,7 +178,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register new user
   const register = async (email, password, name = '') => {
     setLoading(true);
     setError(null);
@@ -193,7 +208,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout
   const logout = async () => {
     setLoading(true);
     setError(null);
@@ -216,7 +230,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Social login (Google, GitHub, etc.)
   const loginWithProvider = async (provider) => {
     setLoading(true);
     setError(null);
@@ -244,7 +257,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Reset password
   const resetPassword = async (email) => {
     setLoading(true);
     setError(null);
@@ -269,22 +281,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Update user profile
   const updateProfile = async (updates) => {
     setLoading(true);
     setError(null);
 
     try {
-      const { data, error } = await supabase.auth.updateUser({
-        data: updates,
-      });
+      const { data, error } = await supabase.auth.updateUser({ data: updates });
 
       if (error) {
         setError(error.message);
         return { success: false, error: error.message };
       }
 
-      // Update local user state
       setUser((prev) => ({
         ...prev,
         ...updates,
@@ -301,12 +309,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Clear error
   const clearError = () => {
     setError(null);
   };
 
-  // Example function showing how to use the API for database calls
   const fetchUserProfile = async (userId) => {
     try {
       const result = await api.get(`/profiles?id=eq.${userId}`);
@@ -331,14 +337,13 @@ export const AuthProvider = ({ children }) => {
     resetPassword,
     updateProfile,
     clearError,
-    api, // Expose the API instance for use in components
-    fetchUserProfile, // Example API call
+    api,
+    fetchUserProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Custom hook to use auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
 

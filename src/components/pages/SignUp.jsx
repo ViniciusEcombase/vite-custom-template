@@ -3,17 +3,20 @@ import { useModalActions } from '../../contextProviders/ModalProvider';
 import Form from '../composed/Form';
 import useFetch from '../../customHooks/useFetch';
 import Header from '../composed/Header';
+import { useAuth } from '../../contextProviders/AuthProvider';
 
 const SignUp = () => {
   const { showAlert } = useModalActions(); // Comes from Context: ModalProvider
-  const [currentStep, setCurrentStep] = useState(2); // Changes what is on display
+  const [currentStep, setCurrentStep] = useState(1); // Changes what is on display
   const [responseUser, setResponseUser] = useState(); // Saves the response of the User form
   const [responseCustomer, setResponseCustomer] = useState(); // Saves the response of the Customer form
-  const [responseAddress, setResponseAddress] = useState(); // Saves the response of the Address form
   const [signUpFormCustomer, setSignUpFormCustomer] = useState(); //Customer form Input config
   const [signUpFormAddress, setSignUpFormAddress] = useState(); //Address form Input config
   const customerFormFetch = useFetch();
   const addressFormFetch = useFetch();
+  const { fetchRequest } = useFetch(); // Comes from CustomHook: useFetch
+  const [loginToSupabase, setLoginToSupabase] = useState();
+  const { login } = useAuth(); // 👈 Add this
 
   useEffect(() => {
     const fetchLocalForm = async () => {
@@ -44,10 +47,10 @@ const SignUp = () => {
       email: values.email,
       password: values.password,
     };
+    setLoginToSupabase(supabaseUser);
 
     try {
-      const resUser = await get(
-        // Signup user in supabase
+      const resUser = await fetchRequest(
         'https://niihlyofonxtmzgzanpv.supabase.co/auth/v1/signup',
         {
           method: 'POST',
@@ -62,7 +65,6 @@ const SignUp = () => {
           body: JSON.stringify(supabaseUser),
         }
       );
-      setResponseUser(resUser);
 
       const supabaseCustomer = {
         first_name: values.first_name,
@@ -70,11 +72,10 @@ const SignUp = () => {
         email: values.email,
         phone: values.phone,
         cpf_cnpj: values.cpf,
-        user_id: resUser.json.user.id,
+        user_id: resUser.data.user.id,
       };
 
       const resCustomer = await fetchRequest(
-        // Signup customer in supabase
         'https://niihlyofonxtmzgzanpv.supabase.co/rest/v1/customers',
         {
           method: 'POST',
@@ -121,7 +122,8 @@ const SignUp = () => {
   const handleAddressFormSubmit = async (values) => {
     try {
       const supabaseCustomerAddress = {
-        customer_id: responseCustomer.json[0].id,
+        customer_id: responseCustomer.data[0].id,
+        address_name: values.address_name,
         street: values.street,
         district: values.district,
         city: values.city,
@@ -147,13 +149,11 @@ const SignUp = () => {
           body: JSON.stringify(supabaseCustomerAddress),
         }
       );
+      login(loginToSupabase.email, loginToSupabase.password);
 
-      setResponseAddress(resAddress);
-
-      // Enhanced success modal with countdown and redirect
       showAlert({
         title: '🎉 Welcome to Our Platform!',
-        message: `Thank you ${responseCustomer.json[0].first_name}! Your registration is now complete. You will be redirected to the home page shortly.`,
+        message: `Thank you ${responseCustomer.data[0].first_name}! Your registration is now complete. You will be redirected to the home page shortly.`,
         confirmText: 'Go to Home Page',
         showCountdown: true,
         countdownDuration: 6,
@@ -162,7 +162,6 @@ const SignUp = () => {
         onCountdownComplete: redirectToHome,
       });
     } catch (error) {
-      // Error handling for address submission
       showAlert({
         title: '❌ Address Registration Failed',
         message:
