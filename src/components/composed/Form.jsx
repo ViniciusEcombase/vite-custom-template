@@ -149,10 +149,13 @@ const Form = ({ formData, onSubmit, label }) => {
             initialValue={fieldConfig.initialValue || ''}
             getFormValues={getFormValues} // ✅ ADD THIS LINE - Pass the function to each input
             onChangeNotify={() => handleFieldChange(fieldConfig.id)} // ✅ ADD THIS LINE - Notify when field changes
+            disabled={fieldConfig.disabled || false}
           />
         ))}
       </div>
       <Button
+        size="md"
+        variant="primary"
         disabled={isSubmitting}
         onClick={handleSubmit}
         text={isSubmitting ? 'Submitting...' : 'Send'}

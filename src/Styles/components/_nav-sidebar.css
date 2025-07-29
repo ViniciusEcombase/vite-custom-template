@@ -1,0 +1,57 @@
+.nav-sidebar {
+  background-color: var(--color-gray-900);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  height: fit-content;
+  box-shadow: var(--shadow-md);
+}
+
+.nav-sidebar h2 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-4) 0;
+}
+
+.nav-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-menu-item {
+  margin-bottom: var(--space-2);
+}
+
+.nav-menu-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: none;
+  border: none;
+  border-radius: var(--radius-base);
+  color: var(--color-text-secondary);
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: var(--transition-colors);
+  text-align: left;
+}
+
+.nav-menu-button:hover {
+  background-color: var(--color-gray-800);
+  color: var(--color-text-primary);
+}
+
+.nav-menu-button.active {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  box-shadow: var(--shadow-primary);
+}
+
+.nav-menu-button .icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}

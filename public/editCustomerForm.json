@@ -1,0 +1,52 @@
+[
+  {
+    "id": "first_name",
+    "label": "First Name",
+    "type": "text",
+    "validations": [
+      { "type": "required", "message": "First name is required" },
+      {
+        "type": "regex",
+        "pattern": "username",
+        "message": "Please enter a valid name"
+      }
+    ]
+  },
+  {
+    "id": "last_name",
+    "label": "Last Name",
+    "type": "text",
+    "validations": [
+      { "type": "required", "message": "Last name is required" },
+      {
+        "type": "regex",
+        "pattern": "username",
+        "message": "Please enter a valid name"
+      }
+    ]
+  },
+  {
+    "id": "email",
+    "label": "Email",
+    "type": "email",
+    "validations": [
+      { "type": "required", "message": "Email is required" },
+      {
+        "type": "regex",
+        "pattern": "email",
+        "message": "Please enter a valid email"
+      }
+    ]
+  },
+  {
+    "id": "phone",
+    "label": "Phone",
+    "type": "text"
+  },
+  {
+    "id": "cpf_cnpj",
+    "label": "Cpf",
+    "type": "text",
+    "validations": [{ "type": "required", "message": "Cpf is required" }]
+  }
+]

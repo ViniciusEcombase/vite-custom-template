@@ -1,0 +1,50 @@
+.settings-sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.settings-section {
+  background-color: var(--color-gray-800);
+  padding: var(--space-6);
+  border-radius: var(--radius-base);
+  border: var(--border-1) solid var(--color-gray-700);
+}
+
+.settings-section h3 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-4) 0;
+}
+
+.settings-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--space-4) 0;
+  border-bottom: var(--border-1) solid var(--color-gray-700);
+  gap: var(--space-4);
+}
+
+.settings-option:last-child {
+  border-bottom: none;
+}
+
+.settings-option-info {
+  flex: 1;
+}
+
+.settings-option-info h4 {
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.settings-option-info p {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: var(--leading-relaxed);
+}

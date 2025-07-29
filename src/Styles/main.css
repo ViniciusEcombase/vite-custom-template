@@ -30,6 +30,13 @@
 @import './components/_review.css';
 @import './components/_checkout.css';
 @import './utilities/_animations.css';
+@import './components/_my-orders.css';
+@import './components/_nav-sidebar.css';
+@import './components/_settings.css';
+@import './components/_user-account.css';
+@import './components/_my-addresses.css';
+@import './components/_my-profile.css';
+@import './components/_toggle.css';
 
 /* Features */
 @import './features/_navbar.css';

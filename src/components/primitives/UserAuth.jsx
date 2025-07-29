@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../contextProviders/AuthProvider';
 import { useClickOutside } from '../../customHooks/useClickOutside';
 
 const UserIcon = () => (
@@ -96,7 +97,26 @@ const UserMenu = ({ user, onUserAction, onLogout, isLoggedIn }) => {
   return (
     <div className="user-menu">
       {isLoggedIn
-        ? menuItems
+        ? menuItems.map((item) => (
+            <button
+              key={item.id}
+              className="user-menu-item"
+              onClick={() => onUserAction(item.id)}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                style={{ marginRight: '8px' }}
+              >
+                {getIcon(item.icon)}
+              </svg>
+              {item.label}
+            </button>
+          ))
         : MenuItemsRegister.map((item) => (
             <button
               key={item.id}
@@ -143,59 +163,91 @@ const UserMenu = ({ user, onUserAction, onLogout, isLoggedIn }) => {
   );
 };
 
-const UserAuth = ({ isLoggedIn, user, onLogin, onLogout, onUserAction }) => {
+const UserAuth = ({ onUserAction }) => {
+  const { user, isLoggedIn, logout, loading } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const menuRef = useClickOutside(() => setShowUserMenu(false));
 
-  const handleLogin = () => {
-    onLogin();
-  };
-
   const handleUserAction = (action) => {
-    onUserAction(action);
+    const path =
+      action === 'profile' ||
+      action === 'orders' ||
+      action === 'wishlist' ||
+      action === 'settings'
+        ? `/UserAccount?section=${action}`
+        : `/${action}`;
+    window.location.href = path;
+
+    onUserAction?.(action);
     setShowUserMenu(false);
   };
 
-  const handleLogout = () => {
-    onLogout();
-    setShowUserMenu(false);
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setShowUserMenu(false);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
-  const handleClick = () => {};
-
-  if (!isLoggedIn) {
+  // Show loading state
+  if (loading) {
     return (
-      <button className="login-btn" onClick={handleLogin}>
-        <UserIcon />
-        <span>Login / Register</span>
-      </button>
+      <div className="user-auth-loading">
+        <div className="spinner" /> {/* Add your loading spinner styles */}
+      </div>
     );
   }
 
-  return (
-    <>
+  if (!isLoggedIn) {
+    return (
       <div className="user-menu-container" ref={menuRef}>
         <button
-          className="user-menu-btn"
+          className="login-btn"
           onClick={() => setShowUserMenu(!showUserMenu)}
         >
           <UserIcon />
-          <span>{user?.name || 'User'}</span>
+          <span>Login / Register</span>
           <ChevronDownIcon />
         </button>
 
         {showUserMenu && (
           <div className="user-menu-wrapper">
-            {/* 👇 This is your dropdown */}
             <UserMenu
               user={user}
               onUserAction={handleUserAction}
               onLogout={handleLogout}
+              isLoggedIn={isLoggedIn}
             />
           </div>
         )}
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div className="user-menu-container" ref={menuRef}>
+      <button
+        className="user-menu-btn"
+        onClick={() => setShowUserMenu(!showUserMenu)}
+      >
+        <UserIcon />
+        <span>{user?.first_name || 'User'}</span>
+        <ChevronDownIcon />
+      </button>
+
+      {showUserMenu && (
+        <div className="user-menu-wrapper">
+          <UserMenu
+            user={user}
+            onUserAction={handleUserAction}
+            onLogout={handleLogout}
+            isLoggedIn={isLoggedIn}
+          />
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -21,6 +21,7 @@ const Input = forwardRef(
       getFormValues = () => ({}),
       onChangeNotify,
       onValidChange,
+      disabled = false,
       onPasswordStrengthChange, // New callback for password strength updates
     },
     ref
@@ -112,12 +113,18 @@ const Input = forwardRef(
       }
     }, [field.value, field.isValid, onValidChange]);
 
+    // 🔁 Sync internal state if initialValue prop changes
+    useEffect(() => {
+      field.setValue(initialValue);
+    }, [initialValue]);
+
     return (
       <div className={showPasswordRequirements ? 'form-input-password' : ''}>
         <label className="form-label" htmlFor={id}>
           {label}
         </label>
         <input
+          disabled={disabled}
           id={id}
           type={type}
           value={field.value}
