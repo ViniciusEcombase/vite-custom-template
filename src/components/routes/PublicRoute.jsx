@@ -4,7 +4,7 @@ import { useAuth } from '../../contextProviders/AuthProvider';
 const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
-  if (loading) return null; // Or a loading spinner
+  if (loading) return null; // or a loading spinner
 
   if (user) {
     return <Navigate to="/" replace />;
