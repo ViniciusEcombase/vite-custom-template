@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin } from 'lucide-react';
 import { useModalActions } from '../../contextProviders/ModalProvider';
 import Button from '../primitives/Button';
 import { useAuth } from '../../contextProviders/AuthProvider';
 import useFetch from '../../customHooks/useFetch';
+import Form from './Form';
 
 const MyAddresses = () => {
   const { user, refreshUser, setUser } = useAuth();
@@ -74,6 +74,28 @@ const MyAddresses = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Boolean(user?.id)]);
 
+  const handleNewAddress = () => {
+    const handleAddressFormSubmit = () => {
+      console.log('vini');
+    };
+    openModal(
+      editForm && (
+        <div className="container">
+          <div className="container container-sm" style={{ padding: '1rem' }}>
+            <Form
+              columns={2}
+              label="Change info"
+              formData={editForm}
+              onSubmit={handleAddressFormSubmit}
+              showCancel={true}
+              onCancel={closeModal}
+            />
+          </div>
+        </div>
+      )
+    );
+  };
+
   return (
     <div className="content-area">
       <div className="content-header">
@@ -130,10 +152,14 @@ const MyAddresses = () => {
           </div>
         ))}
       </div>
-      
+
       <div className="addresses-container">
         {!showAddForm && !editingAddress && (
-          <Button startIcon={mapIcon} text="Add New Address" />
+          <Button
+            startIcon={mapIcon}
+            text="Add New Address"
+            onClick={handleNewAddress}
+          />
         )}
       </div>
     </div>

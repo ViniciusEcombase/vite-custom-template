@@ -31,7 +31,8 @@ const ChevronDownIcon = () => (
 
 const UserMenu = ({ user, onUserAction, onLogout, isLoggedIn }) => {
   const menuItems = [
-    { id: 'profile', label: 'My Profile', icon: 'user' },
+    { id: 'profile', label: 'My Profile', icon: 'myProfile' },
+    { id: 'addresses', label: 'My Addresses', icon: 'map' },
     { id: 'orders', label: 'My Orders', icon: 'clipboard' },
     { id: 'wishlist', label: 'Wishlist', icon: 'heart' },
     { id: 'settings', label: 'Settings', icon: 'settings' },
@@ -44,7 +45,13 @@ const UserMenu = ({ user, onUserAction, onLogout, isLoggedIn }) => {
 
   const getIcon = (iconType) => {
     const icons = {
-      user: <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>,
+      myProfile: (
+        <>
+          <circle cx="12" cy="8" r="4" />
+          <path d="M6 20c0-3.333 2.667-6 6-6s6 2.667 6 6" />
+        </>
+      ),
+
       clipboard: (
         <>
           <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
@@ -61,36 +68,30 @@ const UserMenu = ({ user, onUserAction, onLogout, isLoggedIn }) => {
         </>
       ),
       login: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="currentColor"
-            d="M20.944 18.432a2.577 2.577 0 0 1-2.729 2.5c-2.153.012-4.307 0-6.46 0a.5.5 0 0 1 0-1c2.2 0 4.4.032 6.6 0c1.107-.016 1.589-.848 1.589-1.838V5.63a1.545 1.545 0 0 0-.969-1.471a3 3 0 0 0-1.061-.095h-6.159a.5.5 0 0 1 0-1c2.225 0 4.465-.085 6.688 0a2.566 2.566 0 0 1 2.5 2.67Z"
-          />
-          <path
-            fill="currentColor"
-            d="M15.794 12.354a.46.46 0 0 0 .138-.312l.006-.042l-.006-.041a.46.46 0 0 0-.138-.313l-3.669-3.668a.5.5 0 0 0-.707.707l2.816 2.815H3.492a.5.5 0 0 0 0 1h10.742l-2.816 2.815a.5.5 0 0 0 .707.707Z"
-          />
-        </svg>
+        <>
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+          <path d="M10 17l5-5-5-5" />
+          <path d="M15 12H3" />
+        </>
       ),
+
       register: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="currentColor"
-            d="M15 14c-2.67 0-8 1.33-8 4v2h16v-2c0-2.67-5.33-4-8-4m-9-4V7H4v3H1v2h3v3h2v-3h3v-2m6 2a4 4 0 0 0 4-4a4 4 0 0 0-4-4a4 4 0 0 0-4 4a4 4 0 0 0 4 4"
-          />
-        </svg>
+        <>
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <line x1="19" y1="8" x2="19" y2="14" />
+          <line x1="22" y1="11" x2="16" y2="11" />
+        </>
+      ),
+
+      map: (
+        <>
+          <path d="M12 21c-4-4-6-7-6-10a6 6 0 1 1 12 0c0 3-2 6-6 10z" />
+          <circle cx="12" cy="11" r="2" />
+        </>
       ),
     };
+
     return icons[iconType];
   };
 
@@ -171,6 +172,7 @@ const UserAuth = ({ onUserAction }) => {
   const handleUserAction = (action) => {
     const path =
       action === 'profile' ||
+      action === 'addresses' ||
       action === 'orders' ||
       action === 'wishlist' ||
       action === 'settings'

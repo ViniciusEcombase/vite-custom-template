@@ -78,16 +78,9 @@ const MyProfile = () => {
             label="Change info"
             formData={formWithInitialValues}
             onSubmit={handleAddressFormSubmit}
+            showCancel={true}
+            onCancel={closeModal}
           />
-
-          <div style={{ paddingTop: '10px' }}>
-            <Button
-              size="md"
-              variant="secondary"
-              text="Cancel"
-              onClick={closeModal}
-            />
-          </div>
         </div>
       </div>
     );

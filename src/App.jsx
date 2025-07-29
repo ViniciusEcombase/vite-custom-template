@@ -8,6 +8,7 @@ import PublicRoute from './components/routes/PublicRoute';
 import UserAccount from './components/pages/UserAccount';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import PrivateRoute from './components/routes/PrivateRoute';
 
 const App = () => {
   return (
@@ -32,7 +33,14 @@ const App = () => {
               }
             />
             <Route path="/" element={<Home />} />
-            <Route path="/UserAccount" element={<UserAccount />} />
+            <Route
+              path="/UserAccount"
+              element={
+                <PrivateRoute>
+                  <UserAccount />
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </ModalProvider>
       </AuthProvider>

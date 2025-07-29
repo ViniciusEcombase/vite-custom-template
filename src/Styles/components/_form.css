@@ -5,6 +5,18 @@
   margin-bottom: var(--space-6);
 }
 
+.form-group.two-columns {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+/* Make first child full width if odd number of children */
+.form-group.two-columns > *:first-child:nth-last-child(odd) {
+  grid-column: 1 / -1; /* span both columns */
+}
+
 .form-label {
   display: block;
   margin-bottom: var(--space-2);
@@ -66,4 +78,11 @@
 .form-textarea {
   min-height: 80px;
   resize: vertical;
+}
+
+/* Responsive fallback: stack inputs on small screens */
+@media (max-width: 600px) {
+  .form-group.two-columns {
+    grid-template-columns: 1fr;
+  }
 }
