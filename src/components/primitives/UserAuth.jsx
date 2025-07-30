@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contextProviders/AuthProvider';
 import { useClickOutside } from '../../customHooks/useClickOutside';
+import Button from './Button';
 
 const UserIcon = () => (
   <svg
@@ -29,6 +30,8 @@ const ChevronDownIcon = () => (
   </svg>
 );
 
+const LoadingSpinner = () => <div className="spinner spinner-sm"></div>;
+
 const UserMenu = ({ user, onUserAction, onLogout, isLoggedIn }) => {
   const menuItems = [
     { id: 'profile', label: 'My Profile', icon: 'myProfile' },
@@ -51,7 +54,6 @@ const UserMenu = ({ user, onUserAction, onLogout, isLoggedIn }) => {
           <path d="M6 20c0-3.333 2.667-6 6-6s6 2.667 6 6" />
         </>
       ),
-
       clipboard: (
         <>
           <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
@@ -74,7 +76,6 @@ const UserMenu = ({ user, onUserAction, onLogout, isLoggedIn }) => {
           <path d="M15 12H3" />
         </>
       ),
-
       register: (
         <>
           <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
@@ -83,7 +84,6 @@ const UserMenu = ({ user, onUserAction, onLogout, isLoggedIn }) => {
           <line x1="22" y1="11" x2="16" y2="11" />
         </>
       ),
-
       map: (
         <>
           <path d="M12 21c-4-4-6-7-6-10a6 6 0 1 1 12 0c0 3-2 6-6 10z" />
@@ -165,9 +165,18 @@ const UserMenu = ({ user, onUserAction, onLogout, isLoggedIn }) => {
 };
 
 const UserAuth = ({ onUserAction }) => {
-  const { user, isLoggedIn, logout, loading } = useAuth();
+  const { user, isLoggedIn, logout, loading, session } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const menuRef = useClickOutside(() => setShowUserMenu(false));
+
+  console.log('[UserAuth] Render state:', {
+    loading,
+    isLoggedIn,
+    hasUser: !!user,
+    hasSession: !!session,
+    userFirstName: user?.first_name,
+  });
 
   const handleUserAction = (action) => {
     const path =
@@ -186,30 +195,40 @@ const UserAuth = ({ onUserAction }) => {
 
   const handleLogout = async () => {
     try {
+      setIsLoggingOut(true);
+      console.log('[UserAuth] Logging out...');
       await logout();
       setShowUserMenu(false);
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('[UserAuth] Logout error:', error);
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
-  // Show loading state
-  if (loading) {
-    return (
-      <div className="user-auth-loading">
-        <div className="spinner" /> {/* Add your loading spinner styles */}
-      </div>
-    );
+  // Show loading state only when initially loading or during critical operations
+  if (loading && !session) {
+    console.log('[UserAuth] Showing loading state - no session yet');
+    return <LoadingSpinner />;
   }
 
-  if (!isLoggedIn) {
+  // If we have a session but still loading user data, show a minimal loading state
+  if (loading && session && !user && isLoggedIn) {
+    console.log('[UserAuth] Loading user data with session');
+    return <LoadingSpinner />;
+  }
+
+  // Not logged in - show login/register menu
+  if (!isLoggedIn || !session) {
+    console.log('[UserAuth] Showing login/register menu');
     return (
       <div className="user-menu-container" ref={menuRef}>
         <button
           className="login-btn"
           onClick={() => setShowUserMenu(!showUserMenu)}
+          disabled={loading}
         >
-          <UserIcon />
+          {loading ? <LoadingSpinner /> : <UserIcon />}
           <span>Login / Register</span>
           <ChevronDownIcon />
         </button>
@@ -228,16 +247,20 @@ const UserAuth = ({ onUserAction }) => {
     );
   }
 
+  // Logged in - show user menu
+  const displayName = user?.first_name || 'User';
+  console.log('[UserAuth] Showing logged in menu for:', displayName);
+
   return (
     <div className="user-menu-container" ref={menuRef}>
-      <button
-        className="user-menu-btn"
+      <Button
+        startIcon={isLoggingOut ? <LoadingSpinner /> : <UserIcon />}
+        endIcon={<ChevronDownIcon />}
         onClick={() => setShowUserMenu(!showUserMenu)}
-      >
-        <UserIcon />
-        <span>{user?.first_name || 'User'}</span>
-        <ChevronDownIcon />
-      </button>
+        variant="outline"
+        size="sm"
+        text={displayName}
+      />
 
       {showUserMenu && (
         <div className="user-menu-wrapper">

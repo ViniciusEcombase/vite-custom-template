@@ -12,9 +12,9 @@ import PrivateRoute from './components/routes/PrivateRoute';
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <ModalProvider>
       <AuthProvider>
-        <ModalProvider>
+        <BrowserRouter>
           <Routes>
             <Route
               path="/signup"
@@ -42,9 +42,9 @@ const App = () => {
               }
             />
           </Routes>
-        </ModalProvider>
+        </BrowserRouter>
       </AuthProvider>
-    </BrowserRouter>
+    </ModalProvider>
   );
 };
 
