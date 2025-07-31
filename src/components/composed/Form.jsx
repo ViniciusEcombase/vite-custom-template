@@ -3,13 +3,18 @@ import Input from '../primitives/Input';
 import Button from '../primitives/Button';
 import { useModalActions } from '../../contextProviders/ModalProvider';
 
-const Form = ({ formData, onSubmit, label }) => {
-  const { showConfirmDialog, showAlert, openModal, closeModal } =
-    useModalActions();
+const Form = ({
+  formData,
+  onSubmit,
+  label,
+  columns = 1,
+  showCancel = false,
+  onCancel = () => {},
+}) => {
+  const { showConfirmDialog, showAlert } = useModalActions();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const inputRefs = useRef({});
 
-  // Create refs for each input
   const getInputRef = useCallback((fieldId) => {
     if (!inputRefs.current[fieldId]) {
       inputRefs.current[fieldId] = React.createRef();
@@ -17,7 +22,6 @@ const Form = ({ formData, onSubmit, label }) => {
     return inputRefs.current[fieldId];
   }, []);
 
-  // ✅ ADD THIS FUNCTION - This lets each input know about other field values
   const getFormValues = useCallback(() => {
     const formValues = {};
     Object.keys(inputRefs.current).forEach((fieldId) => {
@@ -29,21 +33,17 @@ const Form = ({ formData, onSubmit, label }) => {
     return formValues;
   }, []);
 
-  // ✅ ADD THIS FUNCTION - Re-validate related fields when one changes
   const handleFieldChange = useCallback(
     (changedFieldId) => {
-      // If password changed, re-validate confirm password
       if (changedFieldId === 'password') {
         const confirmRef = inputRefs.current['confirmPassword']?.current;
         if (confirmRef && confirmRef.getValue()) {
-          // Small delay to ensure the password field has updated
           setTimeout(() => {
             confirmRef.validate(getFormValues());
           }, 50);
         }
       }
 
-      // If confirm password changed, re-validate password (if it has matching rules)
       if (changedFieldId === 'confirmPassword') {
         const passwordRef = inputRefs.current['password']?.current;
         if (passwordRef && passwordRef.getValue()) {
@@ -60,7 +60,6 @@ const Form = ({ formData, onSubmit, label }) => {
     const formValues = {};
     const validationResults = {};
 
-    // Get all current values first
     Object.keys(inputRefs.current).forEach((fieldId) => {
       const inputRef = inputRefs.current[fieldId]?.current;
       if (inputRef) {
@@ -68,7 +67,6 @@ const Form = ({ formData, onSubmit, label }) => {
       }
     });
 
-    // Validate all fields with form context
     for (const fieldId of Object.keys(inputRefs.current)) {
       const inputRef = inputRefs.current[fieldId]?.current;
       if (inputRef) {
@@ -88,7 +86,6 @@ const Form = ({ formData, onSubmit, label }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     if (isSubmitting) return;
 
     setIsSubmitting(true);
@@ -106,31 +103,24 @@ const Form = ({ formData, onSubmit, label }) => {
         console.log('Validation errors:', validationResults, values);
         showConfirmDialog({
           title: 'Validation Error',
-          message: 'Fix validations errors first',
+          message: 'Fix validation errors first',
         });
       }
     } catch (error) {
       console.error('Form submission error:', error);
       showAlert({
-        title: 'Request error Error',
-        message: 'An error ocurred when submiting the form',
+        title: 'Request Error',
+        message: 'An error occurred when submitting the form',
       });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const isFormValid = () => {
-    return Object.keys(inputRefs.current).every((fieldId) => {
-      const inputRef = inputRefs.current[fieldId]?.current;
-      return inputRef ? inputRef.getIsValid() : false;
-    });
-  };
-
   return (
     <form onSubmit={handleSubmit}>
       <h1 className="formLabel">{label}</h1>
-      <div className="form-group">
+      <div className={`form-group ${columns === 2 ? 'two-columns' : ''}`}>
         {formData.map((fieldConfig) => (
           <Input
             key={fieldConfig.id}
@@ -147,19 +137,32 @@ const Form = ({ formData, onSubmit, label }) => {
               fieldConfig.showPasswordRequirements || false
             }
             initialValue={fieldConfig.initialValue || ''}
-            getFormValues={getFormValues} // ✅ ADD THIS LINE - Pass the function to each input
-            onChangeNotify={() => handleFieldChange(fieldConfig.id)} // ✅ ADD THIS LINE - Notify when field changes
+            getFormValues={getFormValues}
+            onChangeNotify={() => handleFieldChange(fieldConfig.id)}
             disabled={fieldConfig.disabled || false}
           />
         ))}
       </div>
-      <Button
-        size="md"
-        variant="primary"
-        disabled={isSubmitting}
-        onClick={handleSubmit}
-        text={isSubmitting ? 'Submitting...' : 'Send'}
-      />
+
+      <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+        {showCancel && (
+          <Button
+            size="md"
+            variant="secondary"
+            text="Cancel"
+            onClick={onCancel}
+            disabled={isSubmitting}
+            style={{ marginLeft: 'auto' }}
+          />
+        )}
+        <Button
+          size="md"
+          variant="primary"
+          disabled={isSubmitting}
+          onClick={handleSubmit}
+          text={isSubmitting ? 'Submitting...' : 'Send'}
+        />
+      </div>
     </form>
   );
 };

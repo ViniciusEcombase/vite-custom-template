@@ -16,7 +16,10 @@ const Button = ({
   ...rest
 }) => {
   const baseClasses = 'btn';
-  const variantClasses = `btn-${variant}`;
+  const variantClasses = Array.isArray(variant)
+    ? variant.map((v) => `btn-${v}`).join(' ')
+    : `btn-${variant}`;
+
   const sizeClasses = `btn-${size}`;
   const widthClasses = fullWidth ? 'btn-full-width' : '';
   const loadingClasses = loading ? 'btn-loading' : '';
