@@ -1,14 +1,12 @@
-import React from 'react';
 import { ModalProvider } from './contextProviders/ModalProvider';
-import SignUp from './components/pages/SignUp';
-import Home from './components/pages/Home';
-import Login from './components/pages/Login';
 import { AuthProvider } from './contextProviders/AuthProvider';
-import PublicRoute from './components/routes/PublicRoute';
-import UserAccount from './components/pages/UserAccount';
-
+import Home from './pages/Home';
+import SignUp from './pages/SignUp';
+import UserAccount from './pages/UserAccount';
+import Login from './pages/Login';
+import PublicRoute from './routes/PublicRoute';
+import PrivateRoute from './routes/PrivateRoute';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import PrivateRoute from './components/routes/PrivateRoute';
 
 const App = () => {
   return (
