@@ -36,7 +36,6 @@ export const AuthProvider = ({ children }) => {
   const buildUserObject = useCallback(
     (sessionUser, customer = null, addresses = []) => {
       if (!sessionUser) return null;
-
       return {
         user_id: sessionUser.id,
         customer_id: customer?.id || null,

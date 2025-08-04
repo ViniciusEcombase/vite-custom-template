@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
-import Modal from '../components/primitives/Modal';
+import Modal from '../components/Modal/Modal';
 
 const ModalContext = createContext();
 

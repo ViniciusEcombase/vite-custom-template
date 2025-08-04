@@ -1,0 +1,449 @@
+/* 1. Revised Design Principles & Philosophy
+Design Principles & Philosophy
+Core Foundation:
+Our design system is built on a shared foundation of core design tokens — including brand colors, typography, spacing, shadows, border-radius, and transitions. These tokens establish a consistent visual language that unifies the product experience, while allowing brand customization.
+
+Contextual Flexibility:
+While the core tokens remain consistent, styles adapt contextually to the purpose and content of different pages or components to optimize usability and visual interest.
+
+Examples of Contextual Variation:
+
+Interactive Controls (e.g., Login Buttons, Menus):
+
+Use transparent backgrounds and subtle borders in neutral grays for a lightweight feel.
+
+Employ the brand primary colors (--color-primary, --color-primary-light, etc.) on hover/focus for clear, engaging highlights.
+
+Apply smooth transitions, and shadows themed with brand shadow tokens (--shadow-primary, --shadow-primary-lg) to reinforce interactivity.
+
+Content-Rich Areas (e.g., Profile Forms, Data Sections):
+
+Use solid dark gray backgrounds for clear content separation.
+
+Apply borders and soft shadows consistent with the neutral palette.
+
+Use linear gradient accent bars or highlights that leverage the brand primary color tokens to emphasize section headings or focus areas.
+
+Hover effects subtly change border colors and elevate sections with brand-themed shadows.
+
+Accessibility & Adaptability:
+The system respects user preferences including reduced motion and high contrast modes, ensuring accessible experiences across devices and contexts.
+
+Goal:
+To deliver visual harmony and coherence across the product by combining a consistent, customizable core language with purpose-driven styling that adapts elegantly to different UI contexts.
+
+2. Revised AI Prompt for Theme Guidance
+Prompt:
+
+"You are designing a modern dark-themed UI based on a shared design system with consistent core tokens for colors, typography, spacing, shadows, border-radius, and transitions.
+
+The system supports brand customization: the primary brand colors (e.g., --color-primary, --color-primary-light, --color-primary-dark) and brand-themed shadows (e.g., --shadow-primary, --shadow-primary-lg) can vary depending on user configuration.
+
+Styles adapt contextually based on component purpose:
+
+Interactive elements (login buttons, menus, etc.) use transparent backgrounds with subtle neutral gray borders and text colors. On hover or focus, they highlight using the brand primary colors and brand-themed shadows, with smooth transitions and subtle elevation effects.
+
+Content-heavy sections (profile forms, data containers, etc.) have solid dark gray backgrounds, neutral borders, and soft shadows. Accent highlights and section headers use linear gradients based on the brand primary color tokens for emphasis. Hover states slightly brighten borders and increase elevation using brand shadow tokens.
+
+All components use consistent typography and spacing from the design tokens. The theme supports accessibility preferences such as reduced motion and high contrast modes.
+
+Maintain visual consistency and coherence while enabling different UI areas to express distinct, context-appropriate personalities aligned with the customizable brand colors." */
+
+/* ---------------------------------------- */
+/* 🌐 GLOBAL DESIGN SYSTEM & RESET LAYER    */
+/* Author: You                             */
+/* Purpose: Full utility and token reference for LLMs/AI tools */
+/* ---------------------------------------- */
+
+/* ========================= */
+/* 🎨 DESIGN TOKENS          */
+/* ========================= */
+
+:root {
+  /* ---------- Typography ---------- */
+  --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  --font-heading: Georgia, 'Times New Roman', serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+
+  /* ---------- Font Sizes ---------- */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
+
+  /* ---------- Colors: Brand ---------- */
+  --color-primary: #ff7a00;
+  --color-primary-light: #ffb266;
+  --color-primary-dark: #cc6200;
+  --color-primary-darker: #994a00;
+  --gradient-primary: linear-gradient(
+    to right,
+    var(--color-primary),
+    var(--color-primary-light)
+  );
+
+  /* ---------- Colors: Neutral ---------- */
+  --color-black: #111111;
+  --color-dark: #292929;
+  --color-white: #ffffff;
+  --color-gray-900: #1f1f1f;
+  --color-gray-800: #252525;
+  --color-gray-700: #333333;
+  --color-gray-600: #4a4a4a;
+  --color-gray-500: #666666;
+  --color-gray-400: #888888;
+  --color-gray-300: #999999;
+  --color-gray-200: #cccccc;
+  --color-gray-100: #e5e5e5;
+
+  --color-text-primary: #eaeaea;
+  --color-text-secondary: #b3b3b3;
+  --color-text-muted: #999999;
+
+  /* ---------- Colors: Semantic ---------- */
+  --color-success: #10b981;
+  --color-success-light: #34d399;
+  --color-success-dark: #059669;
+  --color-error: #ef4444;
+  --color-error-light: #f87171;
+  --color-error-dark: #dc2626;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fbbf24;
+  --color-warning-dark: #d97706;
+  --color-info: #3b82f6;
+  --color-info-light: #60a5fa;
+  --color-info-dark: #2563eb;
+
+  /* ---------- Spacing Scale ---------- */
+  --space-0: 0;
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* ---------- Radius ---------- */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;
+  --radius-base: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-full: 9999px;
+
+  /* ---------- Shadows ---------- */
+  --shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-base: 0 2px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 8px 15px rgba(0, 0, 0, 0.12), 0 4px 6px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 12px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.05);
+  --shadow-2xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+
+  --shadow-primary: 0 4px 10px rgba(255, 122, 0, 0.2);
+  --shadow-primary-lg: 0 6px 14px rgba(255, 122, 0, 0.3);
+  --shadow-primary-xl: 0 10px 20px rgba(255, 122, 0, 0.25);
+
+  /* ---------- Transitions ---------- */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+  --transition-all: all 0.2s ease;
+  --transition-colors: color 0.2s ease, background-color 0.2s ease,
+    border-color 0.2s ease;
+  --transition-opacity: opacity 0.2s ease;
+  --transition-transform: transform 0.2s ease;
+  --transition-shadow: box-shadow 0.2s ease;
+
+  /* ---------- Z-Index Scale ---------- */
+  --z-hide: -1;
+  --z-auto: auto;
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-max: 2147483647;
+}
+
+/* ========================= */
+/* 🔄 BASE RESET             */
+/* ========================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  overflow-y: scroll;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background-color: var(--color-dark);
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+::selection {
+  color: var(--color-text-primary);
+  background-color: var(--color-primary);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-gray-800) inset !important;
+  -webkit-text-fill-color: var(--color-text-primary) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+/* ========================= */
+/* 📄 BASIC ELEMENTS         */
+/* ========================= */
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: var(--transition-base);
+  
+}
+a:hover {
+  color: var(--color-primary-light);
+  cursor: pointer;
+}
+a:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  color: var(--color-primary);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: var(--space-4);
+}
+
+h1 {
+  font-size: var(--text-4xl);
+}
+h2 {
+  font-size: var(--text-3xl);
+}
+h3 {
+  font-size: var(--text-2xl);
+}
+h4 {
+  font-size: var(--text-xl);
+}
+h5 {
+  font-size: var(--text-lg);
+}
+h6 {
+  font-size: var(--text-base);
+}
+
+p {
+  margin-bottom: var(--space-4);
+  color: var(--color-text-primary);
+}
+small {
+  font-size: var(--text-sm);
+}
+
+/* ========================= */
+/* ✨ BASE ANIMATIONS        */
+/* ========================= */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40%,
+  43% {
+    transform: translateY(-4px);
+  }
+  70% {
+    transform: translateY(-2px);
+  }
+  90% {
+    transform: translateY(-1px);
+  }
+}
+
+/* ========================= */
+/* ⚙️  UTILITY CLASSES       */
+/* ========================= */
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+.animate-fade-out {
+  animation: fade-out 0.3s ease-in forwards;
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out;
+}
+.animate-fade-in-down {
+  animation: fade-in-down 0.4s ease-out;
+}
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s ease-out;
+}
+.animate-pop-in {
+  animation: pop-in 0.3s ease-out;
+}
+.animate-bounce {
+  animation: bounce 2s ease infinite;
+}
+
+.text-xs {
+  font-size: var(--text-xs);
+}
+.text-sm {
+  font-size: var(--text-sm);
+}
+.text-lg {
+  font-size: var(--text-lg);
+}
+.text-xl {
+  font-size: var(--text-xl);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
