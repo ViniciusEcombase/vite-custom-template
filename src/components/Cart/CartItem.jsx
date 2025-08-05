@@ -6,11 +6,13 @@ import {
   QuantityLoader,
 } from '../Loaders/Loaders';
 import { useCart } from '../../contextProviders/CartProvider';
+import { useModalActions } from '../../contextProviders/ModalProvider';
 
 const CartItem = () => {
   const { cartItems, addCartItem, removeCartItem, deleteCartItem } = useCart();
   const [itemLoading, setItemLoading] = React.useState(new Map());
   const [priceLoading, setPriceLoading] = React.useState(new Map());
+  const { showConfirmDialog } = useModalActions();
 
   const handleAdd = async (item) => {
     const key = item.variant_id;
@@ -52,18 +54,27 @@ const CartItem = () => {
     }
   };
 
-  const handleDelete = async (item) => {
+  const handleDelete = (item) => {
     const key = item.variant_id;
-    setItemLoading((prev) => new Map(prev).set(key, 'deleting'));
-    try {
-      await deleteCartItem(item);
-    } finally {
-      setItemLoading((prev) => {
-        const map = new Map(prev);
-        map.delete(key);
-        return map;
-      });
-    }
+
+    showConfirmDialog({
+      title: 'Are you sure?',
+      message: 'This item will be deleted permanently',
+      confirmText: 'Confirm',
+      cancelText: 'Cancel',
+      onConfirm: async () => {
+        setItemLoading((prev) => new Map(prev).set(key, 'deleting'));
+        try {
+          await deleteCartItem(item);
+        } finally {
+          setItemLoading((prev) => {
+            const map = new Map(prev);
+            map.delete(key);
+            return map;
+          });
+        }
+      },
+    });
   };
 
   const items = cartItems?.data?.[0]?.items || [];
