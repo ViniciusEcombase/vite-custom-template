@@ -12,7 +12,6 @@ const Overlay = ({ children, onClose, onClickOut = () => null }) => {
   }
 
   if (overlay) {
-    console.log(document.body);
     document.body.classList.add('overlay-body');
   } else {
   }

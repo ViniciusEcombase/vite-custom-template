@@ -168,7 +168,6 @@ const useFieldValidation = (
                   };
                 }
               } catch (error) {
-                console.error('Custom validation error:', error);
                 return {
                   isValid: false,
                   error: rule.message || 'Validation error occurred',
@@ -193,7 +192,6 @@ const useFieldValidation = (
                 if (error.name === 'AbortError') {
                   return { isValid: false, error: '', aborted: true };
                 }
-                console.error('Async validation error:', error);
                 return {
                   isValid: false,
                   error: rule.message || 'Validation error occurred',
@@ -202,7 +200,6 @@ const useFieldValidation = (
               break;
 
             default:
-              console.warn(`Unknown validation rule type: ${rule.type}`);
               break;
           }
         }
@@ -396,7 +393,6 @@ const ExampleForm = () => {
       passwordValid.isValid &&
       confirmPasswordValid.isValid
     ) {
-      console.log('Form is valid!', formValues);
     }
   };
 

@@ -2,6 +2,9 @@
 @import './_base.css';
 
 /* Component styles */
+@import './components/ProductCard/_product-card.css';
+@import './components/NOTIMPLEMENTED/_product-page.css';
+@import './components/Loaders/_loaders.css';
 @import './components/Button/_button.css';
 @import './components/Cart/_cart.css';
 @import './components/ChangeTheme/_theme-picker.css';

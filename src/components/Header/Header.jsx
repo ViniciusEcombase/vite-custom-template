@@ -5,24 +5,12 @@ import UserAuth from '../UserAuth/UserAuth';
 import Cart from '../Cart/Cart';
 import ChangeTheme from '../ChangeTheme/ChangeTheme';
 import { useAuth } from '../../contextProviders/AuthProvider';
-import { useCart } from '../../customHooks/useCart';
 
 const Header = () => {
   const [showThemePicker, setShowThemePicker] = useState(false);
-
   const { isLoggedIn, user, login, logout } = useAuth();
-  const {
-    cartItems,
-    cartTotal,
-    cartItemCount,
-    updateQuantity,
-    removeFromCart,
-    addToCart,
-  } = useCart([]);
 
-  const handleSearch = (searchTerm) => {
-    console.log('Searching for:', searchTerm);
-  };
+  const handleSearch = (searchTerm) => {};
 
   const toggleThemePicker = () => {
     setShowThemePicker((prev) => !prev);
@@ -30,7 +18,6 @@ const Header = () => {
 
   const handleUserAction = (event) => {
     window.location.href = `/${event}`;
-    console.log(event);
   };
 
   return (
@@ -45,15 +32,9 @@ const Header = () => {
               <UserAuth />
             </div>
 
-            <Cart
-              cartItems={cartItems}
-              cartTotal={cartTotal}
-              cartItemCount={cartItemCount}
-              onUpdateQuantity={updateQuantity}
-              onRemoveItem={removeFromCart}
-              onViewCart={() => console.log('View Cart')}
-              onCheckout={() => console.log('Checkout')}
-            />
+            <div className="login-section">
+              <Cart />
+            </div>
 
             <div className="login-section">
               <ChangeTheme

@@ -39,7 +39,6 @@ const Login = () => {
 
   const handleSubmit = async (values) => {
     clearError();
-    console.log(values);
     try {
       const result = await login(values.email, values.password);
       if (result.success) {
@@ -63,7 +62,6 @@ const Login = () => {
         });
       }
     } catch (loginError) {
-      console.error('Login error:', loginError);
       showAlert({
         title: '❌ Login Error',
         message: 'An unexpected error occurred during login. Please try again.',
