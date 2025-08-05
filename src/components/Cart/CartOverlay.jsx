@@ -4,7 +4,7 @@ import CartFooter from './CartFooter.jsx';
 import { useCart } from '../../contextProviders/CartProvider';
 
 const CartOverlay = () => {
-  const { showCart, setShowCart, cartItems } = useCart();
+  const { showCart, setShowCart, cartItems, loading } = useCart(); // 👈 ensure you expose `loading` in CartProvider
 
   function handleClick({ target, currentTarget }) {
     if (target === currentTarget) {
@@ -12,7 +12,6 @@ const CartOverlay = () => {
     }
   }
 
-  // Extract cart data and calculate totals
   const cartData = cartItems?.data?.[0];
   const items = cartData?.items || [];
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
@@ -31,7 +30,7 @@ const CartOverlay = () => {
             <CartItem />
           </div>
 
-          <CartFooter total={cartTotal} />
+          <CartFooter total={cartTotal} loading={loading} />
         </div>
       </div>
     )
