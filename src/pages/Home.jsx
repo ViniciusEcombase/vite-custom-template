@@ -17,7 +17,6 @@ const Home = () => {
       Prefer: 'return=representation',
     },
   });
-
   useEffect(() => {
     const getProductData = async () => {
       const res = await api.get('/product_display_view');
@@ -50,9 +49,13 @@ const Home = () => {
         >
           {products &&
             products.data.map((item) => {
+              console.log(products);
+              console.log(item);
+              const firstImage = item.files;
               return (
                 <ProductCard
                   key={item.variant_id}
+                  image={firstImage?.[0]?.file_url || 'vini'}
                   title={item.product_name}
                   description={item.description}
                   price={item.price}
