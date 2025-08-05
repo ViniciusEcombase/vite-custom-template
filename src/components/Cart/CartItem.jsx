@@ -1,227 +1,71 @@
 import React from 'react';
+import {
+  CartItemLoader,
+  CartPriceLoader,
+  CartSalePriceLoader,
+  QuantityLoader,
+} from '../Loaders/Loaders';
 import { useCart } from '../../contextProviders/CartProvider';
 
 const CartItem = () => {
-  const { cartItems, addCartItem, removeCartItem, deleteCartItem, loading } =
-    useCart();
-
-  // Enhanced loading state management with better UX
+  const { cartItems, addCartItem, removeCartItem, deleteCartItem } = useCart();
   const [itemLoading, setItemLoading] = React.useState(new Map());
   const [priceLoading, setPriceLoading] = React.useState(new Map());
 
-  const handleAddItem = async (item) => {
+  const handleAdd = async (item) => {
     const key = item.variant_id;
     setItemLoading((prev) => new Map(prev).set(key, 'adding'));
     setPriceLoading((prev) => new Map(prev).set(key, true));
-
     try {
       await addCartItem(item, 1);
-    } catch (error) {
     } finally {
       setItemLoading((prev) => {
-        const newMap = new Map(prev);
-        newMap.delete(key);
-        return newMap;
+        const map = new Map(prev);
+        map.delete(key);
+        return map;
       });
       setPriceLoading((prev) => {
-        const newMap = new Map(prev);
-        newMap.delete(key);
-        return newMap;
+        const map = new Map(prev);
+        map.delete(key);
+        return map;
       });
     }
   };
 
-  const handleRemoveItem = async (item) => {
+  const handleRemove = async (item) => {
     const key = item.variant_id;
     setItemLoading((prev) => new Map(prev).set(key, 'removing'));
     setPriceLoading((prev) => new Map(prev).set(key, true));
-
     try {
       await removeCartItem(item);
-    } catch (error) {
     } finally {
       setItemLoading((prev) => {
-        const newMap = new Map(prev);
-        newMap.delete(key);
-        return newMap;
+        const map = new Map(prev);
+        map.delete(key);
+        return map;
       });
       setPriceLoading((prev) => {
-        const newMap = new Map(prev);
-        newMap.delete(key);
-        return newMap;
+        const map = new Map(prev);
+        map.delete(key);
+        return map;
       });
     }
   };
 
-  const handleDeleteItem = async (item) => {
+  const handleDelete = async (item) => {
     const key = item.variant_id;
     setItemLoading((prev) => new Map(prev).set(key, 'deleting'));
-
     try {
       await deleteCartItem(item);
-    } catch (error) {
     } finally {
       setItemLoading((prev) => {
-        const newMap = new Map(prev);
-        newMap.delete(key);
-        return newMap;
+        const map = new Map(prev);
+        map.delete(key);
+        return map;
       });
     }
   };
 
-  // Enhanced pricing renderer with better loading states
-  const renderPricing = (item, isPriceLoading, loadingAction) => {
-    const isOnSale =
-      item.unit_original_price &&
-      item.unit_current_price &&
-      parseFloat(item.unit_current_price) <
-        parseFloat(item.unit_original_price);
-
-    if (isPriceLoading) {
-      return (
-        <div className="cart-item-pricing">
-          {isOnSale ? (
-            <div className="cart-item-price-sale-loader">
-              <div className="price-current-loader"></div>
-              <div className="price-original-loader"></div>
-              <div className="discount-badge-loader"></div>
-            </div>
-          ) : (
-            <div className="cart-item-price-loader size-lg with-currency"></div>
-          )}
-        </div>
-      );
-    }
-
-    const discountPercent = isOnSale
-      ? Math.round(
-          ((parseFloat(item.unit_original_price) -
-            parseFloat(item.unit_current_price)) /
-            parseFloat(item.unit_original_price)) *
-            100
-        )
-      : 0;
-
-    const savings = isOnSale
-      ? (parseFloat(item.unit_original_price) -
-          parseFloat(item.unit_current_price)) *
-        item.quantity
-      : 0;
-
-    return (
-      <div className="cart-item-pricing">
-        {isOnSale ? (
-          <div className="cart-item-price-sale">
-            <div className="cart-item-price-current">
-              ${parseFloat(item.total_price).toFixed(2)}
-            </div>
-            <div className="cart-item-price-original">
-              $
-              {(parseFloat(item.unit_original_price) * item.quantity).toFixed(
-                2
-              )}
-            </div>
-            <div className="cart-item-discount-percent">
-              -{discountPercent}%
-            </div>
-          </div>
-        ) : (
-          <div className="cart-item-price">
-            ${parseFloat(item.total_price).toFixed(2)}
-          </div>
-        )}
-
-        {/* Savings display */}
-        {savings > 0 && (
-          <div className="cart-item-savings">
-            You save: ${savings.toFixed(2)}
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  // Enhanced quantity controls with better loading UX
-  const renderQuantityControls = (item, isLoading, loadingAction) => {
-    const isQuantityLoading =
-      isLoading && (loadingAction === 'adding' || loadingAction === 'removing');
-
-    return (
-      <div className="cart-item-quantity">
-        <button
-          onClick={() => handleRemoveItem(item)}
-          className={`quantity-btn ${
-            loadingAction === 'removing' ? 'loading' : ''
-          }`}
-          disabled={item.quantity <= 1 || isLoading}
-          title={
-            item.quantity <= 1 ? 'Cannot reduce below 1' : 'Decrease quantity'
-          }
-        >
-          <span>-</span>
-        </button>
-
-        <div
-          className={`quantity-display ${isQuantityLoading ? 'loading' : ''}`}
-        >
-          {!isQuantityLoading && item.quantity}
-        </div>
-
-        <button
-          onClick={() => handleAddItem(item)}
-          className={`quantity-btn ${
-            loadingAction === 'adding' ? 'loading' : ''
-          }`}
-          disabled={isLoading}
-          title="Increase quantity"
-        >
-          <span>+</span>
-        </button>
-      </div>
-    );
-  };
-
-  // Enhanced loading overlay component
-  const LoadingOverlay = ({ type, variant = 'spinner' }) => {
-    const getLoadingText = () => {
-      switch (type) {
-        case 'adding':
-          return 'Adding...';
-        case 'removing':
-          return 'Updating...';
-        case 'deleting':
-          return 'Removing...';
-        default:
-          return 'Loading...';
-      }
-    };
-
-    const getThemeClass = () => {
-      switch (type) {
-        case 'adding':
-          return 'loader-theme-primary';
-        case 'removing':
-          return 'loader-theme-secondary';
-        case 'deleting':
-          return 'loader-theme-muted';
-        default:
-          return 'loader-theme-primary';
-      }
-    };
-
-    return (
-      <div className="cart-item-loader-overlay">
-        <div className={`cart-item-loader ${getThemeClass()}`}>
-          <div className="cart-loader-spinner"></div>
-          <div className={`cart-loader-text cart-loader-${type}`}>
-            {getLoadingText()}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Extract items from the cart data structure
   const items = cartItems?.data?.[0]?.items || [];
 
   if (!items.length) {
@@ -235,14 +79,13 @@ const CartItem = () => {
   }
 
   return items
-    .slice() // shallow copy so we don't mutate original state
-    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at)) // oldest first
+    .slice()
+    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
     .map((item) => {
-      const loadingAction = itemLoading.get(item.variant_id);
-      const isItemLoading = Boolean(loadingAction);
-      const isPriceLoading = priceLoading.get(item.variant_id) || false;
+      const key = item.variant_id;
+      const loadingType = itemLoading.get(key);
+      const isPriceLoading = priceLoading.get(key);
 
-      // Check if item is on sale for badge display
       const isOnSale =
         item.unit_original_price &&
         item.unit_current_price &&
@@ -258,39 +101,37 @@ const CartItem = () => {
           )
         : 0;
 
+      const savings = isOnSale
+        ? (parseFloat(item.unit_original_price) -
+            parseFloat(item.unit_current_price)) *
+          item.quantity
+        : 0;
+
       return (
         <div
-          key={item.cart_item_id || item.variant_id}
+          key={item.cart_item_id || key}
           className="cart-item"
           style={{ position: 'relative' }}
         >
-          {/* Enhanced Loader Overlay - only for delete operations */}
-          {isItemLoading && loadingAction === 'deleting' && (
-            <LoadingOverlay type={loadingAction} variant="spinner" />
-          )}
+          {loadingType && <CartItemLoader action={loadingType} />}
 
           <div className="cart-item-image">
             {item.primary_image ? (
               <img src={item.primary_image} alt={item.product_name} />
             ) : (
-              <span>No Image</span>
+              <div className="cart-no-image">No Image</div>
             )}
 
-            {/* Sale Badge with improved hierarchy */}
             {isOnSale && <div className="sale-badge">-{discountPercent}%</div>}
-
-            {/* Other badges - only show if not on sale */}
             {!isOnSale && item.is_new && (
               <div className="sale-badge new-badge">NEW</div>
             )}
-
             {!isOnSale && !item.is_new && item.is_limited && (
               <div className="sale-badge limited-badge">LIMITED</div>
             )}
           </div>
 
           <div className="cart-item-details">
-            {/* Product and variant info */}
             <div className="cart-item-info">
               <h4 className="cart-item-name" title={item.product_name}>
                 {item.product_name}
@@ -302,21 +143,78 @@ const CartItem = () => {
               )}
             </div>
 
-            {/* Enhanced pricing with loading states */}
-            {renderPricing(item, isPriceLoading, loadingAction)}
+            {/* Pricing */}
+            <div className="cart-item-pricing">
+              {isPriceLoading ? (
+                isOnSale ? (
+                  <CartSalePriceLoader />
+                ) : (
+                  <CartPriceLoader size="lg" />
+                )
+              ) : isOnSale ? (
+                <div className="cart-item-price-sale">
+                  <div className="cart-item-price-current">
+                    ${parseFloat(item.total_price).toFixed(2)}
+                  </div>
+                  <div className="cart-item-price-original">
+                    $
+                    {(
+                      parseFloat(item.unit_original_price) * item.quantity
+                    ).toFixed(2)}
+                  </div>
+                  <div className="cart-item-discount-percent">
+                    -{discountPercent}%
+                  </div>
+                  {savings > 0 && (
+                    <div className="cart-item-savings">
+                      You save: ${savings.toFixed(2)}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="cart-item-price">
+                  ${parseFloat(item.total_price).toFixed(2)}
+                </div>
+              )}
+            </div>
 
-            {/* Enhanced quantity controls */}
-            {renderQuantityControls(item, isItemLoading, loadingAction)}
+            {/* Quantity Controls */}
+            <div className="cart-item-quantity">
+              <QuantityLoader
+                type="button"
+                loading={loadingType === 'removing'}
+                onClick={() => handleRemove(item)}
+                disabled={item.quantity <= 1 || !!loadingType}
+              >
+                -
+              </QuantityLoader>
+
+              <QuantityLoader
+                type="display"
+                loading={loadingType === 'adding' || loadingType === 'removing'}
+              >
+                {item.quantity}
+              </QuantityLoader>
+
+              <QuantityLoader
+                type="button"
+                loading={loadingType === 'adding'}
+                onClick={() => handleAdd(item)}
+                disabled={!!loadingType}
+              >
+                +
+              </QuantityLoader>
+            </div>
           </div>
 
-          {/* Enhanced remove button */}
+          {/* Remove Button with Icon */}
           <button
             className={`cart-remove ${
-              loadingAction === 'deleting' ? 'loading' : ''
+              loadingType === 'deleting' ? 'loading' : ''
             }`}
+            onClick={() => handleDelete(item)}
             title="Remove item from cart"
-            onClick={() => handleDeleteItem(item)}
-            disabled={isItemLoading}
+            disabled={!!loadingType}
             aria-label={`Remove ${item.product_name} from cart`}
           >
             <svg
@@ -330,7 +228,7 @@ const CartItem = () => {
               strokeLinejoin="round"
             >
               <polyline points="3,6 5,6 21,6" />
-              <path d="M19,6V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6M8,6V4A2,2 0 0,1 10,2H14A2,2 0 0,1 16,4V6"></path>
+              <path d="M19,6V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6M8,6V4A2,2 0 0,1 10,2H14A2,2 0 0,1 16,4V6" />
               <line x1="10" y1="11" x2="10" y2="17" />
               <line x1="14" y1="11" x2="14" y2="17" />
             </svg>
