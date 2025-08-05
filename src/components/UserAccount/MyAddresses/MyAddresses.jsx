@@ -6,7 +6,6 @@ import { useModalActions } from '../../../contextProviders/ModalProvider';
 import { useAuth } from '../../../contextProviders/AuthProvider';
 import useFetch from '../../../customHooks/useFetch';
 
-// Constants
 const API_CONFIG = {
   baseURL: `${import.meta.env.VITE_SUPABASE_URL}/rest/v1`,
   timeout: 10000,
@@ -74,7 +73,6 @@ const MyAddresses = () => {
         }
       } catch (err) {
         if (isMounted) {
-          console.error('Error fetching form config:', err);
           setError('Failed to load form configuration');
         }
       } finally {
@@ -127,7 +125,6 @@ const MyAddresses = () => {
 
         return response;
       } catch (err) {
-        console.error('Error adding address:', err);
         showAlert({
           title: 'Error',
           message: err.message || 'Failed to add address. Please try again.',
@@ -142,10 +139,6 @@ const MyAddresses = () => {
   // Handle editing address
   const handleEditAddress = useCallback(
     async (values, addressId) => {
-      console.log('AASDKMJAKSJJKDASJKDASJKDASJKDSAKDASJKDKJSAKJDS');
-
-      console.log(addressId);
-
       try {
         const response = await api.patch(
           `/customer_addresses?id=eq.${addressId}`,
@@ -168,7 +161,6 @@ const MyAddresses = () => {
 
         return response;
       } catch (err) {
-        console.error('Error updating address:', err);
         showAlert({
           title: 'Error',
           message: err.message || 'Failed to update address. Please try again.',
@@ -204,7 +196,6 @@ const MyAddresses = () => {
               throw new Error(response.error || 'Failed to delete address');
             }
           } catch (err) {
-            console.error('Error deleting address:', err);
             showAlert({
               title: 'Error',
               message:
@@ -248,7 +239,6 @@ const MyAddresses = () => {
           throw new Error(response.error || 'Failed to set default address');
         }
       } catch (err) {
-        console.error('Error setting default address:', err);
         showAlert({
           title: 'Error',
           message:

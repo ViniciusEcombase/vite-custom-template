@@ -64,7 +64,6 @@ const MyProfile = () => {
         }
       } catch (err) {
         if (isMounted) {
-          console.error('Error fetching form config:', err);
           setError('Failed to load form configuration');
         }
       } finally {
@@ -108,7 +107,6 @@ const MyProfile = () => {
 
         return response;
       } catch (err) {
-        console.error('Error updating profile:', err);
         showAlert({
           title: 'Error',
           message:

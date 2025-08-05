@@ -22,7 +22,6 @@ class ModalErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('Modal content error:', error, errorInfo);
   }
 
   render() {

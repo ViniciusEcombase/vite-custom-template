@@ -111,9 +111,7 @@ const SignUp = () => {
         message:
           'There was an error creating your account. Please try again or contact support if the problem persists.',
         confirmText: 'Try Again',
-        onClose: () => {
-          console.error('Registration error:', error);
-        },
+        onClose: () => {},
       });
     }
   };

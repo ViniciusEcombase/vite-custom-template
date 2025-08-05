@@ -100,14 +100,12 @@ const Form = ({
           alert('Form submitted successfully!');
         }
       } else {
-        console.log('Validation errors:', validationResults, values);
         showConfirmDialog({
           title: 'Validation Error',
           message: 'Fix validation errors first',
         });
       }
     } catch (error) {
-      console.error('Form submission error:', error);
       showAlert({
         title: 'Request Error',
         message: 'An error occurred when submitting the form',

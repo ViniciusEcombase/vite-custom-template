@@ -31,8 +31,6 @@ const useSessionTimeout = (session, onSessionExpired) => {
     if (sessionExpiredRef.current) return;
     sessionExpiredRef.current = true;
 
-    console.log('[SessionTimeout] Session expired! Showing modal.');
-
     showAlert({
       title: 'Session Expired',
       message:
@@ -41,15 +39,11 @@ const useSessionTimeout = (session, onSessionExpired) => {
       showCountdown: true,
       countdownDuration: 5,
       onCountdownComplete: () => {
-        console.log('[SessionTimeout] Redirecting to home after countdown.');
         onSessionExpired?.();
         window.location.href = `/`;
         sessionExpiredRef.current = false; // Reset for next time
       },
       onConfirm: () => {
-        console.log(
-          '[SessionTimeout] User clicked OK, redirecting immediately.'
-        );
         onSessionExpired?.();
         window.location.href = `/`;
         sessionExpiredRef.current = false; // Reset for next time
@@ -58,8 +52,6 @@ const useSessionTimeout = (session, onSessionExpired) => {
   }, [showAlert, onSessionExpired]);
 
   const showWarning = useCallback(() => {
-    console.log('[SessionTimeout] Showing session warning.');
-
     showAlert({
       title: 'Session Expiring Soon',
       message: 'Your session will expire in 2 minutes. Please save any work.',
@@ -73,14 +65,12 @@ const useSessionTimeout = (session, onSessionExpired) => {
     sessionExpiredRef.current = false;
 
     if (!session?.expires_at) {
-      console.log('[SessionTimeout] No session or expiration time available.');
       return;
     }
 
     const currentTime = Math.floor(Date.now() / 1000);
     const expiresIn = session.expires_at - currentTime;
 
-    console.log(`[SessionTimeout] Session expires in ${expiresIn} seconds.`);
 
     // If already expired or expires very soon
     if (expiresIn <= 0) {
@@ -113,14 +103,11 @@ const useSessionTimeout = (session, onSessionExpired) => {
         const expiresIn = session.expires_at - currentTime;
 
         if (expiresIn <= 0) {
-          console.log(
-            '[SessionTimeout] Session expired while page was hidden.'
-          );
+         
           handleSessionExpired();
         } else {
           // Only reschedule if significantly different (>30 seconds difference)
           // to avoid constant rescheduling
-          console.log('[SessionTimeout] Page visible, session still valid');
         }
       }
     };

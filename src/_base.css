@@ -120,7 +120,6 @@ Maintain visual consistency and coherence while enabling different UI areas to e
   --color-info-dark: #2563eb;
 
   /* ---------- Spacing Scale ---------- */
-  --space-0: 0;
   --space-1: 0.25rem; /* 4px */
   --space-2: 0.5rem; /* 8px */
   --space-3: 0.75rem; /* 12px */
@@ -136,7 +135,6 @@ Maintain visual consistency and coherence while enabling different UI areas to e
   --space-32: 8rem;
 
   /* ---------- Radius ---------- */
-  --radius-none: 0;
   --radius-sm: 0.25rem;
   --radius-base: 0.5rem;
   --radius-lg: 0.75rem;
@@ -245,7 +243,6 @@ a {
   color: var(--color-primary);
   text-decoration: none;
   transition: var(--transition-base);
-  
 }
 a:hover {
   color: var(--color-primary-light);

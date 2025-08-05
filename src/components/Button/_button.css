@@ -326,3 +326,19 @@
   border-color: var(--color-error);
   color: var(--color-white);
 }
+
+.btn-selected {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-primary);
+  
+}
+
+.btn-selected:hover:not(:disabled):not(.btn-loading) {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-primary);
+  cursor: not-allowed;
+}

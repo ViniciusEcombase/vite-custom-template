@@ -170,14 +170,6 @@ const UserAuth = ({ onUserAction }) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const menuRef = useClickOutside(() => setShowUserMenu(false));
 
-  console.log('[UserAuth] Render state:', {
-    loading,
-    isLoggedIn,
-    hasUser: !!user,
-    hasSession: !!session,
-    userFirstName: user?.first_name,
-  });
-
   const handleUserAction = (action) => {
     const path =
       action === 'profile' ||
@@ -196,31 +188,27 @@ const UserAuth = ({ onUserAction }) => {
   const handleLogout = async () => {
     try {
       setIsLoggingOut(true);
-      console.log('[UserAuth] Logging out...');
       await logout();
       setShowUserMenu(false);
     } catch (error) {
-      console.error('[UserAuth] Logout error:', error);
     } finally {
       setIsLoggingOut(false);
+      window.location.href = '/';
     }
   };
 
   // Show loading state only when initially loading or during critical operations
   if (loading && !session) {
-    console.log('[UserAuth] Showing loading state - no session yet');
     return <LoadingSpinner />;
   }
 
   // If we have a session but still loading user data, show a minimal loading state
   if (loading && session && !user && isLoggedIn) {
-    console.log('[UserAuth] Loading user data with session');
     return <LoadingSpinner />;
   }
 
   // Not logged in - show login/register menu
   if (!isLoggedIn || !session) {
-    console.log('[UserAuth] Showing login/register menu');
     return (
       <div className="user-menu-container" ref={menuRef}>
         <button
@@ -249,7 +237,6 @@ const UserAuth = ({ onUserAction }) => {
 
   // Logged in - show user menu
   const displayName = user?.first_name || 'User';
-  console.log('[UserAuth] Showing logged in menu for:', displayName);
 
   return (
     <div className="user-menu-container" ref={menuRef}>
