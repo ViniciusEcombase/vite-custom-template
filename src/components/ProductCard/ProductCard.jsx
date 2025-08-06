@@ -184,9 +184,6 @@ const ProductCard = ({
           >
             {selectedVariant.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
           </button>
-          <button className="wishlist-btn" aria-label="Add to wishlist">
-            ♡
-          </button>
         </div>
       </div>
     </div>

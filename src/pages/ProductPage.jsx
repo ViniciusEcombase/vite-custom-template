@@ -449,10 +449,6 @@ const ProductPage = ({ productId }) => {
                   ).toFixed(2)}`}
                   disabled={!selectedVariant || selectedVariant.stock <= 0}
                 />
-
-                <button className="wishlist-btn" aria-label="Add to wishlist">
-                  ♡
-                </button>
               </div>
             </div>
 

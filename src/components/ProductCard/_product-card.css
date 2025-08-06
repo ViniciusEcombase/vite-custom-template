@@ -363,28 +363,6 @@
   opacity: 0.6;
 }
 
-.wishlist-btn {
-  width: 44px;
-  height: 44px;
-  background: transparent;
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-gray-600);
-  border-radius: var(--radius-base);
-  font-size: var(--text-lg);
-  cursor: pointer;
-  transition: var(--transition-all);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.wishlist-btn:hover {
-  color: var(--color-primary);
-  border-color: var(--color-primary);
-  background: rgba(255, 122, 0, 0.1);
-  transform: scale(1.05);
-}
-
 /* ========================= */
 /* 🏷️ COLLECTIONS            */
 /* ========================= */
@@ -457,11 +435,6 @@
     flex-direction: column;
     gap: var(--space-2);
   }
-
-  .wishlist-btn {
-    width: 100%;
-    height: 40px;
-  }
 }
 
 /* ========================= */
@@ -473,7 +446,6 @@
   .product-image,
   .quick-view-btn,
   .add-to-cart-btn,
-  .wishlist-btn,
   .variant-option {
     transition: none;
   }
@@ -516,7 +488,6 @@
 /* Focus styles for keyboard navigation */
 .variant-option:focus,
 .add-to-cart-btn:focus,
-.wishlist-btn:focus,
 .quick-view-btn:focus {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
