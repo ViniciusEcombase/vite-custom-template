@@ -132,24 +132,16 @@ const CartItem = () => {
             ) : (
               <div className="cart-no-image">No Image</div>
             )}
-
-            {isOnSale && <div className="sale-badge">-{discountPercent}%</div>}
-            {!isOnSale && item.is_new && (
-              <div className="sale-badge new-badge">NEW</div>
-            )}
-            {!isOnSale && !item.is_new && item.is_limited && (
-              <div className="sale-badge limited-badge">LIMITED</div>
-            )}
           </div>
 
           <div className="cart-item-details">
             <div className="cart-item-info">
-              <h4 className="cart-item-name" title={item.product_name}>
-                {item.product_name}
+              <h4 className="cart-item-name" title={item.variant_name}>
+                {item.variant_name}
               </h4>
               {item.variant_name && item.variant_name !== 'Default' && (
-                <div className="cart-item-variant" title={item.variant_name}>
-                  {item.variant_name}
+                <div className="cart-item-variant" title={item.product_name}>
+                  {item.product_name}
                 </div>
               )}
             </div>
@@ -176,11 +168,6 @@ const CartItem = () => {
                   <div className="cart-item-discount-percent">
                     -{discountPercent}%
                   </div>
-                  {savings > 0 && (
-                    <div className="cart-item-savings">
-                      You save: ${savings.toFixed(2)}
-                    </div>
-                  )}
                 </div>
               ) : (
                 <div className="cart-item-price">
