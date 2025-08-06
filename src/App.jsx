@@ -34,7 +34,8 @@ const App = () => {
                 }
               />
               <Route path="/" element={<Home />} />
-              <Route path="/product/:productSlug" element={<ProductPage />} />
+              <Route path="/product/:variantSlug" element={<ProductPage />} />
+
               <Route
                 path="/UserAccount"
                 element={
