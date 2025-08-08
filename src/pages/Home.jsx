@@ -52,7 +52,6 @@ const Home = () => {
         const res = await api.get('/product_display_view');
         setProducts(res);
       } catch (err) {
-        console.error('Error fetching products:', err);
         setError('Failed to load products. Please try again.');
       } finally {
         setLoading(false);
@@ -63,7 +62,6 @@ const Home = () => {
   }, []);
 
   const handleAddToCart = (variant) => {
-    console.log('Adding to cart:', variant);
     // You can add cart logic here or navigate to product page
     if (variant.variant_slug) {
       window.location.href = `/product/${variant.variant_slug}`;
@@ -73,7 +71,6 @@ const Home = () => {
   };
 
   const handleViewDetails = (variant) => {
-    console.log('Viewing product details:', variant);
     // Navigate to product details page
     if (variant.variant_slug) {
       window.location.href = `/product/${variant.variant_slug}`;

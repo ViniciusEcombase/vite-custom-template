@@ -1,74 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import {
-  User,
-  Package,
-  Heart,
-  Settings,
-  ChevronRight,
-  MapPin,
-} from 'lucide-react';
+import React, { useState } from 'react';
+import { WishlistHeader } from './WishlistHeader';
+import { WishlistTabs } from './WishlistTabs';
+import { WishlistToolbar } from './WishlistToolbar';
+import { WishlistItems } from './WishlistItems';
+import { WishlistLoading } from './WishlistLoading';
+import { WishlistEmpty } from './WishlistEmpty';
+import { useWishlist } from '../../../contextProviders/WishlistProvider';
 
-const Wishlist = () => {
-  const [wishlistItems, setWishlistItems] = useState([
-    {
-      id: 1,
-      name: 'Premium Wireless Earbuds',
-      price: 199.99,
-      image: null,
-    },
-    {
-      id: 2,
-      name: 'Smart Watch Series X',
-      price: 399.99,
-      image: null,
-    },
-    {
-      id: 3,
-      name: 'Mechanical Gaming Keyboard',
-      price: 159.99,
-      image: null,
-    },
-    {
-      id: 4,
-      name: 'Ultra-wide Monitor',
-      price: 649.99,
-      image: null,
-    },
-  ]);
+export const Wishlist = () => {
+  const {
+    wishlists,
+    currentWishlist,
+    setCurrentWishlist,
+    loading: wishlistLoading,
+  } = useWishlist();
 
-  const removeFromWishlist = (id) => {
-    setWishlistItems((prev) => prev.filter((item) => item.id !== id));
+  const [activeTab, setActiveTab] = useState('all');
+  const [viewMode, setViewMode] = useState('grid');
+  const [selectedItems, setSelectedItems] = useState(new Set());
+
+  const wishlistItems = currentWishlist?.items || [];
+
+  const handleSelectAll = () => {
+    if (selectedItems.size === wishlistItems.length) {
+      setSelectedItems(new Set());
+    } else {
+      setSelectedItems(
+        new Set(wishlistItems.map((item) => item.product_variant_id))
+      );
+    }
   };
 
-  return (
-    <div className="content-area">
-      <div className="content-header">
-        <h2 className="content-title">My Wishlist</h2>
-        <p className="content-subtitle">Items you want to purchase later</p>
-      </div>
+  const handleToggleSelect = (itemId) => {
+    const newSelected = new Set(selectedItems);
+    if (newSelected.has(itemId)) {
+      newSelected.delete(itemId);
+    } else {
+      newSelected.add(itemId);
+    }
+    setSelectedItems(newSelected);
+  };
 
-      <div className="wishlist-grid">
-        {wishlistItems.map((item) => (
-          <div key={item.id} className="wishlist-item">
-            <div className="wishlist-image">
-              <span>No Image</span>
-            </div>
-            <div className="wishlist-content">
-              <h4>{item.name}</h4>
-              <div className="wishlist-price">${item.price}</div>
-              <div className="flex" style={{ gap: 'var(--space-3)' }}>
-                <button className="btn btn-primary">Add to Cart</button>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => removeFromWishlist(item.id)}
-                >
-                  <Heart className="icon" />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+  if (wishlistLoading) {
+    return <WishlistLoading />;
+  }
+
+  if (wishlists.length === 0) {
+    return <WishlistEmpty />;
+  }
+
+  return (
+    <div className="wishlist-container">
+      <WishlistHeader />
+
+      <WishlistTabs
+        wishlists={wishlists}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        currentWishlist={currentWishlist}
+        onWishlistChange={setCurrentWishlist}
+      />
+
+      <WishlistToolbar
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        selectedItems={selectedItems}
+        onSelectAll={handleSelectAll}
+        onClearSelection={() => setSelectedItems(new Set())}
+        itemCount={wishlistItems.length}
+      />
+
+      <WishlistItems
+        items={wishlistItems}
+        viewMode={viewMode}
+        selectedItems={selectedItems}
+        onToggleSelect={handleToggleSelect}
+      />
     </div>
   );
 };
