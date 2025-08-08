@@ -168,7 +168,6 @@ export const WishlistProvider = ({ children }) => {
       }
     } catch (err) {
       setError('Failed to load wishlists');
-      console.error('Load wishlists error:', err);
     } finally {
       setLoading(false);
     }
@@ -187,7 +186,6 @@ export const WishlistProvider = ({ children }) => {
 
       return { success: true };
     } catch (err) {
-      console.error('Add to wishlist error:', err);
       return { success: false, error: err.message };
     }
   };
@@ -207,7 +205,6 @@ export const WishlistProvider = ({ children }) => {
 
       return { success: true };
     } catch (err) {
-      console.error('Remove from wishlist error:', err);
       return { success: false, error: err.message };
     }
   };
@@ -230,7 +227,6 @@ export const WishlistProvider = ({ children }) => {
 
       return { success: true, wishlist: newWishlist };
     } catch (err) {
-      console.error('Create wishlist error:', err);
       return { success: false, error: err.message };
     }
   };
@@ -243,7 +239,6 @@ export const WishlistProvider = ({ children }) => {
 
   // Helper function to get current wishlist items
   const getCurrentWishlistItems = () => {
-    currentWishlist && console.log('vini');
     return currentWishlist?.items || [];
   };
 

@@ -11,6 +11,7 @@ import StorePage from './pages/StorePage';
 import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import CheckoutApp from './components/Checkout/Checkout';
 
 const App = () => {
   return (
@@ -39,7 +40,8 @@ const App = () => {
                 <Route path="/" element={<Home />} />
 
                 <Route path="/product/:variantSlug" element={<ProductPage />} />
-                <Route path="/store/" element={<StorePage />} />
+                <Route path="/store/*" element={<StorePage />} />
+                <Route path="/checkout" element={<CheckoutApp />} />
                 <Route
                   path="/UserAccount"
                   element={

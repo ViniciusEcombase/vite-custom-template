@@ -2,6 +2,7 @@ import { useEffect, useCallback, useState, useMemo } from 'react';
 import Header from '../components/Header/Header';
 import useFetch from '../customHooks/useFetch';
 import ProductCard from '../components/ProductCard/ProductCard';
+import Button from '../components/Button/Button';
 
 const Home = () => {
   const [products, setProducts] = useState(null);
@@ -177,6 +178,13 @@ const Home = () => {
             Discover our amazing collection of products with multiple variants
             and colors
           </p>
+          <Button
+            style={{ marginTop: '30px' }}
+            text={'Go to store'}
+            onClick={() => {
+              window.location.href = `/store`;
+            }}
+          />
         </section>
 
         {/* Products Section */}
@@ -252,14 +260,16 @@ const Home = () => {
               }}
             >
               {groupedProducts.length > 0 ? (
-                groupedProducts.map((variants) => (
-                  <ProductCard
-                    key={variants[0].product_id}
-                    variants={variants}
-                    onAddToCart={handleAddToCart}
-                    onViewDetails={handleViewDetails}
-                  />
-                ))
+                groupedProducts.map((variants) => {
+                  return (
+                    <ProductCard
+                      key={variants[0].product_id}
+                      variants={variants}
+                      onAddToCart={handleAddToCart}
+                      onViewDetails={handleViewDetails}
+                    />
+                  );
+                })
               ) : (
                 <div
                   style={{

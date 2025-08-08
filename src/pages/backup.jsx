@@ -30,7 +30,7 @@ const StorePage = ({ storeId = 1 }) => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [parentCategoryName, setParentCategoryName] = useState('');
-  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false); // ✅ track loading manually
 
   const apiCrud = useFetch({
     baseURL: `${import.meta.env.VITE_SUPABASE_URL}/rest/v1`,
@@ -60,10 +60,6 @@ const StorePage = ({ storeId = 1 }) => {
   );
   const api = apiRef.current;
 
-  const isLeafCategory = (category) => {
-    return category && category.children_count === 0;
-  };
-
   const fetchCategories = useCallback(
     async (parentId = null, currentPath = '') => {
       if (currentPath === '') {
@@ -89,12 +85,12 @@ const StorePage = ({ storeId = 1 }) => {
         }
       }
     },
-    []
+    [api, apiCrud, storeId]
   );
 
   const fetchProducts = useCallback(
     async (path = '', offset = 0, append = false) => {
-      setIsLoadingProducts(true);
+      setIsLoadingProducts(true); // ✅ loading begins
 
       const categoryPath = path === '' ? null : path;
       const { data, error } = await api.post('get_products_by_category_path', {
@@ -106,7 +102,7 @@ const StorePage = ({ storeId = 1 }) => {
 
       if (error) {
         if (!append) setProducts([]);
-        setIsLoadingProducts(false);
+        setIsLoadingProducts(false); // ✅ end
         return;
       }
 
@@ -120,56 +116,65 @@ const StorePage = ({ storeId = 1 }) => {
       }
 
       setHasMoreProducts(newProducts.length === PRODUCTS_PER_PAGE);
-      setIsLoadingProducts(false);
+      setIsLoadingProducts(false); // ✅ end
     },
-    []
+    [api, storeId]
   );
 
-  const fetchCategoryInfo = useCallback(async (path) => {
-    if (!path) {
-      setCurrentCategory(null);
-      setBreadcrumbs([]);
-      return;
-    }
+  const fetchCategoryInfo = useCallback(
+    async (path) => {
+      if (!path) {
+        setCurrentCategory(null);
+        setBreadcrumbs([]);
+        return;
+      }
 
-    const { data: categoryData, error: categoryError } = await api.post(
-      'get_category_by_path',
-      { path_input: path, store_id: storeId }
-    );
-
-    if (categoryError) {
-      setCurrentCategory(null);
-      setBreadcrumbs([]);
-      return;
-    }
-
-    const category = categoryData?.[0] || null;
-    setCurrentCategory(category);
-
-    if (category) {
-      const { data: breadcrumbData, error: breadcrumbError } = await api.post(
-        'get_category_breadcrumbs',
-        { category_id_input: category.id }
+      const { data: categoryData, error: categoryError } = await api.post(
+        'get_category_by_path',
+        { path_input: path, store_id: storeId }
       );
 
-      if (breadcrumbError) {
+      if (categoryError) {
+        setCurrentCategory(null);
         setBreadcrumbs([]);
-      } else {
-        setBreadcrumbs(breadcrumbData || []);
+        return;
       }
-    } else {
-      setBreadcrumbs([]);
-    }
-  }, []);
 
-  const fetchParentPath = useCallback(async (path) => {
-    if (!path) return null;
-    const { data, error } = await api.post('get_parent_category_path', {
-      current_path: path,
-    });
-    if (error || !data) return null;
-    return data;
-  }, []);
+      const category = categoryData?.[0] || null;
+      setCurrentCategory(category);
+
+      if (category) {
+        const { data: breadcrumbData, error: breadcrumbError } = await api.post(
+          'get_category_breadcrumbs',
+          { category_id_input: category.id }
+        );
+
+        if (breadcrumbError) {
+          setBreadcrumbs([]);
+        } else {
+          setBreadcrumbs(breadcrumbData || []);
+        }
+      } else {
+        setBreadcrumbs([]);
+      }
+    },
+    [api, storeId]
+  );
+
+  const fetchParentPath = useCallback(
+    async (currentPath) => {
+      const { data, error } = await api.post('get_parent_category_path', {
+        current_path: currentPath,
+      });
+
+      if (error) {
+        return null;
+      }
+
+      return data;
+    },
+    [api]
+  );
 
   const fetchParentCategoryName = useCallback(
     async (currentPath) => {
@@ -196,23 +201,14 @@ const StorePage = ({ storeId = 1 }) => {
 
       setParentCategoryName(data[0].name || '');
     },
-    [fetchParentPath]
+    [api, fetchParentPath, storeId]
   );
 
   const handleBackClick = useCallback(async () => {
     if (currentPath === '') return;
 
-    let newPath = '';
-
-    if (isLeafCategory(currentCategory)) {
-      const parentPath = await fetchParentPath(currentPath);
-      if (!parentPath) return;
-      const grandParentPath = await fetchParentPath(parentPath);
-      newPath = grandParentPath || '';
-    } else {
-      const parentPath = await fetchParentPath(currentPath);
-      newPath = parentPath || '';
-    }
+    const parentPath = await fetchParentPath(currentPath);
+    const newPath = parentPath || '';
 
     setCurrentPath(newPath);
     setCurrentPage(0);
@@ -225,7 +221,6 @@ const StorePage = ({ storeId = 1 }) => {
     window.history.pushState({}, '', url);
   }, [
     currentPath,
-    currentCategory,
     fetchParentPath,
     fetchCategoryInfo,
     fetchCategories,
@@ -254,15 +249,11 @@ const StorePage = ({ storeId = 1 }) => {
     }
   }, [hasMoreProducts, currentPage, currentPath, fetchProducts]);
 
-  const handleAddToCart = (variant) => {
-    // You can add cart logic here or navigate to product page
-    if (variant.variant_slug) {
-      window.location.href = `/product/${variant.variant_slug}`;
-    } else {
-      window.location.href = `/product/${variant.product_slug}`;
-    }
-  };
+  const handleAddToCart = useCallback((variant) => {
+    // Add to cart logic
+  }, []);
 
+  // Sync currentPath with URL
   useEffect(() => {
     const path = extractPathFromLocation(location.pathname) || '';
     if (path !== currentPath) {
@@ -270,6 +261,7 @@ const StorePage = ({ storeId = 1 }) => {
     }
   }, [location.pathname]);
 
+  // Fetch all necessary data when currentPath changes
   useEffect(() => {
     setCurrentPage(0);
     fetchCategoryInfo(currentPath);
@@ -293,13 +285,9 @@ const StorePage = ({ storeId = 1 }) => {
 
   let backLabel = '';
   if (canGoBack) {
-    if (isLeafCategory(currentCategory)) {
-      backLabel = 'Go back two levels';
-    } else {
-      backLabel = isFirstLevel
-        ? 'See all categories'
-        : `Go back to: ${parentCategoryName}`;
-    }
+    backLabel = isFirstLevel
+      ? 'See all categories'
+      : parentCategoryName || 'Back';
   }
 
   const getPageTitle = () => currentCategory?.name || 'All Products';
@@ -329,12 +317,14 @@ const StorePage = ({ storeId = 1 }) => {
               onBreadcrumbClick={handleBreadcrumbClick}
               currentCategory={currentCategory}
             />
+
             <h1 className="store-title">{getPageTitle()}</h1>
             <p className="store-subtitle">{getPageSubtitle()}</p>
           </header>
+
           <ProductGrid
             products={products}
-            loading={isLoadingProducts}
+            loading={isLoadingProducts} // ✅ Use stable loading
             hasMore={hasMoreProducts}
             onLoadMore={handleLoadMore}
             searchTerm={searchTerm}

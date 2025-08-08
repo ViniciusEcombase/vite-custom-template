@@ -62,7 +62,6 @@ export const WishlistSelectorModal = ({ productVariant, onClose }) => {
         throw new Error(result?.error || 'Failed to add to wishlist');
       }
     } catch (err) {
-      console.error('Error in handleConfirm:', err);
       // You might want to show a toast notification here
       alert(`Error: ${err.message}`);
     } finally {

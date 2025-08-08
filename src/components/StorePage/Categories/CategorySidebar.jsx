@@ -8,6 +8,7 @@ const CategorySidebar = ({
   onBackClick,
   canGoBack,
   loading,
+  backLabel, // added backLabel prop
 }) => {
   if (loading) {
     return (
@@ -40,7 +41,7 @@ const CategorySidebar = ({
           type="button"
         >
           <ChevronLeft size={16} />
-          Back to Parent
+          {backLabel}
         </button>
       )}
 

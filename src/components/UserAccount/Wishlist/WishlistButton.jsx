@@ -92,7 +92,6 @@ export const WishlistButton = ({
         setShowSelector(true);
       }
     } catch (error) {
-      console.error('Error in wishlist operation:', error);
       // You might want to show a toast notification here
       alert(`Error: ${error.message}`);
     } finally {

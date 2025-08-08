@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import ProductCard from '../../ProductCard/ProductCard'; // Assuming this is imported from your existing component
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import ProductCard from '../../ProductCard/ProductCard'; // Adjust path as needed
 
 const ProductGrid = ({
   products,
@@ -9,70 +9,84 @@ const ProductGrid = ({
   searchTerm,
   onAddToCart,
 }) => {
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const observerRef = useRef();
-  const loadingRef = useRef();
+  const loadingRef = useRef(null);
+  const observerRef = useRef(null);
 
-  // Filter products based on search term
-  useEffect(() => {
+  // Memoized filtered products to prevent unnecessary recalculations
+  const filteredProducts = useMemo(() => {
     if (!searchTerm) {
-      setFilteredProducts(products);
-    } else {
-      const filtered = products.filter(
-        (product) =>
-          product.product_name
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          product.variant_name?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredProducts(filtered);
+      return products;
     }
+
+    const lowerTerm = searchTerm.toLowerCase();
+    return products.filter(
+      (product) =>
+        product.product_name?.toLowerCase().includes(lowerTerm) ||
+        product.variant_name?.toLowerCase().includes(lowerTerm)
+    );
   }, [products, searchTerm]);
 
-  // Infinite scroll observer
+  // Memoized grouped products to prevent unnecessary recalculations
+  const productGroups = useMemo(() => {
+    const grouped = filteredProducts.reduce((acc, product) => {
+      const id = product.product_id;
+      if (!acc[id]) acc[id] = [];
+      acc[id].push(product);
+      return acc;
+    }, {});
+
+    return Object.values(grouped);
+  }, [filteredProducts]);
+
+  // Setup IntersectionObserver for infinite scroll
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    const currentRef = loadingRef.current;
+
+    // Clean up previous observer
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    if (!currentRef || !hasMore) return;
+
+    observerRef.current = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loading) {
+        const entry = entries[0];
+        if (entry.isIntersecting && hasMore && !loading) {
           onLoadMore();
         }
       },
       { threshold: 0.1 }
     );
 
-    if (loadingRef.current) {
-      observer.observe(loadingRef.current);
-    }
+    observerRef.current.observe(currentRef);
 
     return () => {
-      if (loadingRef.current) {
-        observer.unobserve(loadingRef.current);
+      if (observerRef.current) {
+        observerRef.current.disconnect();
       }
     };
   }, [hasMore, loading, onLoadMore]);
 
-  // Group products by product_id to pass variants to ProductCard
-  const groupedProducts = filteredProducts.reduce((acc, product) => {
-    const productId = product.product_id;
+  // Handle clear search
+  const handleClearSearch = () => {
+    // You might want to pass this as a prop instead of reloading
+    window.location.search = '';
+  };
 
-    if (!acc[productId]) {
-      acc[productId] = [];
-    }
-
-    acc[productId].push(product);
-    return acc;
-  }, {});
-
-  const productGroups = Object.values(groupedProducts);
-
+  // Render: Loading spinner initially
   if (loading && filteredProducts.length === 0) {
     return (
-      <div className="loading-spinner">
-        <div className="spinner"></div>
+      <div className="loading-container">
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+        </div>
+        <p>Loading products...</p>
       </div>
     );
   }
 
+  // Render: Empty state
   if (filteredProducts.length === 0 && !loading) {
     return (
       <div className="empty-state">
@@ -88,7 +102,8 @@ const ProductGrid = ({
         {searchTerm && (
           <button
             className="empty-state-action"
-            onClick={() => window.location.reload()}
+            onClick={handleClearSearch}
+            type="button"
           >
             Clear Search
           </button>
@@ -98,40 +113,46 @@ const ProductGrid = ({
   }
 
   return (
-    <>
+    <div className="product-grid-container">
       <div className="products-grid">
-        {productGroups.map((variants, index) => (
-          <ProductCard
-            key={`${variants[0].product_id}-${index}`}
-            variants={variants}
-            onAddToCart={onAddToCart}
-            onViewDetails={(variant) => {
-              // Handle view details if needed
-              console.log('View details:', variant);
-            }}
-          />
-        ))}
+        {productGroups.map((variants, index) => {
+          return (
+            <ProductCard
+              key={`${variants[0].product_id}-${index}`}
+              variants={variants}
+              onAddToCart={onAddToCart}
+            />
+          );
+        })}
       </div>
 
-      {/* Infinite scroll trigger and loading indicator */}
+      {/* Infinite scroll trigger + fallback button */}
       {hasMore && (
         <div ref={loadingRef} className="load-more-container">
           {loading ? (
             <div className="loading-spinner">
               <div className="spinner"></div>
+              <p>Loading more products...</p>
             </div>
           ) : (
             <button
               className="load-more-btn"
               onClick={onLoadMore}
               type="button"
+              disabled={loading}
             >
               Load More Products
             </button>
           )}
         </div>
       )}
-    </>
+
+      {!hasMore && productGroups.length > 0 && (
+        <div className="end-of-results">
+          <p>You've reached the end of the products</p>
+        </div>
+      )}
+    </div>
   );
 };
 
