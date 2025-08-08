@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useAuth } from '../../contextProviders/AuthProvider';
 import { useModalActions } from '../../contextProviders/ModalProvider';
+import Button from '../Button/Button';
 
 const ProductCard = ({
   variants = [], // Array of variant objects from your API
@@ -192,15 +193,12 @@ const ProductCard = ({
 
         {/* Actions */}
         <div className="product-actions">
-          <button
-            className={`add-to-cart-btn ${
-              selectedVariant.stock === 0 ? 'disabled' : ''
-            }`}
-            onClick={handleAddToCart}
+          <Button
+            size="full-width"
+            text={selectedVariant.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
             disabled={selectedVariant.stock === 0}
-          >
-            {selectedVariant.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-          </button>
+            onClick={handleAddToCart}
+          />
         </div>
       </div>
     </div>

@@ -13,6 +13,7 @@ const Button = ({
   loading = false,
   startIcon,
   endIcon,
+  selected = false,
   ...rest
 }) => {
   const baseClasses = 'btn';
@@ -23,6 +24,7 @@ const Button = ({
   const sizeClasses = `btn-${size}`;
   const widthClasses = fullWidth ? 'btn-full-width' : '';
   const loadingClasses = loading ? 'btn-loading' : '';
+  const selectedClasses = selected ? 'btn-selected' : '';
 
   const classNames = [
     baseClasses,
@@ -30,6 +32,7 @@ const Button = ({
     sizeClasses,
     widthClasses,
     loadingClasses,
+    selectedClasses,
     className,
   ]
     .filter(Boolean)
@@ -49,6 +52,7 @@ const Button = ({
       className={classNames}
       onClick={handleClick}
       aria-disabled={disabled || loading}
+      aria-pressed={selected}
       {...rest}
     >
       {loading && (

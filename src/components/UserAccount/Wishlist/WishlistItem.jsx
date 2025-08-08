@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Lucide from 'lucide-react';
 import { useWishlist } from '../../../contextProviders/WishlistProvider';
+import Button from '../../Button/Button';
 
 // ========================= //
 // 🛍️ WISHLIST ITEM          //
@@ -72,14 +73,16 @@ export const WishlistItem = ({
         </div>
 
         <div className="wishlist-item-actions">
-          <button className="add-to-cart-btn" disabled={item.stock === 0}>
-            {item.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-          </button>
-
-          <button className="move-to-wishlist-btn">
-            <Lucide.Move size={16} />
-            Move
-          </button>
+          <Button
+            size="sm"
+            variant="secondary"
+            endIcon={<Lucide.Move size={16} />}
+            text={'Move'}
+          />
+          <Button
+            text={item.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+            disabled={item.stock === 0}
+          />
         </div>
       </div>
     </div>

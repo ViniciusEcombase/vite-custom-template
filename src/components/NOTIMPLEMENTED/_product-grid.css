@@ -44,7 +44,11 @@
 }
 
 .view-toggle-btn:hover {
-  background: var(--color-gray-700);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-darker)
+  );
   color: var(--color-text-primary);
 }
 

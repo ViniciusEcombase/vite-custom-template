@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as Lucide from 'lucide-react';
 import { useWishlist } from '../../../contextProviders/WishlistProvider';
+import Button from '../../Button/Button';
 
 // ========================= //
 // ➕ CREATE WISHLIST MODAL  //
@@ -13,8 +14,7 @@ export const CreateWishlistModal = ({ onClose }) => {
   const [isPublic, setIsPublic] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!name.trim()) return;
 
     setLoading(true);
@@ -41,12 +41,14 @@ export const CreateWishlistModal = ({ onClose }) => {
       >
         <div className="wishlist-selector-header">
           <h3 className="wishlist-selector-title">Create New Wishlist</h3>
-          <button className="wishlist-selector-close" onClick={onClose}>
-            <Lucide.X size={20} />
-          </button>
+          <Button
+            variant="secondary"
+            onClick={onClose}
+            startIcon={<Lucide.X size={16} />}
+          />
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form>
           <div style={{ marginBottom: 'var(--space-4)' }}>
             <label
               style={{
@@ -122,20 +124,13 @@ export const CreateWishlistModal = ({ onClose }) => {
           </div>
 
           <div className="wishlist-selector-actions">
-            <button
-              type="button"
-              className="wishlist-selector-cancel"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="wishlist-selector-confirm"
+            <Button text={'Cancel'} onClick={onClose} variant="secondary" />
+            <Button
               disabled={!name.trim() || loading}
-            >
-              {loading ? 'Creating...' : 'Create Wishlist'}
-            </button>
+              text={loading ? 'Creating...' : 'Create Wishlist'}
+              variant="primary"
+              onClick={handleSubmit}
+            />
           </div>
         </form>
       </div>

@@ -5,6 +5,7 @@
 import React, { useState } from 'react';
 import * as Lucide from 'lucide-react';
 import { CreateWishlistModal } from './CreateWishlistModal';
+import Button from '../../Button/Button';
 
 export const WishlistHeader = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -17,13 +18,11 @@ export const WishlistHeader = () => {
       </div>
 
       <div className="wishlist-header-actions">
-        <button
-          className="create-wishlist-btn"
+        <Button
+          startIcon={<Lucide.Plus size={20} />}
+          text={'Create Wishlist'}
           onClick={() => setShowCreateForm(true)}
-        >
-          <Lucide.Plus size={20} />
-          Create Wishlist
-        </button>
+        />
       </div>
 
       {showCreateForm && (

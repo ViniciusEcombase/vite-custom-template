@@ -365,7 +365,11 @@
 }
 
 .wishlist-tab.active {
-  background: var(--gradient-primary);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
   color: var(--color-white);
   box-shadow: var(--shadow-primary);
 }

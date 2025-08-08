@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as Lucide from 'lucide-react';
 import { useWishlist } from '../../../contextProviders/WishlistProvider';
+import Button from '../../Button/Button';
 
 // ========================= //
 // 📋 WISHLIST SELECTOR      //
@@ -97,9 +98,11 @@ export const WishlistSelectorModal = ({ productVariant, onClose }) => {
       >
         <div className="wishlist-selector-header">
           <h3 className="wishlist-selector-title">Add to Wishlist</h3>
-          <button className="wishlist-selector-close" onClick={onClose}>
-            <Lucide.X size={20} />
-          </button>
+          <Button
+            variant="secondary"
+            onClick={onClose}
+            startIcon={<Lucide.X size={16} />}
+          />
         </div>
 
         <div className="wishlist-options">
@@ -154,20 +157,19 @@ export const WishlistSelectorModal = ({ productVariant, onClose }) => {
         )}
 
         <div className="wishlist-selector-actions">
-          <button
-            className="wishlist-selector-cancel"
-            onClick={onClose}
+          <Button
+            variant="secondary"
+            text={'Cancel'}
             disabled={loading}
-          >
-            Cancel
-          </button>
-          <button
-            className="wishlist-selector-confirm"
-            onClick={handleConfirm}
+            onClick={onClose}
+          />
+
+          <Button
+            variant="primary"
+            text={loading ? 'Adding...' : 'Add to Wishlist'}
             disabled={(!selectedWishlist && !newWishlistName.trim()) || loading}
-          >
-            {loading ? 'Adding...' : 'Add to Wishlist'}
-          </button>
+            onClick={handleConfirm}
+          />
         </div>
       </div>
     </div>

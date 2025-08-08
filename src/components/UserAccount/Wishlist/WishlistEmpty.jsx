@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Lucide from 'lucide-react';
+import Button from '../../Button/Button';
 
 export const WishlistEmpty = () => {
   return (
@@ -10,10 +11,13 @@ export const WishlistEmpty = () => {
         Save items you love by clicking the heart icon on any product. They'll
         appear here so you can easily find them later.
       </p>
-      <button className="browse-products-btn">
-        <Lucide.ShoppingBag size={20} />
-        Browse Products
-      </button>
+      <Button
+        onClick={() => {
+          window.location.href = '/store';
+        }}
+        text={'Browse Products'}
+        startIcon={<Lucide.ShoppingBag size={20} />}
+      />
     </div>
   );
 };

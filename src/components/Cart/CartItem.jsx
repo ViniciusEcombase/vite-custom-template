@@ -7,6 +7,7 @@ import {
 } from '../Loaders/Loaders';
 import { useCart } from '../../contextProviders/CartProvider';
 import { useModalActions } from '../../contextProviders/ModalProvider';
+import Button from '../Button/Button';
 
 const CartItem = () => {
   const { cartItems, addCartItem, removeCartItem, deleteCartItem } = useCart();
@@ -205,32 +206,29 @@ const CartItem = () => {
             </div>
           </div>
 
-          {/* Remove Button with Icon */}
-          <button
-            className={`cart-remove ${
-              loadingType === 'deleting' ? 'loading' : ''
-            }`}
-            onClick={() => handleDelete(item)}
-            title="Remove item from cart"
+          <Button
             disabled={!!loadingType}
-            aria-label={`Remove ${item.product_name} from cart`}
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="3,6 5,6 21,6" />
-              <path d="M19,6V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6M8,6V4A2,2 0 0,1 10,2H14A2,2 0 0,1 16,4V6" />
-              <line x1="10" y1="11" x2="10" y2="17" />
-              <line x1="14" y1="11" x2="14" y2="17" />
-            </svg>
-          </button>
+            variant="outline"
+            size="sm"
+            startIcon={
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="3,6 5,6 21,6" />
+                <path d="M19,6V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6M8,6V4A2,2 0 0,1 10,2H14A2,2 0 0,1 16,4V6" />
+                <line x1="10" y1="11" x2="10" y2="17" />
+                <line x1="14" y1="11" x2="14" y2="17" />
+              </svg>
+            }
+            onClick={() => handleDelete(item)}
+          />
         </div>
       );
     });

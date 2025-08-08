@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import CheckoutHeader from './CheckoutHeader';
+import Button from '../Button/Button';
 
 // ========================= MOCK DATA =========================
 const MOCK_SHIPPING_QUOTES = [
@@ -340,33 +341,6 @@ const TextArea = ({ className = '', ...props }) => (
   <textarea {...props} className={`form-textarea ${className}`} />
 );
 
-const Button = ({
-  variant = 'primary',
-  disabled = false,
-  loading = false,
-  children,
-  className = '',
-  ...props
-}) => {
-  const variantClass =
-    variant === 'primary'
-      ? 'btn-primary'
-      : variant === 'secondary'
-      ? 'btn-secondary'
-      : 'btn-ghost';
-
-  return (
-    <button
-      {...props}
-      disabled={disabled || loading}
-      className={`btn ${variantClass} ${className}`}
-    >
-      {loading && <div className="loading-spinner loading-spinner-small" />}
-      {children}
-    </button>
-  );
-};
-
 const LoadingSpinner = ({ size = 'medium' }) => (
   <div className={`loading-spinner loading-spinner-${size}`} />
 );
@@ -591,22 +565,25 @@ const PromoCodeInput = () => {
             className="promo-code-input"
             onKeyPress={(e) => e.key === 'Enter' && handleApply()}
           />
+
           <Button
             onClick={handleApply}
             loading={loading}
             disabled={!code.trim()}
-          >
-            Apply
-          </Button>
+            text={'Apply'}
+          />
         </div>
       ) : (
         <div className="promo-code-applied">
           <span className="promo-code-applied-text">
             {MOCK_PROMO_CODES[state.promoCode]?.description}
           </span>
-          <Button variant="ghost" onClick={handleRemove}>
-            Remove
-          </Button>
+          <Button
+            variant="ghost"
+            onClick={handleRemove}
+            loading={loading}
+            text={'Remove'}
+          />
         </div>
       )}
 
@@ -914,9 +891,11 @@ const Step1ContactShipping = ({ onNext }) => {
         />
       </div>
 
-      <Button onClick={handleSubmit} className="btn-full-width">
-        Continue to Shipping Method
-      </Button>
+      <Button
+        onClick={handleSubmit}
+        size="full-width"
+        text={'Continue to Shipping Method'}
+      />
     </div>
   );
 };
@@ -939,9 +918,14 @@ const Step2ShippingMethod = ({ onNext, onBack }) => {
   return (
     <div className="step-container">
       <div className="step-header">
-        <Button variant="ghost" onClick={onBack} className="back-button">
-          ← Back
-        </Button>
+        <Button
+          style={{ marginRight: '10px' }}
+          variant="outline"
+          onClick={onBack}
+          size="md"
+          text={'← Back'}
+        />
+
         <h2 className="step-title">Choose Shipping Method</h2>
       </div>
 
@@ -966,12 +950,11 @@ const Step2ShippingMethod = ({ onNext, onBack }) => {
       </FormField>
 
       <Button
-        onClick={handleSubmit}
         disabled={!state.selectedShippingMethod}
-        className="btn-full-width"
-      >
-        Continue to Payment & Review
-      </Button>
+        onClick={handleSubmit}
+        size="full-width"
+        text={'Continue to Payment & Review'}
+      />
     </div>
   );
 };
@@ -1036,9 +1019,13 @@ const Step3PaymentReview = ({ onBack, onComplete }) => {
   return (
     <div className="step-container-wide">
       <div className="step-header">
-        <Button variant="ghost" onClick={onBack} className="back-button">
-          ← Back
-        </Button>
+        <Button
+          style={{ marginRight: '10px' }}
+          variant="outline"
+          onClick={onBack}
+          size="md"
+          text={'← Back'}
+        />
         <h2 className="step-title">Payment & Review</h2>
       </div>
 
@@ -1096,12 +1083,11 @@ const Step3PaymentReview = ({ onBack, onComplete }) => {
           )}
 
           <Button
+            size="full-width"
             onClick={handlePlaceOrder}
             loading={loading}
-            className="btn-full-width btn-large"
-          >
-            {loading ? 'Processing Order...' : 'Place Order'}
-          </Button>
+            text={loading ? 'Processing Order...' : 'Place Order'}
+          />
 
           <div className="terms-text">
             By placing your order, you agree to our Terms of Service and Privacy
@@ -1140,7 +1126,11 @@ const OrderConfirmation = ({ orderNumber }) => (
       </ul>
     </div>
 
-    <Button onClick={() => window.location.reload()}>Continue Shopping</Button>
+    <Button
+      size="full-width"
+      onClick={() => (window.location.href = '/store')}
+      text={'Continue Shopping'}
+    />
   </div>
 );
 

@@ -68,50 +68,6 @@ const ProductGrid = ({
     };
   }, [hasMore, loading, onLoadMore]);
 
-  // Handle clear search
-  const handleClearSearch = () => {
-    // You might want to pass this as a prop instead of reloading
-    window.location.search = '';
-  };
-
-  // Render: Loading spinner initially
-  if (loading && filteredProducts.length === 0) {
-    return (
-      <div className="loading-container">
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-        </div>
-        <p>Loading products...</p>
-      </div>
-    );
-  }
-
-  // Render: Empty state
-  if (filteredProducts.length === 0 && !loading) {
-    return (
-      <div className="empty-state">
-        <div className="empty-state-icon">🛍️</div>
-        <h3 className="empty-state-title">
-          {searchTerm ? 'No products found' : 'No products available'}
-        </h3>
-        <p className="empty-state-message">
-          {searchTerm
-            ? `No products match "${searchTerm}". Try adjusting your search.`
-            : 'There are no products in this category yet.'}
-        </p>
-        {searchTerm && (
-          <button
-            className="empty-state-action"
-            onClick={handleClearSearch}
-            type="button"
-          >
-            Clear Search
-          </button>
-        )}
-      </div>
-    );
-  }
-
   return (
     <div className="product-grid-container">
       <div className="products-grid">
