@@ -5,6 +5,7 @@ import UserAuth from '../UserAuth/UserAuth';
 import Cart from '../Cart/Cart';
 import ChangeTheme from '../ChangeTheme/ChangeTheme';
 import { useAuth } from '../../contextProviders/AuthProvider';
+import { WishlistToolbar } from '../UserAccount/Wishlist/WishlistToolbar';
 
 const Header = () => {
   const [showThemePicker, setShowThemePicker] = useState(false);

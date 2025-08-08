@@ -1,11 +1,11 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+// ========================= //
+// WishlistToolbar.jsx
+// ========================= //
+
+import React from 'react';
 import * as Lucide from 'lucide-react';
 
-// ========================= //
-// 🛠️ WISHLIST TOOLBAR       //
-// ========================= //
-
-const WishlistToolbar = ({
+export const WishlistToolbar = ({
   viewMode,
   onViewModeChange,
   selectedItems,
@@ -38,6 +38,13 @@ const WishlistToolbar = ({
       </div>
 
       <div className="wishlist-toolbar-right">
+        {itemCount > 0 && (
+          <button className="bulk-action-btn" onClick={onSelectAll}>
+            <Lucide.CheckSquare size={16} />
+            Select All
+          </button>
+        )}
+
         {selectedItems.size > 0 && (
           <>
             <button className="bulk-action-btn">

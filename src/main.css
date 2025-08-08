@@ -17,6 +17,7 @@
 @import './components/Overlay/_overlay.css';
 @import './components/SearchBar/_search-bar.css';
 @import './components/UserAuth/_login.css';
+@import './components/StorePage/_store-page.css';
 @import './components/UserAccount/_user_account.css';
 @import './components/UserAccount/MyAddresses/_address-card.css';
 @import './components/UserAccount/MyAddresses/_my-addresses.css';

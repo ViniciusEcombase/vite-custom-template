@@ -1,10 +1,12 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
-import * as Lucide from 'lucide-react';
 // ========================= //
-// 📑 WISHLIST HEADER        //
+// WishlistHeader.jsx
 // ========================= //
 
-const WishlistHeader = () => {
+import React, { useState } from 'react';
+import * as Lucide from 'lucide-react';
+import { CreateWishlistModal } from './CreateWishlistModal';
+
+export const WishlistHeader = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   return (

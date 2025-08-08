@@ -1,15 +1,23 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React from 'react';
 import * as Lucide from 'lucide-react';
+import { useWishlist } from '../../../contextProviders/WishlistProvider';
 
 // ========================= //
 // 🛍️ WISHLIST ITEM          //
 // ========================= //
 
-const WishlistItem = ({ item, viewMode, isSelected, onToggleSelect }) => {
+export const WishlistItem = ({
+  item,
+  viewMode,
+  isSelected,
+  onToggleSelect,
+}) => {
   const { removeFromWishlist, currentWishlist } = useWishlist();
 
   const handleRemove = async () => {
-    await removeFromWishlist(item.product_variant_id, currentWishlist.id);
+    if (currentWishlist) {
+      await removeFromWishlist(item.variant_id, currentWishlist.wishlist_id);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -24,15 +32,10 @@ const WishlistItem = ({ item, viewMode, isSelected, onToggleSelect }) => {
       <div className="wishlist-item-image-container">
         <img
           src={item.file_url || '/placeholder-image.jpg'}
-          alt={item.sku}
+          alt={item.variant_sku}
           className="wishlist-item-image"
         />
-        <input
-          type="checkbox"
-          className="wishlist-item-checkbox"
-          checked={isSelected}
-          onChange={onToggleSelect}
-        />
+
         <button className="wishlist-item-remove" onClick={handleRemove}>
           <Lucide.X size={16} />
         </button>
@@ -40,7 +43,7 @@ const WishlistItem = ({ item, viewMode, isSelected, onToggleSelect }) => {
 
       <div className="wishlist-item-content">
         <div className="wishlist-item-info">
-          <h3 className="wishlist-item-name">{item.sku}</h3>
+          <h3 className="wishlist-item-name">{item.variant_name}</h3>
 
           <div className="wishlist-item-price">
             <span className="wishlist-item-current-price">
@@ -53,9 +56,11 @@ const WishlistItem = ({ item, viewMode, isSelected, onToggleSelect }) => {
             )}
           </div>
 
-          <div className="wishlist-item-added-date">
-            Added {formatDate(item.added_at)}
-          </div>
+          {item.added_at && (
+            <div className="wishlist-item-added-date">
+              Added {formatDate(item.added_at)}
+            </div>
+          )}
 
           <div
             className={`wishlist-item-stock ${

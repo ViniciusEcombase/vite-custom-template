@@ -1,10 +1,14 @@
 import React, { useState, useMemo } from 'react';
+import { useAuth } from '../../contextProviders/AuthProvider';
+import { useModalActions } from '../../contextProviders/ModalProvider';
 
 const ProductCard = ({
   variants = [], // Array of variant objects from your API
   onAddToCart,
   onViewDetails,
 }) => {
+  const { user } = useAuth();
+  const { showAlert } = useModalActions();
   // Group variants by product_id and get the first variant as default
   const productData = useMemo(() => {
     if (!variants || variants.length === 0) return null;
@@ -57,6 +61,19 @@ const ProductCard = ({
 
     return colors;
   }, [variants]);
+
+  const handleAuthRequired = () => {
+    if (!user) {
+      showAlert({
+        title: 'Login Required',
+        message: 'Please log in to save items to your wishlist',
+        confirmText: 'Login',
+        onClose: () => (window.location.href = '/login'),
+      });
+      return true;
+    }
+    return false;
+  };
 
   // Get color hex values for display (you might want to store these in your DB)
   const getColorHex = (colorName) => {

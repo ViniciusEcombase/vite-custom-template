@@ -1,11 +1,12 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState } from 'react';
 import * as Lucide from 'lucide-react';
+import { useWishlist } from '../../../contextProviders/WishlistProvider';
 
 // ========================= //
 // ➕ CREATE WISHLIST MODAL  //
 // ========================= //
 
-const CreateWishlistModal = ({ onClose }) => {
+export const CreateWishlistModal = ({ onClose }) => {
   const { createWishlist } = useWishlist();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -17,15 +18,18 @@ const CreateWishlistModal = ({ onClose }) => {
     if (!name.trim()) return;
 
     setLoading(true);
-    const result = await createWishlist(
-      name.trim(),
-      description.trim(),
-      isPublic
-    );
-    setLoading(false);
-
-    if (result.success) {
-      onClose();
+    try {
+      const result = await createWishlist(
+        name.trim(),
+        description.trim(),
+        isPublic
+      );
+      if (result.success) {
+        onClose();
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
     }
   };
 

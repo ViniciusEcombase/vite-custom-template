@@ -1,11 +1,7 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React from 'react';
 import * as Lucide from 'lucide-react';
 
-// ========================= //
-// 📭 EMPTY STATES           //
-// ========================= //
-
-const WishlistEmpty = () => {
+export const WishlistEmpty = () => {
   return (
     <div className="wishlist-empty">
       <Lucide.Heart className="wishlist-empty-icon" />
@@ -18,14 +14,6 @@ const WishlistEmpty = () => {
         <Lucide.ShoppingBag size={20} />
         Browse Products
       </button>
-    </div>
-  );
-};
-
-const WishlistLoading = () => {
-  return (
-    <div className="wishlist-loading">
-      <div className="wishlist-loading-spinner"></div>
     </div>
   );
 };

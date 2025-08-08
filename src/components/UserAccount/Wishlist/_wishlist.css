@@ -25,7 +25,7 @@
 }
 
 .wishlist-button:hover {
-  background: rgba(255, 122, 0, 0.1);
+  background: var(--shadow-primary-lg);
   color: var(--color-primary-light);
   transform: scale(1.05);
 }
@@ -36,11 +36,11 @@
 
 .wishlist-button.in-wishlist {
   color: var(--color-primary);
-  background: rgba(255, 122, 0, 0.1);
+  background: var(--shadow-primary-lg);
 }
 
 .wishlist-button.in-wishlist:hover {
-  background: rgba(255, 122, 0, 0.15);
+  background: var(--shadow-primary-lg);
   color: var(--color-primary-light);
 }
 
@@ -71,7 +71,7 @@
 }
 
 .product-card .wishlist-button:hover {
-  background: rgba(255, 122, 0, 0.9);
+  background: var(--color-primary);
   border-color: var(--color-primary);
 }
 
@@ -153,14 +153,14 @@
 
 .wishlist-option:hover {
   border-color: var(--color-primary);
-  background: rgba(255, 122, 0, 0.05);
+  background: var(--shadow-primary-lg);
   transform: translateY(-1px);
   box-shadow: var(--shadow-primary);
 }
 
 .wishlist-option.selected {
   border-color: var(--color-primary);
-  background: rgba(255, 122, 0, 0.1);
+  background: var(--shadow-primary-lg);
 }
 
 .wishlist-option-radio {
@@ -217,7 +217,7 @@
 .wishlist-selector-create:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
-  background: rgba(255, 122, 0, 0.05);
+  background: var(--shadow-primary-lg);
 }
 
 .wishlist-selector-actions {

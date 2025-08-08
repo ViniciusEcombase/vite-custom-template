@@ -6,6 +6,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../contextProviders/CartProvider';
 import { useAuth } from '../contextProviders/AuthProvider';
 import { useModalActions } from '../contextProviders/ModalProvider';
+import { WishlistButton } from '../components/UserAccount/Wishlist/WishlistButton'; // Import WishlistButton
 
 const ProductPage = ({ productId }) => {
   const { showAlert } = useModalActions();
@@ -40,7 +41,6 @@ const ProductPage = ({ productId }) => {
         setLoading(true);
 
         if (!variantSlug) {
-          console.error('No variant slug provided');
           setLoading(false);
           return;
         }
@@ -68,11 +68,9 @@ const ProductPage = ({ productId }) => {
           }
         } else {
           // Variant not found
-          console.error('Variant not found:', variantSlug);
           // You might want to redirect to 404 or home page here
         }
       } catch (error) {
-        console.error('Error loading product data:', error);
       } finally {
         setLoading(false);
       }
@@ -229,6 +227,22 @@ const ProductPage = ({ productId }) => {
     }
   };
 
+  // Handle auth requirement for wishlist button
+  const handleAuthRequired = () => {
+    if (!user) {
+      showAlert({
+        title: 'Login Required',
+        message: 'You must be logged in to add items to your wishlist',
+        confirmText: 'Login',
+        onClose: () => {
+          window.location.href = `/login`;
+        },
+      });
+      return true; // Return true to indicate auth is required and action should be prevented
+    }
+    return false; // User is authenticated, proceed with action
+  };
+
   // Custom button component for variant selection
   const VariantButton = ({ optionName, value, isSelected, attributeIndex }) => {
     const availableForAttribute = getAvailableOptionsForAttribute(optionName);
@@ -319,6 +333,16 @@ const ProductPage = ({ productId }) => {
                 )}
                 <span className="free-shipping-badge">Free Shipping</span>
               </div>
+              {/* Add wishlist button to product image */}
+              <WishlistButton
+                productVariant={{
+                  variant_id: selectedVariant.variant_id,
+                  ...selectedVariant,
+                }}
+                className="product-page-wishlist"
+                showTooltip={true}
+                onAuthRequired={handleAuthRequired}
+              />
             </div>
 
             <div className="thumbnail-container">
@@ -343,7 +367,21 @@ const ProductPage = ({ productId }) => {
           <div className="product-info">
             <div className="product-header">
               <span className="brand">{selectedVariant.collections?.[0]}</span>
-              <h1 className="product-title">{selectedVariant.variant_name}</h1>
+              <div className="product-title-row">
+                <h1 className="product-title">
+                  {selectedVariant.variant_name}
+                </h1>
+                {/* Additional wishlist button in header for easy access */}
+                <WishlistButton
+                  productVariant={{
+                    variant_id: selectedVariant.variant_id,
+                    ...selectedVariant,
+                  }}
+                  className="product-header-wishlist"
+                  showTooltip={true}
+                  onAuthRequired={handleAuthRequired}
+                />
+              </div>
 
               <div className="rating-section">
                 <div className="stars">
@@ -444,7 +482,7 @@ const ProductPage = ({ productId }) => {
                 <Button
                   onClick={handleAddToCart}
                   size="md"
-                  text={`Add to Cart - $${(
+                  text={`Add to Cart - ${(
                     selectedVariant.current_price * quantity
                   ).toFixed(2)}`}
                   disabled={!selectedVariant || selectedVariant.stock <= 0}
