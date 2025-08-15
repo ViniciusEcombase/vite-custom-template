@@ -3,7 +3,7 @@ import Button from '../../Button/Button';
 import Form from '../../Form/Form';
 import CardAddress from './CardAddress';
 import { useModalActions } from '../../../contextProviders/ModalProvider';
-import { useAuth } from '../../../contextProviders/AuthProvider';
+import { useAuth } from '../../../contextProviders/AuthProvider.tsx';
 import useFetch from '../../../customHooks/useFetch';
 
 const API_CONFIG = {

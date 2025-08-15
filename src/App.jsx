@@ -1,5 +1,5 @@
 import { ModalProvider } from './contextProviders/ModalProvider';
-import { AuthProvider } from './contextProviders/AuthProvider';
+import { AuthProvider } from './contextProviders/AuthProvider.tsx';
 import { CartProvider } from './contextProviders/CartProvider';
 import { WishlistProvider } from './contextProviders/WishlistProvider';
 import Home from './pages/Home';
@@ -12,6 +12,7 @@ import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import CheckoutApp from './components/Checkout/Checkout';
+import Testes from './pages/Testes.tsx';
 
 const App = () => {
   return (
@@ -42,6 +43,8 @@ const App = () => {
                 <Route path="/product/:variantSlug" element={<ProductPage />} />
                 <Route path="/store/*" element={<StorePage />} />
                 <Route path="/checkout" element={<CheckoutApp />} />
+                <Route path="/teste" element={<Testes />} />
+
                 <Route
                   path="/UserAccount"
                   element={

@@ -4,20 +4,97 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  ReactNode,
 } from 'react';
 import { supabase } from '../SupabaseConfiguration';
 import useFetch from '../customHooks/useFetch';
 import useSessionTimeout from '../customHooks/useSessionTimeout';
 import { useModalActions } from './ModalProvider';
+import type { Session, User, Provider, AuthError } from '@supabase/supabase-js';
 
-const AuthContext = createContext({});
+// ==========================
+// Types
+// ==========================
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+export interface Address {
+  id?: string;
+  street?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  [key: string]: any;
+}
+
+export interface Customer {
+  id?: string;
+  first_name?: string;
+  last_name?: string;
+  cpf_cnpj?: string;
+  phone?: string;
+  updated_at?: string;
+  [key: string]: any;
+}
+
+export interface Cart {
+  id: string;
+  [key: string]: any;
+}
+
+export interface AuthUser {
+  user_id: string;
+  customer_id: string | null;
+  email: string;
+  first_name: string;
+  last_name: string;
+  cpf_cnpj: string;
+  phone: string;
+  avatar: string | null;
+  updated_at: string;
+  addresses: Address[];
+  cart_id: string;
+}
+
+export interface AuthContextType {
+  user: AuthUser | null;
+  setUser: React.Dispatch<React.SetStateAction<AuthUser | null>>;
+  refreshUser: () => Promise<void>;
+  isLoggedIn: boolean;
+  loading: boolean;
+  error: string | null;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; error?: string; user?: User }>;
+  register: (
+    email: string,
+    password: string,
+    name?: string
+  ) => Promise<{ success: boolean; error?: string; user?: User | null }>;
+  logout: () => Promise<void>;
+  resetPassword: (
+    email: string
+  ) => Promise<{ success: boolean; error?: string }>;
+  updateProfile: (
+    updates: Record<string, any>
+  ) => Promise<{ success: boolean; error?: string; user?: User }>;
+  clearError: () => void;
+  api: ReturnType<typeof useFetch>;
+  fetchUserProfile: (userId: string) => Promise<any>;
+  session: Session | null;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [session, setSession] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const { showAlert } = useModalActions();
 
   const api = useFetch({
@@ -34,7 +111,12 @@ export const AuthProvider = ({ children }) => {
 
   // Helper to build user object from session and customer data
   const buildUserObject = useCallback(
-    (sessionUser, customer = null, addresses = [], cart_id = null) => {
+    (
+      sessionUser: User,
+      customer: Customer | null = null,
+      addresses: Address[] = [],
+      cart: Cart | null = null
+    ): AuthUser | null => {
       if (!sessionUser) return null;
       return {
         user_id: sessionUser.id,
@@ -46,10 +128,10 @@ export const AuthProvider = ({ children }) => {
           customer?.last_name || sessionUser.email?.split('@')[0] || 'User',
         cpf_cnpj: customer?.cpf_cnpj || '',
         phone: customer?.phone || '',
-        avatar: sessionUser.user_metadata?.avatar_url || null,
+        avatar: (sessionUser.user_metadata as any)?.avatar_url || null,
         updated_at: customer?.updated_at || new Date().toISOString(),
         addresses: Array.isArray(addresses) ? [...addresses] : [],
-        cart_id: cart_id?.id || '',
+        cart_id: cart?.id || '',
       };
     },
     []
@@ -57,7 +139,7 @@ export const AuthProvider = ({ children }) => {
 
   // Fetch user data from database
   const fetchUserData = useCallback(
-    async (sessionUser) => {
+    async (sessionUser: User): Promise<AuthUser | null> => {
       if (!sessionUser?.id) {
         return null;
       }
@@ -69,25 +151,23 @@ export const AuthProvider = ({ children }) => {
         const {
           data: [cartData],
         } = await api.get(`/carts?customer_id=eq.${customerData.id}`);
-        let addresses = [];
+        let addresses: Address[] = [];
         try {
           const { data: customerAddressData } = await api.get(
             `/customer_addresses?customer_id=eq.${customerData.id}`
           );
-
           addresses = customerAddressData || [];
-        } catch (addressErr) {
-          showAlert({ title: 'Error', message: addressErr });
+        } catch (addressErr: any) {
+          showAlert({
+            title: 'Error',
+            message: String(addressErr),
+            onClose: () => {},
+            onCountdownComplete: () => {},
+          });
         }
 
-        const userData = buildUserObject(
-          sessionUser,
-          customerData,
-          addresses,
-          cartData
-        );
-        return userData;
-      } catch (err) {
+        return buildUserObject(sessionUser, customerData, addresses, cartData);
+      } catch {
         return buildUserObject(sessionUser);
       }
     },
@@ -96,7 +176,7 @@ export const AuthProvider = ({ children }) => {
 
   // Handle auth state changes
   const handleAuthStateChange = useCallback(
-    async (event, newSession) => {
+    async (event: string, newSession: Session | null) => {
       try {
         setSession(newSession);
 
@@ -108,7 +188,6 @@ export const AuthProvider = ({ children }) => {
           return;
         }
 
-        // Only process INITIAL_SESSION and ignore SIGNED_IN to avoid duplicates
         if (event === 'INITIAL_SESSION') {
           setLoading(true);
           const userData = await fetchUserData(newSession.user);
@@ -116,46 +195,39 @@ export const AuthProvider = ({ children }) => {
           setIsLoggedIn(!!userData);
         }
 
-        // For TOKEN_REFRESHED, just update the session but keep existing user data
-        // unless the user ID changed (unlikely but possible)
         if (event === 'TOKEN_REFRESHED') {
-          const currentUserId = user?.user_id;
-          if (currentUserId !== newSession.user.id) {
+          if (user?.user_id !== newSession.user.id) {
             const userData = await fetchUserData(newSession.user);
             setUser(userData);
             setIsLoggedIn(!!userData);
-          } else {
           }
         }
 
-        // Ignore SIGNED_IN as it's redundant with INITIAL_SESSION
         if (event === 'SIGNED_IN') {
           return;
         }
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message || 'Authentication error occurred');
         setUser(null);
         setIsLoggedIn(false);
       } finally {
         if (event !== 'SIGNED_IN') {
-          // Don't set loading false for ignored events
           setLoading(false);
         }
       }
     },
-    [fetchUserData]
-  ); // Remove user dependency to prevent recreation
+    [fetchUserData, user?.user_id]
+  );
 
-  // Set up auth state listener
+  // Auth listener
   useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(handleAuthStateChange);
-
     return () => {
       subscription?.unsubscribe();
     };
-  }, []); // Remove dependency to prevent recreation
+  }, [handleAuthStateChange]);
 
   // Session timeout handler
   const handleSessionExpired = useCallback(() => {
@@ -165,68 +237,50 @@ export const AuthProvider = ({ children }) => {
     setError(null);
   }, []);
 
-  // Use the session timeout hook
   useSessionTimeout(session, handleSessionExpired);
 
-  // Refresh user data from database
+  // Refresh user
   const refreshUser = useCallback(async () => {
-    if (!session?.user) {
-      return;
-    }
-
+    if (!session?.user) return;
     try {
       const userData = await fetchUserData(session.user);
       setUser(userData);
       setIsLoggedIn(!!userData);
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message || 'Failed to refresh user data');
     }
   }, [session?.user, fetchUserData]);
 
   // Auth functions
-  const login = async (email, password) => {
+  const login = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
-
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
-      if (error) {
-        setError(error.message);
-        return { success: false, error: error.message };
-      }
-
+      if (error) return { success: false, error: error.message };
       return { success: true, user: data.user };
-    } catch (err) {
+    } catch {
       const errorMessage = 'An unexpected error occurred during login';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }
   };
 
-  const register = async (email, password, name = '') => {
+  const register = async (email: string, password: string, name = '') => {
     setLoading(true);
     setError(null);
-
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: { name },
-        },
+        options: { data: { name } },
       });
-
-      if (error) {
-        setError(error.message);
-        return { success: false, error: error.message };
-      }
-
+      if (error) return { success: false, error: error.message };
       return { success: true, user: data.user };
-    } catch (err) {
+    } catch {
       const errorMessage = 'An unexpected error occurred during registration';
       setError(errorMessage);
       return { success: false, error: errorMessage };
@@ -236,34 +290,24 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await supabase.auth.signOut();
-      // State will be cleared by the auth state change listener
-    } catch (error) {
-      // Force clear state even if logout fails
+    } catch {
       setUser(null);
       setIsLoggedIn(false);
       setSession(null);
     }
   };
 
-  const loginWithProvider = async (provider) => {
+  const loginWithProvider = async (provider: Provider) => {
     setLoading(true);
     setError(null);
-
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: { redirectTo: `${window.location.origin}/auth/callback` },
       });
-
-      if (error) {
-        setError(error.message);
-        return { success: false, error: error.message };
-      }
-
+      if (error) return { success: false, error: error.message };
       return { success: true };
-    } catch (err) {
+    } catch {
       const errorMessage = `An unexpected error occurred during ${provider} login`;
       setError(errorMessage);
       return { success: false, error: errorMessage };
@@ -272,22 +316,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const resetPassword = async (email) => {
+  const resetPassword = async (email: string) => {
     setLoading(true);
     setError(null);
-
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
-
-      if (error) {
-        setError(error.message);
-        return { success: false, error: error.message };
-      }
-
+      if (error) return { success: false, error: error.message };
       return { success: true };
-    } catch (err) {
+    } catch {
       const errorMessage = 'An unexpected error occurred during password reset';
       setError(errorMessage);
       return { success: false, error: errorMessage };
@@ -296,27 +334,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateProfile = async (updates) => {
+  const updateProfile = async (updates: Record<string, any>) => {
     setLoading(true);
     setError(null);
-
     try {
       const { data, error } = await supabase.auth.updateUser({ data: updates });
+      if (error) return { success: false, error: error.message };
 
-      if (error) {
-        setError(error.message);
-        return { success: false, error: error.message };
+      // Instead of shallow update, refresh full user info:
+      if (session?.user) {
+        const userData = await fetchUserData(session.user);
+        setUser(userData);
+        setIsLoggedIn(!!userData);
       }
 
-      // Update local user state
-      setUser((prev) => ({
-        ...prev,
-        ...updates,
-        name: updates.name || prev?.name,
-      }));
-
       return { success: true, user: data.user };
-    } catch (err) {
+    } catch {
       const errorMessage = 'An unexpected error occurred during profile update';
       setError(errorMessage);
       return { success: false, error: errorMessage };
@@ -325,20 +358,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const clearError = useCallback(() => {
-    setError(null);
-  }, []);
+  const clearError = useCallback(() => setError(null), []);
 
-  const fetchUserProfile = async (userId) => {
+  const fetchUserProfile = async (userId: string) => {
     try {
       const result = await api.get(`/profiles?id=eq.${userId}`);
       return result;
-    } catch (error) {
+    } catch (error: any) {
       return { success: false, error: error.message };
     }
   };
 
-  const value = {
+  const value: AuthContextType = {
     user,
     setUser,
     refreshUser,
@@ -348,7 +379,6 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
-    loginWithProvider,
     resetPassword,
     updateProfile,
     clearError,
@@ -360,11 +390,9 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
 

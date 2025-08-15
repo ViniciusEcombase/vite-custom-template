@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, useMemo } from 'react';
 import Header from '../components/Header/Header';
 import useFetch from '../customHooks/useFetch';
 import ProductCard from '../components/ProductCard/ProductCard';
-import Button from '../components/Button/Button';
+import Button from '../components/Button/Button.tsx';
 
 const Home = () => {
   const [products, setProducts] = useState(null);

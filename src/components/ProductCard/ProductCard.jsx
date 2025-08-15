@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useAuth } from '../../contextProviders/AuthProvider';
+import { useAuth } from '../../contextProviders/AuthProvider.tsx';
 import { useModalActions } from '../../contextProviders/ModalProvider';
 import Button from '../Button/Button';
 

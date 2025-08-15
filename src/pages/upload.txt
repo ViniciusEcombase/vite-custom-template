@@ -1,0 +1,168 @@
+import React, { useState } from 'react';
+
+const SUPABASE_URL = 'https://niihlyofonxtmzgzanpv.supabase.co';
+const SERVICE_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5paWhseW9mb254dG16Z3phbnB2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjcyMzg2MCwiZXhwIjoyMDYyMjk5ODYwfQ.4Cy3yD5bJcDoI5xf1hYCdswiNHpRy1C9zETJH6czBpk'; // Only for testing
+const BUCKET_NAME = 'loja-do-vini';
+
+const Testes = () => {
+  const [files, setFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [fileUrls, setFileUrls] = useState([]);
+
+  // Handle file selection
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+
+    // Merge new files with existing files
+    const updatedFiles = [...files, ...selectedFiles];
+    setFiles(updatedFiles);
+
+    const newPreviews = selectedFiles.map((file) => ({
+      url: URL.createObjectURL(file),
+      type: file.type,
+      name: file.name,
+    }));
+
+    setPreviews((prev) => [...prev, ...newPreviews]);
+  };
+
+  // Remove a selected file before uploading
+  const handleRemoveFile = (index) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+    setPreviews((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const uploadFile = async (bucketName, filePath, file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('cacheControl', '3600');
+    formData.append('upsert', 'true');
+
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/storage/v1/object/${bucketName}/${filePath}`,
+        {
+          method: 'POST',
+          headers: {
+            apikey: SERVICE_KEY,
+            Authorization: `Bearer ${SERVICE_KEY}`,
+          },
+          body: formData,
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) {
+        console.error('Upload error:', data);
+        alert(`Upload failed for ${file.name}: ${data.message}`);
+        return null;
+      }
+
+      return `${SUPABASE_URL}/storage/v1/object/public/${bucketName}/${filePath}`;
+    } catch (err) {
+      console.error('Upload exception:', err);
+      alert(`Upload failed for ${file.name}. See console.`);
+      return null;
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!files.length) {
+      alert('Please select files first');
+      return;
+    }
+
+    setUploading(true);
+    const uploadedUrls = [];
+
+    for (const file of files) {
+      const url = await uploadFile(
+        BUCKET_NAME,
+        `review_media/${file.name}`,
+        file
+      );
+      if (url) uploadedUrls.push(url);
+    }
+
+    setFileUrls(uploadedUrls);
+    setUploading(false);
+    setFiles([]);
+    setPreviews([]);
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="file"
+          onChange={handleFileChange}
+          multiple
+          accept="image/*,video/*"
+        />
+        <button type="submit" disabled={uploading}>
+          {uploading ? 'Uploading...' : 'Enviar'}
+        </button>
+      </form>
+
+      {/* Preview selected files with remove button */}
+      {previews.length > 0 && (
+        <div
+          style={{
+            marginTop: '20px',
+            display: 'flex',
+            gap: '10px',
+            flexWrap: 'wrap',
+          }}
+        >
+          {previews.map((preview, index) => (
+            <div key={preview.url} style={{ position: 'relative' }}>
+              {preview.type.startsWith('video') ? (
+                <video
+                  src={preview.url}
+                  controls
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    objectFit: 'cover',
+                  }}
+                />
+              ) : (
+                <img
+                  src={preview.url}
+                  alt={preview.name}
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    objectFit: 'cover',
+                  }}
+                />
+              )}
+              <button
+                onClick={() => handleRemoveFile(index)}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  background: 'red',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '20px',
+                  height: '20px',
+                  cursor: 'pointer',
+                }}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Testes;

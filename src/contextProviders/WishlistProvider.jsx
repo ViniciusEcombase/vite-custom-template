@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import useFetch from '../customHooks/useFetch';
-import { useAuth } from './AuthProvider';
+import { useAuth } from './AuthProvider.tsx';
 
 const WishlistContext = createContext();
 

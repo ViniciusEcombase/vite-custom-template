@@ -4,7 +4,7 @@ import SearchBar from '../SearchBar/SearchBar';
 import UserAuth from '../UserAuth/UserAuth';
 import Cart from '../Cart/Cart';
 import ChangeTheme from '../ChangeTheme/ChangeTheme';
-import { useAuth } from '../../contextProviders/AuthProvider';
+import { useAuth } from '../../contextProviders/AuthProvider.tsx';
 import { WishlistToolbar } from '../UserAccount/Wishlist/WishlistToolbar';
 
 const Header = () => {

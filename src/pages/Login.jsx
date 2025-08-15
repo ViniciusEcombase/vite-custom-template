@@ -8,7 +8,7 @@ import Header from '../components/Header/Header';
 import Form from '../components/Form/Form';
 import useFetch from '../customHooks/useFetch';
 import { useModalActions } from '../contextProviders/ModalProvider';
-import { useAuth } from '../contextProviders/AuthProvider';
+import { useAuth } from '../contextProviders/AuthProvider.tsx';
 
 const Login = () => {
   const { showAlert } = useModalActions();

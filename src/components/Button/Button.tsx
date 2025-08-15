@@ -1,6 +1,35 @@
 import React from 'react';
 
-const Button = ({
+type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'danger'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'light'
+  | 'dark'
+  | 'outline';
+
+type ButtonSize = 'sm' | 'md' | 'lg';
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children?: React.ReactNode;
+  text?: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
+  variant?: ButtonVariant | ButtonVariant[];
+  size?: ButtonSize;
+  fullWidth?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  className?: string;
+  loading?: boolean;
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
+  selected?: boolean;
+}
+
+const Button: React.FC<ButtonProps> = ({
   children,
   text,
   onClick,

@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useAuth } from './AuthProvider';
+import { useAuth } from './AuthProvider.tsx';
 import useFetch from '../customHooks/useFetch';
 
 const CartContext = createContext();
@@ -67,8 +67,7 @@ export const CartProvider = ({ children }) => {
       if (cart_items.data && cart_items.data.length > 0) {
         setCart(cart_items.data[0]);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }, [user?.customer_id, user?.cart_id]);
 
   // Optimistic update function for better UX - updated for new structure
@@ -247,8 +246,7 @@ export const CartProvider = ({ children }) => {
           const { data } = await api.post('/carts', {
             customer_id: user.customer_id,
           });
-        } catch (error) {
-        }
+        } catch (error) {}
       }
 
       // Only fetch cart data if we have a cart_id
