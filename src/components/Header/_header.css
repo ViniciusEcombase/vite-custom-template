@@ -21,3 +21,12 @@
   align-items: center;
   gap: var(--space-4);
 }
+
+
+.header-checkout-container {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+}

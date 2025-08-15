@@ -117,6 +117,8 @@
 
 .btn-outline:active:not(:disabled):not(.btn-loading) {
   transform: translateY(0);
+  background: rgba(var(--color-primary-rgb), 0.1);
+  border-color: var(--color-primary-dark);
 }
 
 /* Ghost Variant */
@@ -161,6 +163,12 @@
 
 .btn-danger:active:not(:disabled):not(.btn-loading) {
   transform: translateY(0);
+  background: linear-gradient(
+    135deg,
+    var(--color-error-dark),
+    var(--color-error-darker)
+  );
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
 }
 
 /* Size Variants */
@@ -305,6 +313,7 @@
   }
 }
 
+/* Icon Button */
 .btn-icon {
   padding: var(--space-2) var(--space-3);
   background: none;
@@ -321,18 +330,30 @@
   color: var(--color-text-primary);
 }
 
+.btn-icon:active:not(:disabled):not(.btn-loading) {
+  background-color: var(--color-gray-600);
+  border-color: var(--color-gray-500);
+  transform: scale(0.98);
+}
+
 .btn-icon.btn-danger:hover {
   background-color: var(--color-error);
   border-color: var(--color-error);
   color: var(--color-white);
 }
 
+.btn-icon.btn-danger:active:not(:disabled):not(.btn-loading) {
+  background-color: var(--color-error-dark);
+  border-color: var(--color-error-dark);
+  transform: scale(0.98);
+}
+
+/* Selected Button */
 .btn-selected {
   background: var(--color-primary);
   color: var(--color-white);
   border-color: var(--color-primary);
   box-shadow: var(--shadow-primary);
-  
 }
 
 .btn-selected:hover:not(:disabled):not(.btn-loading) {
@@ -341,4 +362,12 @@
   border-color: var(--color-primary);
   box-shadow: var(--shadow-primary);
   cursor: not-allowed;
+}
+
+.btn-selected:active:not(:disabled):not(.btn-loading) {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-primary);
+  transform: none;
 }

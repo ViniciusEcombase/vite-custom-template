@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Form from '../components/Form/Form';
 import Header from '../components/Header/Header';
 import useFetch from '../customHooks/useFetch';
-import { useAuth } from '../contextProviders/AuthProvider';
+import { useAuth } from '../contextProviders/AuthProvider.tsx';
 import { useModalActions } from '../contextProviders/ModalProvider';
 
 const SignUp = () => {

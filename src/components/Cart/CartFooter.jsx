@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCart } from '../../contextProviders/CartProvider';
 import { CartTotalLoader } from '../Loaders/Loaders'; // adjust path if needed
+import Button from '../Button/Button';
 
 const CartFooter = ({ total, loading = false }) => {
   const { showCart } = useCart();
@@ -19,10 +20,14 @@ const CartFooter = ({ total, loading = false }) => {
           )}
         </div>
         <div className="cart-actions">
-          <button className="cart-action-btn cart-view-btn">View Cart</button>
-          <button className="cart-action-btn cart-checkout-btn">
-            <span>Checkout</span>
-          </button>
+          <Button
+            variant="primary"
+            size="full-width"
+            text={'Checkout'}
+            onClick={() => {
+              window.location.href = '/checkout';
+            }}
+          />
         </div>
       </div>
     )

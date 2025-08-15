@@ -1,6 +1,35 @@
 import React from 'react';
 
-const Button = ({
+type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'danger'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'light'
+  | 'dark'
+  | 'outline';
+
+type ButtonSize = 'sm' | 'md' | 'lg';
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children?: React.ReactNode;
+  text?: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
+  variant?: ButtonVariant | ButtonVariant[];
+  size?: ButtonSize;
+  fullWidth?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  className?: string;
+  loading?: boolean;
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
+  selected?: boolean;
+}
+
+const Button: React.FC<ButtonProps> = ({
   children,
   text,
   onClick,
@@ -13,6 +42,7 @@ const Button = ({
   loading = false,
   startIcon,
   endIcon,
+  selected = false,
   ...rest
 }) => {
   const baseClasses = 'btn';
@@ -23,6 +53,7 @@ const Button = ({
   const sizeClasses = `btn-${size}`;
   const widthClasses = fullWidth ? 'btn-full-width' : '';
   const loadingClasses = loading ? 'btn-loading' : '';
+  const selectedClasses = selected ? 'btn-selected' : '';
 
   const classNames = [
     baseClasses,
@@ -30,6 +61,7 @@ const Button = ({
     sizeClasses,
     widthClasses,
     loadingClasses,
+    selectedClasses,
     className,
   ]
     .filter(Boolean)
@@ -49,6 +81,7 @@ const Button = ({
       className={classNames}
       onClick={handleClick}
       aria-disabled={disabled || loading}
+      aria-pressed={selected}
       {...rest}
     >
       {loading && (

@@ -2,6 +2,7 @@ import { useEffect, useCallback, useState, useMemo } from 'react';
 import Header from '../components/Header/Header';
 import useFetch from '../customHooks/useFetch';
 import ProductCard from '../components/ProductCard/ProductCard';
+import Button from '../components/Button/Button.tsx';
 
 const Home = () => {
   const [products, setProducts] = useState(null);
@@ -52,7 +53,6 @@ const Home = () => {
         const res = await api.get('/product_display_view');
         setProducts(res);
       } catch (err) {
-        console.error('Error fetching products:', err);
         setError('Failed to load products. Please try again.');
       } finally {
         setLoading(false);
@@ -63,7 +63,6 @@ const Home = () => {
   }, []);
 
   const handleAddToCart = (variant) => {
-    console.log('Adding to cart:', variant);
     // You can add cart logic here or navigate to product page
     if (variant.variant_slug) {
       window.location.href = `/product/${variant.variant_slug}`;
@@ -73,7 +72,6 @@ const Home = () => {
   };
 
   const handleViewDetails = (variant) => {
-    console.log('Viewing product details:', variant);
     // Navigate to product details page
     if (variant.variant_slug) {
       window.location.href = `/product/${variant.variant_slug}`;
@@ -180,6 +178,13 @@ const Home = () => {
             Discover our amazing collection of products with multiple variants
             and colors
           </p>
+          <Button
+            style={{ marginTop: '30px' }}
+            text={'Go to store'}
+            onClick={() => {
+              window.location.href = `/store`;
+            }}
+          />
         </section>
 
         {/* Products Section */}
@@ -255,14 +260,16 @@ const Home = () => {
               }}
             >
               {groupedProducts.length > 0 ? (
-                groupedProducts.map((variants) => (
-                  <ProductCard
-                    key={variants[0].product_id}
-                    variants={variants}
-                    onAddToCart={handleAddToCart}
-                    onViewDetails={handleViewDetails}
-                  />
-                ))
+                groupedProducts.map((variants) => {
+                  return (
+                    <ProductCard
+                      key={variants[0].product_id}
+                      variants={variants}
+                      onAddToCart={handleAddToCart}
+                      onViewDetails={handleViewDetails}
+                    />
+                  );
+                })
               ) : (
                 <div
                   style={{

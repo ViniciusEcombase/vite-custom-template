@@ -17,6 +17,7 @@
 @import './components/Overlay/_overlay.css';
 @import './components/SearchBar/_search-bar.css';
 @import './components/UserAuth/_login.css';
+@import './components/StorePage/_store-page.css';
 @import './components/UserAccount/_user_account.css';
 @import './components/UserAccount/MyAddresses/_address-card.css';
 @import './components/UserAccount/MyAddresses/_my-addresses.css';
@@ -24,3 +25,5 @@
 @import './components/UserAccount/MyProfile/_my-profile.css';
 @import './components/UserAccount/Settings/_settings.css';
 @import './components/UserAccount/Wishlist/_wishlist.css';
+@import './components/Checkout/_checkout.css';
+@import './components/Review/_reviews.css';

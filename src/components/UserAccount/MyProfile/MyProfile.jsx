@@ -4,7 +4,7 @@ import Button from '../../Button/Button';
 import Form from '../../Form/Form';
 import useFetch from '../../../customHooks/useFetch';
 import { useModalActions } from '../../../contextProviders/ModalProvider';
-import { useAuth } from '../../../contextProviders/AuthProvider';
+import { useAuth } from '../../../contextProviders/AuthProvider.tsx';
 
 // Constants
 const API_CONFIG = {
@@ -213,6 +213,7 @@ const MyProfile = () => {
                 data-field-type={item.type}
               >
                 <Input
+                  key={`${item.id}-${user.updated_at}`}
                   initialValue={user[item.id] ?? ''}
                   type={item.type}
                   disabled={true}

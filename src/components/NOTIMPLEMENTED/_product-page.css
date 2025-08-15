@@ -530,26 +530,6 @@
   color: var(--color-white);
 }
 
-.wishlist-btn {
-  width: 50px;
-  height: 50px;
-  background: transparent;
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-gray-600);
-  border-radius: var(--radius-base);
-  font-size: var(--text-xl);
-  cursor: pointer;
-  transition: var(--transition-all);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.wishlist-btn:hover {
-  color: var(--color-primary);
-  border-color: var(--color-primary);
-}
-
 .features-section h3 {
   font-size: var(--text-lg);
   margin-bottom: var(--space-4);

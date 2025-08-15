@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import useClickOutside from '../../customHooks/useClickOutside';
+import Button from '../Button/Button';
 
 const ChangeTheme = ({ showThemePicker, toggleThemePicker }) => {
   const dropdownRef = useClickOutside(() => {
@@ -156,14 +157,19 @@ const ChangeTheme = ({ showThemePicker, toggleThemePicker }) => {
 
   return (
     <div className="theme-picker-container">
-      <button className="theme-picker-btn" onClick={toggleThemePicker}>
-        <ColorOrb
-          color={getThemePreview(currentTheme)}
-          size="14px"
-          isActive={true}
-        />
-        Theme
-      </button>
+      <Button
+        onClick={toggleThemePicker}
+        size="md"
+        text={'Theme'}
+        variant="outline"
+        startIcon={
+          <ColorOrb
+            color={getThemePreview(currentTheme)}
+            size="14px"
+            isActive={true}
+          />
+        }
+      />
 
       {showThemePicker && (
         <div className="theme-picker-dropdown" ref={dropdownRef}>

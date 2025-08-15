@@ -99,66 +99,73 @@ const UserMenu = ({ user, onUserAction, onLogout, isLoggedIn }) => {
     <div className="user-menu">
       {isLoggedIn
         ? menuItems.map((item) => (
-            <button
+            <Button
               key={item.id}
-              className="user-menu-item"
+              variant="ghost"
+              size="full-width"
               onClick={() => onUserAction(item.id)}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                style={{ marginRight: '8px' }}
-              >
-                {getIcon(item.icon)}
-              </svg>
-              {item.label}
-            </button>
+              text={item.label}
+              startIcon={
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  style={{ marginRight: '8px' }}
+                >
+                  {getIcon(item.icon)}
+                </svg>
+              }
+            />
           ))
         : MenuItemsRegister.map((item) => (
-            <button
+            <Button
               key={item.id}
-              className="user-menu-item"
+              variant="ghost"
+              size="full-width"
               onClick={() => onUserAction(item.id)}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                style={{ marginRight: '8px' }}
-              >
-                {getIcon(item.icon)}
-              </svg>
-              {item.label}
-            </button>
+              text={item.label}
+              startIcon={
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  style={{ marginRight: '8px' }}
+                >
+                  {getIcon(item.icon)}
+                </svg>
+              }
+            />
           ))}
       {isLoggedIn && (
-        <button
-          className="user-menu-item"
-          onClick={onLogout}
+        <Button
+          key={'logout'}
           style={{ color: 'var(--color-error)' }}
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            style={{ marginRight: '8px' }}
-          >
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-            <polyline points="16,17 21,12 16,7"></polyline>
-            <line x1="21" y1="12" x2="9" y2="12"></line>
-          </svg>
-          Sign Out
-        </button>
+          variant="ghost"
+          size="full-width"
+          onClick={onLogout}
+          text={'Logout'}
+          startIcon={
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              style={{ marginRight: '8px' }}
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16,17 21,12 16,7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          }
+        />
       )}
     </div>
   );

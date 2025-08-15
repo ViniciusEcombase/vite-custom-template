@@ -4,8 +4,10 @@ import Button from '../components/Button/Button';
 import useFetch from '../customHooks/useFetch';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../contextProviders/CartProvider';
-import { useAuth } from '../contextProviders/AuthProvider';
+import { useAuth } from '../contextProviders/AuthProvider.tsx';
 import { useModalActions } from '../contextProviders/ModalProvider';
+import { WishlistButton } from '../components/UserAccount/Wishlist/WishlistButton'; // Import WishlistButton
+import ProductReviews from '../components/Review/ProductReviews.jsx';
 
 const ProductPage = ({ productId }) => {
   const { showAlert } = useModalActions();
@@ -40,7 +42,6 @@ const ProductPage = ({ productId }) => {
         setLoading(true);
 
         if (!variantSlug) {
-          console.error('No variant slug provided');
           setLoading(false);
           return;
         }
@@ -68,11 +69,9 @@ const ProductPage = ({ productId }) => {
           }
         } else {
           // Variant not found
-          console.error('Variant not found:', variantSlug);
           // You might want to redirect to 404 or home page here
         }
       } catch (error) {
-        console.error('Error loading product data:', error);
       } finally {
         setLoading(false);
       }
@@ -229,6 +228,22 @@ const ProductPage = ({ productId }) => {
     }
   };
 
+  // Handle auth requirement for wishlist button
+  const handleAuthRequired = () => {
+    if (!user) {
+      showAlert({
+        title: 'Login Required',
+        message: 'You must be logged in to add items to your wishlist',
+        confirmText: 'Login',
+        onClose: () => {
+          window.location.href = `/login`;
+        },
+      });
+      return true; // Return true to indicate auth is required and action should be prevented
+    }
+    return false; // User is authenticated, proceed with action
+  };
+
   // Custom button component for variant selection
   const VariantButton = ({ optionName, value, isSelected, attributeIndex }) => {
     const availableForAttribute = getAvailableOptionsForAttribute(optionName);
@@ -319,6 +334,16 @@ const ProductPage = ({ productId }) => {
                 )}
                 <span className="free-shipping-badge">Free Shipping</span>
               </div>
+              {/* Add wishlist button to product image */}
+              <WishlistButton
+                productVariant={{
+                  variant_id: selectedVariant.variant_id,
+                  ...selectedVariant,
+                }}
+                className="product-page-wishlist"
+                showTooltip={true}
+                onAuthRequired={handleAuthRequired}
+              />
             </div>
 
             <div className="thumbnail-container">
@@ -343,7 +368,21 @@ const ProductPage = ({ productId }) => {
           <div className="product-info">
             <div className="product-header">
               <span className="brand">{selectedVariant.collections?.[0]}</span>
-              <h1 className="product-title">{selectedVariant.variant_name}</h1>
+              <div className="product-title-row">
+                <h1 className="product-title">
+                  {selectedVariant.variant_name}
+                </h1>
+                {/* Additional wishlist button in header for easy access */}
+                <WishlistButton
+                  productVariant={{
+                    variant_id: selectedVariant.variant_id,
+                    ...selectedVariant,
+                  }}
+                  className="product-header-wishlist"
+                  showTooltip={true}
+                  onAuthRequired={handleAuthRequired}
+                />
+              </div>
 
               <div className="rating-section">
                 <div className="stars">
@@ -444,15 +483,11 @@ const ProductPage = ({ productId }) => {
                 <Button
                   onClick={handleAddToCart}
                   size="md"
-                  text={`Add to Cart - $${(
+                  text={`Add to Cart - ${(
                     selectedVariant.current_price * quantity
                   ).toFixed(2)}`}
                   disabled={!selectedVariant || selectedVariant.stock <= 0}
                 />
-
-                <button className="wishlist-btn" aria-label="Add to wishlist">
-                  ♡
-                </button>
               </div>
             </div>
 
@@ -489,137 +524,8 @@ const ProductPage = ({ productId }) => {
           </div>
         </div>
 
-        {/* Product Details Tabs */}
-        <div className="product-details">
-          <div className="tab-navigation">
-            <button
-              className={`tab-btn ${
-                activeTab === 'description' ? 'active' : ''
-              }`}
-              onClick={() => setActiveTab('description')}
-            >
-              Description
-            </button>
-            <button
-              className={`tab-btn ${
-                activeTab === 'specifications' ? 'active' : ''
-              }`}
-              onClick={() => setActiveTab('specifications')}
-            >
-              Specifications
-            </button>
-            <button
-              className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
-              onClick={() => setActiveTab('reviews')}
-            >
-              Reviews
-            </button>
-          </div>
-
-          <div className="tab-content">
-            {activeTab === 'description' && (
-              <div className="description-content">
-                <p>{selectedVariant.description}</p>
-                <p>
-                  High-quality product crafted with attention to detail. Perfect
-                  for everyday use with excellent durability and style.
-                </p>
-              </div>
-            )}
-
-            {activeTab === 'specifications' && (
-              <div className="specifications-content">
-                <div className="spec-grid">
-                  <div className="spec-item">
-                    <span className="spec-label">Material</span>
-                    <span className="spec-value">Premium blend</span>
-                  </div>
-                  <div className="spec-item">
-                    <span className="spec-label">Care</span>
-                    <span className="spec-value">Machine washable</span>
-                  </div>
-                  <div className="spec-item">
-                    <span className="spec-label">SKU</span>
-                    <span className="spec-value">{selectedVariant.sku}</span>
-                  </div>
-                  <div className="spec-item">
-                    <span className="spec-label">Weight</span>
-                    <span className="spec-value">
-                      {selectedVariant.weight || 'N/A'}
-                    </span>
-                  </div>
-                  <div className="spec-item">
-                    <span className="spec-label">Warranty</span>
-                    <span className="spec-value">1 year</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'reviews' && (
-              <div className="reviews-content">
-                <div className="reviews-summary">
-                  <div className="rating-breakdown">
-                    <span className="avg-rating">4.5</span>
-                    <div className="stars">
-                      {[...Array(5)].map((_, i) => (
-                        <span
-                          key={i}
-                          className={`star ${
-                            i < Math.floor(4.5) ? 'filled' : ''
-                          }`}
-                        >
-                          ★
-                        </span>
-                      ))}
-                    </div>
-                    <span className="total-reviews">
-                      Based on 1,234 reviews
-                    </span>
-                  </div>
-                </div>
-
-                <div className="review-list">
-                  <div className="review-item">
-                    <div className="review-header">
-                      <span className="reviewer-name">Sarah M.</span>
-                      <div className="review-rating">
-                        {[...Array(5)].map((_, i) => (
-                          <span key={i} className="star filled">
-                            ★
-                          </span>
-                        ))}
-                      </div>
-                      <span className="review-date">2 weeks ago</span>
-                    </div>
-                    <p className="review-text">
-                      Great quality and perfect fit. Exactly what I was looking
-                      for!
-                    </p>
-                  </div>
-
-                  <div className="review-item">
-                    <div className="review-header">
-                      <span className="reviewer-name">Mike R.</span>
-                      <div className="review-rating">
-                        {[...Array(4)].map((_, i) => (
-                          <span key={i} className="star filled">
-                            ★
-                          </span>
-                        ))}
-                        <span className="star">★</span>
-                      </div>
-                      <span className="review-date">1 month ago</span>
-                    </div>
-                    <p className="review-text">
-                      Good product overall. Fast shipping and excellent customer
-                      service.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+        <div style={{ marginTop: '15rem' }}>
+          <ProductReviews />
         </div>
       </div>
     </>
