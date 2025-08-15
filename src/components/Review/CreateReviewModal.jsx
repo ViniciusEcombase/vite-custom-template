@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Loader2, AlertCircle } from 'lucide-react';
 import StarRating from './StarRating';
 import FileUploadSection from './FileUploadSection';
+import Button from '../Button/Button';
 
 const CreateReviewModal = ({
   show,
@@ -38,9 +39,7 @@ const CreateReviewModal = ({
       <div className="modal modal--large">
         <div className="modal__header">
           <h3 className="modal__title">Write a Review</h3>
-          <button onClick={handleClose} className="modal__close">
-            <X />
-          </button>
+          <Button onClick={handleClose} variant={'ghost'} startIcon={<X />} />
         </div>
 
         <div className="modal__content">
@@ -153,31 +152,27 @@ const CreateReviewModal = ({
         </div>
 
         <div className="modal__actions">
-          <button
-            onClick={handleClose}
-            className="btn btn--secondary"
+          <Button
             disabled={uploading}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onSubmit}
+            text="Cancel"
+            variant={'secondary'}
+            onClick={handleClose}
+          />
+          <Button
             disabled={!newReview.rating || !newReview.content || uploading}
-            className="btn btn--primary"
-            style={{
-              opacity:
-                !newReview.rating || !newReview.content || uploading ? 0.5 : 1,
-            }}
-          >
-            {uploading ? (
-              <>
-                <Loader2 className="btn__icon animate-spin" />
-                Submitting...
-              </>
-            ) : (
-              'Submit Review'
-            )}
-          </button>
+            text={
+              uploading ? (
+                <>
+                  <Loader2 className="btn__icon animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit Review'
+              )
+            }
+            variant={'primary'}
+            onClick={onSubmit}
+          />
         </div>
       </div>
     </div>

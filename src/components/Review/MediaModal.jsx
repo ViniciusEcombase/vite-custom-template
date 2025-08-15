@@ -1,5 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
+import Button from '../Button/Button';
 
 const MediaModal = ({
   show,
@@ -24,16 +25,16 @@ const MediaModal = ({
               : 'review-video-modal__container'
           }`}
         >
-          <button
-            onClick={onClose}
+          <div
             className={`${
               type === 'image'
                 ? 'image-modal__close'
                 : 'review-video-modal__close'
             }`}
           >
-            <X />
-          </button>
+            <Button variant={'ghost'} onClick={onClose} startIcon={<X />} />
+          </div>
+
           {type === 'image' ? (
             <img src={src} alt="Review" className="image-modal__image" />
           ) : (

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Button from '../Button/Button';
 
 const ReviewsPagination = ({ currentPage, totalPages, onPageChange }) => {
   if (totalPages <= 1) return null;
@@ -14,13 +15,13 @@ const ReviewsPagination = ({ currentPage, totalPages, onPageChange }) => {
 
   return (
     <div className="reviews-pagination">
-      <button
-        onClick={handlePrevious}
+      <Button
+        startIcon={<ChevronLeft />}
+        size="sm"
+        variant={'outline'}
         disabled={currentPage === 1}
-        className="reviews-pagination__button"
-      >
-        <ChevronLeft />
-      </button>
+        onClick={handlePrevious}
+      />
 
       <div className="reviews-pagination__pages">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -36,13 +37,13 @@ const ReviewsPagination = ({ currentPage, totalPages, onPageChange }) => {
         ))}
       </div>
 
-      <button
-        onClick={handleNext}
+      <Button
+        startIcon={<ChevronRight />}
+        size="sm"
+        variant={'outline'}
         disabled={currentPage === totalPages}
-        className="reviews-pagination__button"
-      >
-        <ChevronRight />
-      </button>
+        onClick={handleNext}
+      />
     </div>
   );
 };

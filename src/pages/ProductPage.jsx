@@ -293,6 +293,7 @@ const ProductPage = ({ productId }) => {
   const isSaving =
     selectedVariant.original_price - selectedVariant.current_price;
 
+  selectedVariant && console.log(selectedVariant.categories);
   return (
     <>
       <Header />
@@ -301,9 +302,7 @@ const ProductPage = ({ productId }) => {
         <nav className="breadcrumb">
           <a href="/">Home</a>
           <span className="separator">›</span>
-          <a
-            href={`/category/${selectedVariant.categories?.[0]?.toLowerCase()}`}
-          >
+          <a href={`/store/${selectedVariant.categories?.[0]?.toLowerCase()}`}>
             {selectedVariant.categories?.[0]}
           </a>
           <span className="separator">›</span>
@@ -524,9 +523,11 @@ const ProductPage = ({ productId }) => {
           </div>
         </div>
 
-        <div style={{ marginTop: '15rem' }}>
-          <ProductReviews />
-        </div>
+        {variantSlug && (
+          <div style={{ marginTop: '15rem' }}>
+            <ProductReviews slug={variantSlug} />
+          </div>
+        )}
       </div>
     </>
   );

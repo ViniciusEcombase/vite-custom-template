@@ -15,7 +15,7 @@ const SUPABASE_URL = 'https://niihlyofonxtmzgzanpv.supabase.co';
 const SERVICE_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5paWhseW9mb254dG16Z3phbnB2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjcyMzg2MCwiZXhwIjoyMDYyMjk5ODYwfQ.4Cy3yD5bJcDoI5xf1hYCdswiNHpRy1C9zETJH6czBpk';
 
-const ProductReviews = () => {
+const ProductReviews = ({ slug }) => {
   // State management
   const [showSummary, setShowSummary] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -198,7 +198,6 @@ const ProductReviews = () => {
       videoPreviews: prev.videoPreviews.filter((_, i) => i !== index),
     }));
   };
-
   const handleCreateReview = async () => {
     if (!newReview.rating || !newReview.content) {
       alert('Please provide a rating and review content.');
@@ -265,10 +264,9 @@ const ProductReviews = () => {
       alert('Review submitted successfully!');
       setShowCreateModal(false);
       resetForm();
-
       // Refresh the reviews list
       const res = await api.get(
-        '/product_variant_reviews_view?variant_id=eq.1'
+        `/product_variant_reviews_view?variant_slug=eq.${slug}`
       );
       setPayload(res);
     } catch (error) {
@@ -320,7 +318,7 @@ const ProductReviews = () => {
   useEffect(() => {
     const init = async () => {
       const res = await api.get(
-        '/product_variant_reviews_view?variant_id=eq.1'
+        `/product_variant_reviews_view?variant_slug=eq.${slug}`
       );
       setPayload(res);
     };
@@ -328,53 +326,53 @@ const ProductReviews = () => {
   }, []);
 
   // Render logic
-  if (showSummary) {
-    return (
-      <>
-        {payload && (
-          <ReviewsSummary
-            payload={payload}
-            onShowAllReviews={() => setShowSummary(false)}
-            onWriteReview={() => setShowCreateModal(true)}
-            formatDate={formatDate}
-          />
-        )}
-      </>
-    );
-  }
+  console.log(payload);
+  
 
   return (
     <>
       {payload && (
-        <div className="reviews-container">
-          <ReviewsHeader
-            payload={payload}
-            onShowSummary={() => setShowSummary(true)}
-            onWriteReview={() => setShowCreateModal(true)}
-          />
-
-          <div className="reviews-grid">
-            <div>
-              <ReviewsFilters
+        <>
+          {showSummary ? (
+            <ReviewsSummary
+              payload={payload}
+              onShowAllReviews={() => setShowSummary(false)}
+              onWriteReview={() => setShowCreateModal(true)}
+              formatDate={formatDate}
+            />
+          ) : (
+            <div className="reviews-container">
+              <ReviewsHeader
                 payload={payload}
-                selectedRatingFilter={selectedRatingFilter}
-                onFilterChange={handleFilterChange}
+                onShowSummary={() => setShowSummary(true)}
+                onWriteReview={() => setShowCreateModal(true)}
               />
-            </div>
 
-            <div>
-              <ReviewsList
-                reviews={paginatedReviews}
-                formatDate={formatDate}
-                onImageClick={handleImageClick}
-                onVideoClick={handleVideoClick}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            </div>
-          </div>
+              <div className="reviews-grid">
+                <div>
+                  <ReviewsFilters
+                    payload={payload}
+                    selectedRatingFilter={selectedRatingFilter}
+                    onFilterChange={handleFilterChange}
+                  />
+                </div>
 
+                <div>
+                  <ReviewsList
+                    reviews={paginatedReviews}
+                    formatDate={formatDate}
+                    onImageClick={handleImageClick}
+                    onVideoClick={handleVideoClick}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Create Review Modal */}
           <CreateReviewModal
             show={showCreateModal}
             onClose={handleCloseCreateModal}
@@ -389,6 +387,7 @@ const ProductReviews = () => {
             uploadError={uploadError}
           />
 
+          {/* Image Modal */}
           <MediaModal
             show={showImageModal}
             type="image"
@@ -396,13 +395,14 @@ const ProductReviews = () => {
             onClose={() => setShowImageModal(false)}
           />
 
+          {/* Video Modal */}
           <MediaModal
             show={showVideoModal}
             type="video"
             src={selectedVideo}
             onClose={() => setShowVideoModal(false)}
           />
-        </div>
+        </>
       )}
     </>
   );
